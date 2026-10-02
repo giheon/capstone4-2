@@ -1,0 +1,49 @@
+{
+  "documents": [
+    {
+      "filename": "personal-information-protection-act-2026-09-11.html",
+      "format": "html",
+      "download_url": "https://www.law.go.kr/LSW/lsInfoR.do?lsiSeq=283839&chrClsCd=010202&efYd=20260911&ancYnChk=0",
+      "metadata": {
+        "title": "개인정보 보호법",
+        "source_url": "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=283839&chrClsCd=010202&urlMode=lsInfoP&efYd=20260911&ancYnChk=0",
+        "kind": "law",
+        "publisher": "대한민국",
+        "effective_from": "2026-09-11",
+        "edition": "법률 제21445호",
+        "published_at": "2026-03-10",
+        "version": "lsiSeq=283839"
+      }
+    },
+    {
+      "filename": "fixed-camera-guidance-2024-12.pdf",
+      "format": "pdf",
+      "download_url": "https://www.privacy.go.kr/cmm/fms/FileDown.do?atchFileId=ATCH_000000000900655&fileSn=1",
+      "metadata": {
+        "title": "고정형 영상정보처리기기 설치·운영 안내서",
+        "source_url": "https://www.privacy.go.kr/front/bbs/bbsView.do?bbsNo=BBSMSTR_000000000049&bbscttNo=20779",
+        "kind": "guide",
+        "publisher": "개인정보보호위원회",
+        "effective_from": null,
+        "edition": "2024-12",
+        "published_at": "2024-12-31",
+        "version": null
+      }
+    },
+    {
+      "filename": "mobile-camera-guidance-2024-09.pdf",
+      "format": "pdf",
+      "download_url": "https://www.privacy.go.kr/cmm/fms/FileDown.do?atchFileId=ATCH_000000000893249&fileSn=1",
+      "metadata": {
+        "title": "이동형 영상정보처리기기를 위한 개인영상정보 보호·활용 안내서",
+        "source_url": "https://www.privacy.go.kr/front/bbs/bbsView.do?bbsNo=BBSMSTR_000000000049&bbscttNo=20759",
+        "kind": "guide",
+        "publisher": "개인정보보호위원회",
+        "effective_from": null,
+        "edition": "2024-09",
+        "published_at": "2024-10-14",
+        "version": null
+      }
+    }
+  ]
+}

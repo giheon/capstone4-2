@@ -1,0 +1,3 @@
+extends: fixture
+name: fixture-yunet
+detector: yunet

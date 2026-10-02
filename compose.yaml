@@ -1,0 +1,41 @@
+services:
+  redis:
+    image: redis:8-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+  api:
+    build: .
+    image: privframe:baseline
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      PRIVFRAME_REDIS_URL: redis://redis:6379/0
+      PRIVFRAME_DATA_DIR: /app/data
+      PRIVFRAME_FRONTEND_ORIGIN: http://localhost:8000
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      redis:
+        condition: service_healthy
+  worker:
+    image: privframe-worker:baseline
+    build: .
+    command: ["uv", "run", "--no-sync", "celery", "-A", "privframe.worker:celery_app", "worker", "--pool=solo", "--concurrency=1", "--loglevel=INFO"]
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      PRIVFRAME_REDIS_URL: redis://redis:6379/0
+      PRIVFRAME_DATA_DIR: /app/data
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      redis:
+        condition: service_healthy
+volumes:
+  redis-data:

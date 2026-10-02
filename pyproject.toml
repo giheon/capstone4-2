@@ -1,0 +1,37 @@
+[project]
+name = "privframe"
+version = "0.1.0"
+description = "Replaceable video privacy redaction research baseline"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "fastapi>=0.115,<1", "uvicorn[standard]>=0.34,<1", "python-multipart>=0.0.20",
+  "pydantic>=2.10,<3", "pydantic-settings>=2.7,<3", "python-dotenv>=1,<2", "sqlalchemy>=2.0,<3",
+  "celery[redis]>=5.6,<6", "httpx>=0.28,<1", "pyyaml>=6,<7",
+  "pdfplumber>=0.11,<1", "beautifulsoup4>=4.13,<5", "jinja2>=3.1,<4",
+  "langchain-core>=1,<2", "langchain-text-splitters>=1,<2",
+  "langchain-openai>=1,<2", "langchain-chroma>=1,<2", "chromadb>=1,<2",
+  "opencv-python-headless>=4.11,<5", "numpy>=2,<3",
+]
+
+[project.scripts]
+privframe = "privframe.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8,<10", "ruff>=0.11,<1"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["backend/src/privframe"]
+
+[tool.pytest.ini_options]
+testpaths = ["backend/tests"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]

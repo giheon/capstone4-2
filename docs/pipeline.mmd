@@ -1,0 +1,17 @@
+flowchart TB
+    Docs[공식 원문 · 사용자 PDF/TXT] --> Extract[추출 → 청킹 → 임베딩]
+    Extract --> Index[문서·설정 버전별 인덱스]
+    Input[영상 · 자유로운 상황 설명] --> Analyze[정규화 → 얼굴 검출 → 연속 트랙]
+    Analyze --> Labels[사용자 트랙 설명 · 선택 입력]
+    Labels --> Retrieve[상황 기반 RAG 검색]
+    Index --> Retrieve
+    Retrieve --> Decide[교체 가능한 판단기 · 초기 LLM 직접 판단]
+    Decide --> Review[근거·처리 계획 검토 → 사용자 수정]
+    Review --> Render[확정된 전체 트랙 처리 → 영상 출력]
+    Analyze -. 관측 결과 .-> Snapshot[(실행별 스냅샷)]
+    Retrieve -. 후보·실제 전달 원문 .-> Snapshot
+    Decide -. 판단·인용·사용량 .-> Snapshot
+    Review -. 사용자 변경 .-> Snapshot
+    Render -. 실제 파라미터·파일 해시 .-> Snapshot
+    Snapshot --> Report[JSON · HTML 보고서 / 재생성]
+    Snapshot --> Evaluate[실험 비교 · 평가]

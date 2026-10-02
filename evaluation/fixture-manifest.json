@@ -1,0 +1,51 @@
+{
+  "schema_version": "1",
+  "label": "FIXTURE_SYNTHETIC",
+  "mode": "fixture",
+  "documents": [
+    {
+      "id": "video-guidance",
+      "path": "corpus/synthetic-video-guidance.txt",
+      "title": "FIXTURE_SYNTHETIC 가상 영상 사례",
+      "kind": "fixture_synthetic"
+    },
+    {
+      "id": "document-controls",
+      "path": "corpus/synthetic-document-controls.txt",
+      "title": "FIXTURE_SYNTHETIC 가상 문서 처리",
+      "kind": "fixture_synthetic"
+    }
+  ],
+  "cases": [
+    {
+      "id": "synthetic-access-context",
+      "video": "../data/demo/checkerboard.mp4",
+      "context": "FIXTURE_SYNTHETIC: 가상 주차장 영상 열람 실험입니다. 요청자와 배경 인물의 처리 대상을 확인하는 검색 흐름을 시험합니다. 실제 영상에는 사람이 없습니다.",
+      "facts": {"영상 출처": "합성 격자 실험", "출연자": "없음"},
+      "expected_source_spans": [
+        {
+          "document_id": "video-guidance",
+          "article": "제1조(가상 영상 열람 사례)",
+          "text": "가상 주차장 영상 열람 실험에서 요청자와 배경 인물을 구분하여 사용자에게 처리 대상 확인을 요청한다."
+        }
+      ],
+      "manual_face_expectation": {"has_actual_faces": false, "expected_track_count": 0, "annotations": null},
+      "render": false
+    },
+    {
+      "id": "synthetic-incomplete-facts",
+      "video": "../data/demo/checkerboard.mp4",
+      "context": "FIXTURE_SYNTHETIC: 가상 실험에서 영상 출처와 출연자 관계가 명확하지 않은 경우 확인이 필요한 사실을 따로 기록하는 검색을 시험합니다. 실제 영상에는 사람이 없습니다.",
+      "facts": {"용도": "참고 문서 검색 시험"},
+      "expected_source_spans": [
+        {
+          "document_id": "document-controls",
+          "article": "제1조(가상 입력 부족 사례)",
+          "text": "가상 실험에서 영상 출처와 출연자 관계가 명확하지 않은 경우 확인이 필요한 사실을 따로 기록한다."
+        }
+      ],
+      "manual_face_expectation": {"has_actual_faces": false, "expected_track_count": 0, "annotations": null},
+      "render": false
+    }
+  ]
+}

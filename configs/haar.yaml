@@ -1,0 +1,3 @@
+extends: baseline
+name: haar
+detector: haar

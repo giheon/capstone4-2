@@ -1,0 +1,4 @@
+extends: baseline
+name: small-chunks
+chunk_size: 800
+chunk_overlap: 100

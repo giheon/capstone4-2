@@ -1,0 +1,8 @@
+extends: baseline
+name: fixture
+mode: fixture
+embedding_model: fixture-hash-v1
+embedding_dimensions: 256
+decider: fixture
+llm_model: fixture-only
+detector: haar
