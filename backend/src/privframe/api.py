@@ -9,11 +9,12 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from redis import Redis
 
-from privframe.application.service import Service
+from privframe.application.service import Service, ServiceUnavailable
 from privframe.bootstrap import get_service, openai_configured
 from privframe.config import ROOT, Settings, load_profile
 from privframe.domain.models import (
-    Contract, DocumentRecord, IndexRecord, RunSnapshot, ScenarioInput, SourceMetadata, Treatment, VideoRecord,
+    AppConfig, Contract, DocumentRecord, EvidenceBundle, ExecutionRecord, IdentityReviewInput, IndexRecord, RunSnapshot, ScenarioInput,
+    SourceMetadata, SplitTrackInput, Treatment, VideoObservation, VideoRecord,
 )
 from privframe.infrastructure.storage import ConflictError, sha256_file
 
@@ -21,14 +22,34 @@ from privframe.infrastructure.storage import ConflictError, sha256_file
 class CreateIndex(Contract):
     document_ids: list[str]
     profile: str = "baseline"
+    stop_after: str | None = None
+
+
+class ComponentRequest(Contract):
+    graph: Literal["retrieval", "decision"]
+    profile: str = "baseline"
+    scenario: ScenarioInput
+    index_id: str | None = None
+    observation: VideoObservation | None = None
+    evidence: EvidenceBundle | None = None
+    stop_after: str | None = None
+
+
+class ActivateIndex(Contract):
+    profile: str = "baseline"
+
+
+class StopAfter(Contract):
+    stop_after: str | None = None
 
 
 class CreateRun(Contract):
     video_id: str
     index_id: str | None = None
     scenario: ScenarioInput
-    profile: str = "baseline"
+    profile: str | None = None
     parent_id: str | None = None
+    stop_after: str | None = None
 
 
 class TrackLabels(Contract):
@@ -42,6 +63,7 @@ class Overrides(Contract):
 
 class RetryStage(Contract):
     stage: Literal["analyze", "decide", "render"]
+    stop_after: str | None = None
 
 
 class ForkRun(Contract):
@@ -93,7 +115,7 @@ def create_app(service: Service | None = None) -> FastAPI:
 
     @app.exception_handler(ValueError)
     async def invalid(_, error):
-        return JSONResponse(status_code=409 if isinstance(error, ConflictError) else 400,
+        return JSONResponse(status_code=503 if isinstance(error, ServiceUnavailable) else 409 if isinstance(error, ConflictError) else 400,
                             content={"detail": str(error)})
 
     @app.get("/api/health")
@@ -107,7 +129,55 @@ def create_app(service: Service | None = None) -> FastAPI:
             pass
         return {"status": "ok", "api_key_configured": openai_configured(), "redis_available": available,
                 "ffmpeg_available": bool(shutil.which("ffmpeg") and shutil.which("ffprobe")),
-                "yunet_available": service.settings.model_path.is_file(), "fixture_mode_available": True}
+                "yunet_available": service.settings.model_path.is_file(),
+                "identity_model_available": service.settings.identity_model_path.is_file(),
+                "fixture_mode_available": True}
+
+    @app.get("/api/app-config", response_model=AppConfig)
+    def app_config(service: Dependency):
+        value = service.app_config()
+        if not health(service)["redis_available"]:
+            value["ready"] = False
+            value["messages"].append("영상 처리 서비스를 준비하고 있습니다.")
+        return value
+
+    @app.post("/api/indexes/{index_id}/activate")
+    def activate_index(index_id: str, body: ActivateIndex, service: Dependency):
+        return service.activate_index(index_id, body.profile)
+
+    @app.get("/api/executions", response_model=list[ExecutionRecord])
+    def executions(service: Dependency):
+        return service.repository.list("execution", ExecutionRecord)
+
+    @app.get("/api/executions/{execution_id}", response_model=ExecutionRecord)
+    def execution(execution_id: str, service: Dependency):
+        return service.repository.get("execution", execution_id, ExecutionRecord)
+
+    @app.get("/api/executions/{execution_id}/outputs/{node}")
+    def execution_output(execution_id: str, node: str, service: Dependency):
+        from privframe.application.graphs import GraphRunner
+        value = service.repository.get("execution", execution_id, ExecutionRecord)
+        if node not in value.output_artifacts:
+            raise KeyError("Node output is not available")
+        return GraphRunner(service.repository, service.artifacts).read_json(value.output_artifacts[node])
+
+    @app.post("/api/executions/{execution_id}/pause", response_model=ExecutionRecord)
+    def pause_execution(execution_id: str, service: Dependency):
+        return service.pause_execution(execution_id)
+
+    @app.post("/api/executions/{execution_id}/resume", response_model=ExecutionRecord, status_code=202)
+    def resume_execution(execution_id: str, service: Dependency):
+        return service.resume_execution(execution_id)
+
+    @app.post("/api/executions", response_model=ExecutionRecord, status_code=202)
+    def create_component(body: ComponentRequest, service: Dependency):
+        return service.create_component(body.graph, body.model_dump(mode="json", exclude={"graph", "stop_after"}),
+                                        body.stop_after)
+
+    @app.get("/api/graphs/{graph}")
+    def graph_definition(graph: str, service: Dependency):
+        from privframe.application.graphs import GRAPH_VERSION, GraphRunner
+        return {"version": GRAPH_VERSION, "mermaid": GraphRunner(service.repository, service.artifacts).diagram(graph)}
 
     @app.get("/api/profiles")
     def profiles(service: Dependency):
@@ -163,7 +233,7 @@ def create_app(service: Service | None = None) -> FastAPI:
 
     @app.post("/api/indexes", response_model=IndexRecord, status_code=202)
     def build_index(body: CreateIndex, service: Dependency):
-        return service.create_index(body.document_ids, body.profile)
+        return service.create_index(body.document_ids, body.profile, stop_after=body.stop_after)
 
     @app.post("/api/indexes/{index_id}/retry", response_model=IndexRecord, status_code=202)
     def retry_index(index_id: str, service: Dependency):
@@ -198,27 +268,40 @@ def create_app(service: Service | None = None) -> FastAPI:
 
     @app.post("/api/runs", response_model=RunSnapshot, status_code=202)
     def create_run(body: CreateRun, service: Dependency):
-        return service.create_run(body.video_id, body.index_id, body.scenario, body.profile, body.parent_id)
+        if body.profile is None:
+            if not app_config(service)["ready"]:
+                raise ServiceUnavailable("서비스 준비 중입니다. 잠시 후 다시 확인하세요.")
+            return service.create_product_run(body.video_id, body.scenario)
+        return service.create_run(body.video_id, body.index_id, body.scenario, body.profile, body.parent_id,
+                                  stop_after=body.stop_after)
 
     @app.post("/api/runs/{run_id}/labels", response_model=RunSnapshot)
     def labels(run_id: str, body: TrackLabels, service: Dependency):
         return service.labels(run_id, body.track_labels)
 
+    @app.post("/api/runs/{run_id}/identity-review", response_model=RunSnapshot)
+    def identity_review(run_id: str, body: IdentityReviewInput, service: Dependency):
+        return service.identity_review(run_id, body)
+
+    @app.post("/api/runs/{run_id}/split-track", response_model=RunSnapshot)
+    def split_track(run_id: str, body: SplitTrackInput, service: Dependency):
+        return service.split_track(run_id, body)
+
     @app.post("/api/runs/{run_id}/decide", response_model=RunSnapshot, status_code=202)
-    def decide(run_id: str, service: Dependency):
-        return service.request_stage(run_id, "decide")
+    def decide(run_id: str, service: Dependency, body: StopAfter | None = None):
+        return service.request_stage(run_id, "decide", stop_after=body.stop_after if body else None)
 
     @app.put("/api/runs/{run_id}/overrides", response_model=RunSnapshot)
     def overrides(run_id: str, body: Overrides, service: Dependency):
         return service.overrides(run_id, body.treatments, body.no_faces_confirmed)
 
     @app.post("/api/runs/{run_id}/render", response_model=RunSnapshot, status_code=202)
-    def render(run_id: str, service: Dependency):
-        return service.request_stage(run_id, "render")
+    def render(run_id: str, service: Dependency, body: StopAfter | None = None):
+        return service.request_stage(run_id, "render", stop_after=body.stop_after if body else None)
 
     @app.post("/api/runs/{run_id}/retry", response_model=RunSnapshot, status_code=202)
     def retry(run_id: str, body: RetryStage, service: Dependency):
-        return service.request_stage(run_id, body.stage, retry=True)
+        return service.request_stage(run_id, body.stage, retry=True, stop_after=body.stop_after)
 
     @app.post("/api/runs/{run_id}/fork", response_model=RunSnapshot, status_code=202)
     def fork(run_id: str, body: ForkRun, service: Dependency):

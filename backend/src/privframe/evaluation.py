@@ -10,13 +10,14 @@ import hashlib
 import math
 import time
 from collections import Counter
+from itertools import combinations
 from pathlib import Path
 from typing import Any, Literal
 
 import httpx
-from pydantic import Field, model_validator
+from pydantic import Field, field_validator, model_validator
 
-from privframe.domain.models import Box, Contract, DecisionPlan, ScenarioInput, Treatment, now
+from privframe.domain.models import AudienceScope, Box, Contract, DecisionPlan, ScenarioInput, Treatment, UsePurpose, now
 
 
 class ExpectedSourceSpan(Contract):
@@ -43,6 +44,14 @@ class EvaluationDocument(Contract):
 class FaceAnnotation(Contract):
     frame: int = Field(ge=0)
     box: Box
+    identity_label: str | None = Field(default=None, min_length=1, max_length=128)
+
+    @field_validator("identity_label")
+    @classmethod
+    def meaningful_identity(cls, value):
+        if value is not None and not value.strip():
+            raise ValueError("identity_label cannot be blank")
+        return value
 
 
 class FaceAnnotations(Contract):
@@ -65,7 +74,9 @@ class ManualFaceExpectation(Contract):
 class EvaluationCase(Contract):
     id: str
     video: str
-    context: str
+    context: str = ""
+    use_purpose: UsePurpose | None = None
+    audience_scope: AudienceScope | None = None
     facts: dict[str, str] = Field(default_factory=dict)
     track_labels: dict[str, str] = Field(default_factory=dict)
     expected_source_spans: list[ExpectedSourceSpan] = Field(default_factory=list)
@@ -216,10 +227,44 @@ def _iou(first: dict, second: dict) -> float:
     return intersection / (first["width"] * first["height"] + second["width"] * second["height"] - intersection)
 
 
+def _match_face_annotations(observation: dict, annotations: FaceAnnotations) -> tuple:
+    """One-to-one box matching on actual observed frames, shared by both evaluations."""
+    if (annotations.width != observation["width"] or annotations.height != observation["height"]
+            or not math.isclose(annotations.fps, observation["fps"], abs_tol=0.01)):
+        raise ValueError("Annotations do not use this observation's normalized frame basis")
+    known = set(annotations.annotated_frames) | {face.frame for face in annotations.faces}
+    if any(frame < 0 or frame >= observation["frame_count"] for frame in known):
+        raise ValueError("Annotated frame is outside the normalized video")
+    if annotations.exhaustive:
+        known = set(range(observation["frame_count"]))
+    if any(face.box.x + face.box.width > annotations.width or face.box.y + face.box.height > annotations.height
+           for face in annotations.faces):
+        raise ValueError("Annotated box is outside the normalized frame")
+    ground = [face.model_dump() for face in annotations.faces]
+    predicted = [{**point, "track_id": track["id"]} for track in observation.get("tracks", [])
+                 if track.get("object_type", "face") == "face" for point in track["points"]
+                 if point["frame"] in known]
+    by_frame: dict[int, list[tuple[int, dict]]] = {}
+    for index, point in enumerate(predicted):
+        by_frame.setdefault(point["frame"], []).append((index, point))
+    pairs = sorted((-_iou(first["box"], second["box"]), first_index, second_index)
+                   for first_index, first in enumerate(ground)
+                   for second_index, second in by_frame.get(first["frame"], [])
+                   if _iou(first["box"], second["box"]) >= annotations.iou_threshold)
+    matched_ground, matched_predicted = set(), set()
+    matches = []
+    for _, first, second in pairs:
+        if first not in matched_ground and second not in matched_predicted:
+            matched_ground.add(first)
+            matched_predicted.add(second)
+            matches.append((first, second))
+    return known, ground, predicted, matches
+
+
 def face_metrics(observation: dict, expectation: ManualFaceExpectation | None) -> dict | None:
     if expectation is None:
         return None
-    count = len(observation.get("tracks", []))
+    count = sum(track.get("object_type", "face") == "face" for track in observation.get("tracks", []))
     result = {"has_actual_faces": expectation.has_actual_faces, "expected_track_count": expectation.expected_track_count,
               "observed_track_count": count,
               "track_count_error": count - expectation.expected_track_count
@@ -227,34 +272,12 @@ def face_metrics(observation: dict, expectation: ManualFaceExpectation | None) -
     annotations = expectation.annotations
     if annotations is None:
         return result
-    if (annotations.width != observation["width"] or annotations.height != observation["height"]
-            or not math.isclose(annotations.fps, observation["fps"], abs_tol=0.01)):
-        result["annotation_error"] = "Annotations do not use this observation's normalized frame basis"
+    try:
+        known, ground, predicted, matched = _match_face_annotations(observation, annotations)
+    except ValueError as error:
+        result["annotation_error"] = str(error)
         return result
-    known = set(annotations.annotated_frames) | {face.frame for face in annotations.faces}
-    if annotations.exhaustive:
-        known = set(range(observation["frame_count"]))
-    if any(frame < 0 or frame >= observation["frame_count"] for frame in known):
-        result["annotation_error"] = "Annotated frame is outside the normalized video"
-        return result
-    if any(face.box.x + face.box.width > annotations.width or face.box.y + face.box.height > annotations.height
-           for face in annotations.faces):
-        result["annotation_error"] = "Annotated box is outside the normalized frame"
-        return result
-    ground = [face.model_dump() for face in annotations.faces]
-    predicted = [point for track in observation.get("tracks", []) for point in track["points"]
-                 if point["frame"] in known]
-    pairs = sorted((-_iou(first["box"], second["box"]), first_index, second_index)
-                   for first_index, first in enumerate(ground)
-                   for second_index, second in enumerate(predicted)
-                   if first["frame"] == second["frame"]
-                   and _iou(first["box"], second["box"]) >= annotations.iou_threshold)
-    matched_ground, matched_predicted = set(), set()
-    for _, first, second in pairs:
-        if first not in matched_ground and second not in matched_predicted:
-            matched_ground.add(first)
-            matched_predicted.add(second)
-    matches = len(matched_ground)
+    matches = len(matched)
     result["annotated_box_metrics"] = {
         "iou_threshold": annotations.iou_threshold, "exhaustive": annotations.exhaustive,
         "annotated_frame_count": len(known), "ground_truth_boxes": len(ground), "detected_boxes": len(predicted),
@@ -263,6 +286,81 @@ def face_metrics(observation: dict, expectation: ManualFaceExpectation | None) -
         "precision": matches / len(predicted) if predicted else None,
     }
     return result
+
+
+def identity_grouping_metrics(observation: dict, identity: dict | None,
+                              annotations: FaceAnnotations | None) -> dict | None:
+    """Evaluate track pairs only where matched annotations establish a pure identity.
+
+    Mixed-identity tracks are reported separately and excluded from pair metrics.
+    Missing identity labels mean unmeasured accuracy, never zero errors.
+    """
+    if identity is None or annotations is None or not any(face.identity_label for face in annotations.faces):
+        return None
+    try:
+        _, ground, predicted, matches = _match_face_annotations(observation, annotations)
+    except ValueError as error:
+        return {"annotation_error": str(error), "automatic": None, "current": None}
+    truth: dict[str, set[str]] = {}
+    matched_labels = 0
+    for first, second in matches:
+        label = ground[first]["identity_label"]
+        if label is not None:
+            truth.setdefault(predicted[second]["track_id"], set()).add(label)
+            matched_labels += 1
+    tracks = {track["id"]: track for track in observation.get("tracks", [])
+              if track.get("object_type", "face") == "face"}
+    frames = {key: {point["frame"] for point in track["points"]} for key, track in tracks.items()}
+    pure = {key: next(iter(labels)) for key, labels in truth.items() if len(labels) == 1}
+
+    def score(groups: list[dict]) -> dict:
+        membership: dict[str, list[int]] = {}
+        flagged: set[str] = set()
+        simultaneous: set[tuple[str, str]] = set()
+        for index, group in enumerate(groups):
+            for track_id in group["track_ids"]:
+                membership.setdefault(track_id, []).append(index)
+                if group.get("review_reasons"):
+                    flagged.add(track_id)
+            for first, second in combinations(sorted(set(group["track_ids"]) & tracks.keys()), 2):
+                if frames[first] & frames[second]:
+                    simultaneous.add((first, second))
+        valid = {key: memberships[0] for key, memberships in membership.items() if len(memberships) == 1}
+        unresolved = {key for key in tracks if key not in valid} | (flagged & tracks.keys())
+        eligible = sorted(pure.keys() & valid.keys())
+        false_merges = false_splits = same_pairs = different_pairs = correct_same = 0
+        for first, second in combinations(eligible, 2):
+            same_truth, same_group = pure[first] == pure[second], valid[first] == valid[second]
+            same_pairs += same_truth
+            different_pairs += not same_truth
+            false_merges += not same_truth and same_group
+            false_splits += same_truth and not same_group
+            correct_same += same_truth and same_group
+        measured = same_pairs + different_pairs > 0
+        return {
+            "group_count": len(groups), "evaluated_track_count": len(eligible),
+            "evaluated_track_pair_count": same_pairs + different_pairs,
+            "same_person_track_pairs": same_pairs, "different_person_track_pairs": different_pairs,
+            "false_merged_track_pairs": false_merges if measured else None,
+            "split_same_person_track_pairs": false_splits if measured else None,
+            "same_person_pair_recall": correct_same / same_pairs if same_pairs else None,
+            "grouped_pair_precision": correct_same / (correct_same + false_merges)
+            if correct_same + false_merges else None,
+            "unresolved_track_count": len(unresolved), "unresolved_track_ids": sorted(unresolved),
+            "invalid_membership_track_ids": sorted(key for key in tracks if key not in valid),
+            "unknown_track_ids": sorted(membership.keys() - tracks.keys()),
+            "simultaneous_track_pair_count": len(simultaneous),
+        }
+
+    labeled_count = sum(face.identity_label is not None for face in annotations.faces)
+    return {
+        "matching": "normalized_observed_frame_and_one_to_one_box_iou", "iou_threshold": annotations.iou_threshold,
+        "labeled_annotations": labeled_count, "matched_identity_annotations": matched_labels,
+        "unmatched_identity_annotations": labeled_count - matched_labels,
+        "labeled_track_count": len(truth), "unlabeled_track_count": len(tracks.keys() - truth.keys()),
+        "mixed_identity_track_ids": sorted(key for key, labels in truth.items() if len(labels) > 1),
+        "automatic": score(identity.get("automatic_groups", [])), "current": score(identity.get("groups", [])),
+    }
 
 
 def _json(response: httpx.Response) -> Any:
@@ -294,6 +392,7 @@ def _summary(cases: list[dict]) -> dict:
     return {
         "case_count": len(cases), "completed_decisions": len(quality),
         "failed_case_count": sum(case.get("error") is not None for case in cases),
+        "review_pending_case_count": sum(bool(case.get("review_pending")) for case in cases),
         "source_spans_expected": expected, "source_spans_matched": matched,
         "invalid_reference_count": invalid,
         "retrieved_source_span_recall": matched / expected if expected and not invalid else None,
@@ -363,7 +462,7 @@ def evaluate_manifest(client: httpx.Client, manifest: Path, profile: str) -> dic
                                     "video_path": str(videos[case.id]), "run_id": None, "status": "RUNNING"}
             result["cases"].append(item)
             try:
-                scenario = ScenarioInput(context=case.context, facts=case.facts)
+                scenario = ScenarioInput(context=case.context, use_purpose=case.use_purpose, audience_scope=case.audience_scope, facts=case.facts)
                 with videos[case.id].open("rb") as handle:
                     video = _json(client.post("/api/videos", files={"file": (videos[case.id].name, handle)}))
                 item["video_id"], item["original_hash"] = video["id"], video["content_hash"]
@@ -376,6 +475,25 @@ def evaluate_manifest(client: httpx.Client, manifest: Path, profile: str) -> dic
                 run = _wait(client, "runs", run["id"], settings)
                 if run["status"] != "AWAITING_LABELS":
                     raise RuntimeError(run.get("error") or f"Analysis failed: {run['status']}")
+                observation, identity = run["observation"], run.get("identity")
+                annotations = case.manual_face_expectation.annotations if case.manual_face_expectation else None
+                item.update(
+                    status=run["status"], config=run["config"],
+                    analysis_fingerprint=observation["analysis_fingerprint"], working_hash=observation["working_hash"],
+                    detector=observation["detector"], tracker=observation["tracker"],
+                    track_count=len(observation["tracks"]), frame_count=observation["frame_count"],
+                    face_metrics=face_metrics(observation, case.manual_face_expectation),
+                    identity_metrics=identity_grouping_metrics(observation, identity, annotations),
+                    identity={key: identity.get(key) for key in (
+                        "feature_fingerprint", "grouping_fingerprint", "automatic_groups", "groups",
+                        "reviewed", "revision", "model", "metrics", "elapsed_seconds",
+                    )} if identity is not None else None,
+                    stages=run.get("stages", []),
+                )
+                if identity is not None and identity.get("groups") and not identity.get("reviewed", False):
+                    item["review_pending"] = True
+                    # Benchmark labels are ground truth for measurement, not human consent or group approval.
+                    continue
                 if case.track_labels:
                     run = _json(client.post(f"/api/runs/{run['id']}/labels", json={"track_labels": case.track_labels}))
                 _json(client.post(f"/api/runs/{run['id']}/decide"))
@@ -394,7 +512,6 @@ def evaluate_manifest(client: httpx.Client, manifest: Path, profile: str) -> dic
                     decision_quality=decision_quality(run), review_reasons=run.get("review_reasons", []),
                     usage=(run.get("decision") or {}).get("usage", {}),
                     decision_model=(run.get("decision") or {}).get("model"),
-                    face_metrics=face_metrics(observation, case.manual_face_expectation),
                     stages=run.get("stages", []),
                 )
                 if case.render:
@@ -415,7 +532,9 @@ def evaluate_manifest(client: httpx.Client, manifest: Path, profile: str) -> dic
                 item["status"], item["error"] = "FAILED", str(error)
             finally:
                 item["client_elapsed_seconds"] = time.monotonic() - case_start
-        result["status"] = "FAILED" if any(case.get("error") for case in result["cases"]) else "COMPLETED"
+        result["status"] = ("FAILED" if any(case.get("error") for case in result["cases"]) else
+                            "AWAITING_LABELS" if any(case.get("review_pending") for case in result["cases"]) else
+                            "COMPLETED")
     except (httpx.HTTPError, ValueError, RuntimeError, TimeoutError) as error:
         result["status"], result["error"] = "FAILED", str(error)
     result["ended_at"] = now()

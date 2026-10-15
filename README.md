@@ -1,21 +1,24 @@
 # 캡스톤 4-2 · PrivFrame
 
-영상·상황 설명과 검색 근거로 얼굴 처리 제안을 만들고, 사용자가 검토한 결과를 영상과 보고서로 내보내는 연구용 베이스라인입니다. 알고리즘과 모델을 교체하며 비교할 수 있도록 모듈형 모놀리스와 Ports & Adapters로 구현했습니다.
+영상과 이용 목적·공개 범위를 입력하면 인물별 처리 제안을 만들고, 검토한 결과를 영상과 보고서로 내보냅니다. 사용자 화면은 영상 처리와 작업 내역으로 구성하고, 내부 알고리즘 실험은 개발 CLI/API로 수행합니다. 알고리즘과 모델을 교체하며 비교할 수 있도록 모듈형 모놀리스와 Ports & Adapters로 구현했습니다.
 
 - [팀 공유용 구현 계획](docs/PrivFrame_구현계획.md)
 - [파이프라인 SVG](docs/pipeline.svg) · [PNG](docs/pipeline.png) · [편집용 Mermaid](docs/pipeline.mmd)
 - [검증 결과와 제한](docs/검증결과.md)
+- [제품 입력·운영 인덱스·LangGraph 사용법](docs/Product_Workflows.md)
+- [인물 그룹화 구현 기록](docs/Identity_Grouping.md)
 
-![PrivFrame pipeline](docs/pipeline.png)
+위 파이프라인 이미지는 최초 베이스라인 기록입니다. 현재 노드 구성은 실행 중인 그래프에서 `privframe graph GRAPH_NAME`으로 내보낼 수 있습니다.
 
 ## Mac에서 실행
 
-Python 3.12는 uv가 관리합니다. Node 24와 npm이 필요합니다.
+Python 3.12는 uv가 관리합니다. 검증 환경은 Node 24/npm이며, 실행 전 Node와 npm을 설치해야 합니다. 기존 `.env`가 있으면 복사하지 말고 해당 파일의 서버 API 키를 설정하세요.
 
 ```bash
 brew install uv ffmpeg redis
-cp .env.example .env
-# 실제 임베딩·판단을 사용할 때만 .env의 OPENAI_API_KEY를 설정합니다.
+cp -n .env.example .env
+# 처음 만든 .env의 OPENAI_API_KEY를 설정한 뒤 실행합니다.
+# 활성 운영 인덱스는 아래 첫 실행 흐름에서 지정합니다.
 ./scripts/dev.sh
 ```
 
@@ -39,23 +42,28 @@ npm run dev
 
 ## 첫 실행 흐름
 
-1. **문서·색인:** 공식 자료 가져오기 또는 PDF/TXT 업로드. 추출이 READY가 되면 문서를 선택해 프로필별 인덱스를 생성합니다.
-2. **새 실행:** 영상, 자유로운 상황, 선택 사실, 프로필과 인덱스를 선택합니다.
-3. **트랙 설명:** 분석된 연속 등장 구간을 확인하고 필요한 트랙에 본인/제3자 등의 설명을 입력합니다.
-4. **판단:** 판정 생성을 요청하면 트랙 설명까지 포함해 근거를 검색하고 처리 제안을 만듭니다. RAG 후보·실제 LLM 입력·인용을 확인하고, 트랙별 KEEP/BLUR/MOSAIC/MASK를 수정할 수 있습니다.
-5. **출력:** 전체 트랙의 처리가 유효하면 렌더합니다. 검토 필요 상태는 전체 트랙을 직접 지정한 실험 출력을 허용합니다. 얼굴 0개는 별도 확인이 필요합니다.
-6. **실험:** 다른 맥락·프로필로 새 실행을 만들면 이전 기록을 유지합니다. 검출 설정이 같으면 영상 분석을 재사용합니다. HTML/JSON 보고서는 저장된 실행 데이터로 재생성합니다.
+운영자가 CLI로 근거 자료를 준비합니다. 기존 공식 문서가 있으면 재사용합니다.
 
-출력 후 처리 방식·강도만 바꾸려면 **처리만 수정해 다시 출력**을 선택하세요. 이전 분석·검색 근거·판단을 복사한 새 실행에서 수정·렌더만 수행합니다. 검출·검색·LLM 호출 없이 이전 출력과 완료 기록을 유지합니다. CLI는 `revise RUN_ID`가 같은 동작을 제공합니다.
+```bash
+uv run privframe list documents
+# 문서가 없는 새 환경에서만: uv run privframe seed
+uv run privframe index DOC_ID_1 DOC_ID_2 DOC_ID_3 --profile baseline
+uv run privframe wait indexes INDEX_ID
+uv run privframe activate-index INDEX_ID --profile baseline
+uv run privframe app-config
+```
 
-인덱스와 실행의 청킹·임베딩 설정은 일치해야 합니다. 검출기만 바꾸는 `haar`는 `baseline` 인덱스를 함께 사용할 수 있고, `small-chunks`는 해당 설정의 새 인덱스가 필요합니다.
+1. **영상 입력:** 영상을 선택하고 이용 목적·공개 범위 두 질문에 답합니다. 모르면 모름을 선택할 수 있습니다.
+2. **인물 확인:** 얼굴 그룹과 등장 구간을 확인합니다. 본인은 동의 해당 없음, 다른 사람은 동의·미취득·명시적 거부·미확인을 구분합니다. 열람 요청 목적이면 요청 당사자도 따로 확인합니다. 그룹 병합·분리와 트랙 구간 분할을 사용할 수 있습니다.
+3. **처리 검토:** 인물 정보를 저장한 뒤 판단을 요청하고, 처리 제안과 인용 근거를 확인합니다. 인물 전체 또는 개별 등장 구간의 처리를 수정할 수 있습니다.
+4. **출력:** 영상을 만들고 다운로드합니다. 처리만 수정해 다시 출력하면 이전 분석·근거·판단을 재사용하고 기존 결과를 보존합니다.
 
-API 키 없이 흐름을 확인하려면 문서 색인과 실행 모두 **fixture** 프로필을 명시적으로 선택하세요. 실제 Chroma·영상 검출·렌더를 사용하지만 임베딩과 판단은 테스트용입니다. fixture는 UI와 보고서에 표시되며 OpenAI 실패 시 자동으로 전환되지 않습니다.
+화면에서 문서·색인·실험 프로필을 고르지 않습니다. 키·모델·활성 근거 인덱스 등이 미준비이면 준비 안내를 표시합니다. fixture는 개발 CLI/API에서 명시했을 때만 사용하며 실제 모델 실패 시 자동 대체하지 않습니다. API 키 없이 전체 연결을 검증하려면 `uv run python scripts/test_live.py`를 사용하세요. 이 검사는 임시 저장소에서 실제 얼굴 분석·렌더와 fixture 판단을 수행하고 성공 후 정리합니다.
 
 ## Linux에서 실행
 
 ```bash
-cp .env.example .env
+cp -n .env.example .env
 docker compose up --build
 ```
 
@@ -67,23 +75,64 @@ http://localhost:8000에서 빌드된 React UI와 API를 제공합니다. API·w
 
 | 프로필 | 용도 |
 |---|---|
-| `baseline` | YuNet + 1200/150 청킹 + OpenAI 임베딩/직접 판단 |
-| `haar` | 검출기만 Haar로 변경 |
+| `baseline` | YuNet + ArcFace 인물 그룹화 + 1200/150 청킹 + OpenAI 문서 임베딩/직접 판단 |
+| `haar` | Haar 얼굴 검출 비교; 랜드마크가 없어 인물 그룹화는 끔 |
 | `small-chunks` | 청킹만 800/100으로 변경 |
 | `fixture` | 명시적인 오프라인 통합 테스트; 실제 법률 판단 아님 |
-| `fixture-yunet` | 테스트용 임베딩·판단 + 실제 YuNet 검출; API 키 없이 영상 흐름 검증 |
+| `fixture-yunet` | 테스트용 문서 임베딩·판단 + 실제 YuNet·ArcFace; API 키 없이 인물 검토·출력 검증 |
 
 `configs/*.yaml`의 변경은 새 실행에만 적용됩니다. `PipelineConfig`가 지원되는 선택과 범위를 검증합니다. 지원하지 않는 설정은 조용히 무시하지 않습니다. 새 알고리즘은 domain port를 구현하고 adapters factory와 config 선택에 추가한 뒤 bootstrap에서 연결합니다.
 
 코드 책임은 다음처럼 나뉩니다.
 
 - `backend/src/privframe/domain`: 공통 데이터, port, 누락·근거 연결·렌더 조건 검증.
-- `application`: 프레임워크 객체를 전달받지 않는 명령과 단계별 파이프라인.
+- `application`: 명령과 단계별 파이프라인, LangGraph 실행·체크포인트 조정.
 - `adapters`: LangChain/Chroma/OpenAI, OpenCV/FFmpeg, 스냅샷 보고서.
 - `infrastructure`: SQLAlchemy 저장소, 아티팩트 저장. `bootstrap.py`가 구체 구현을 조립합니다.
 - `api.py`와 `worker.py`: HTTP와 Celery 진입점. CLI·평가는 HTTP API를 사용하며 Chroma를 직접 열지 않습니다.
 
-raw 영상과 썸네일은 외부 LLM에 전송하지 않습니다. 외부 API에는 문서 텍스트의 임베딩과 상황·트랙 설명·근거 텍스트가 전달됩니다. 키는 서버 환경에만 두고 실행 기록·프런트엔드에 포함하지 않습니다.
+raw 영상·썸네일·얼굴 임베딩은 외부 LLM에 전송하지 않습니다. 외부 API에는 문서 텍스트의 임베딩과 상황·인물 관계/동의·트랙 연결·근거 텍스트가 전달됩니다. 얼굴 특징 파일은 공개 아티팩트 API로 내려받을 수 없습니다. 키는 서버 환경에만 두고 실행 기록·프런트엔드에 포함하지 않습니다.
+
+## 선택지와 검색 질의
+
+사용자에게는 일반적인 표현을 보여주고, 검색에는 **선택 문구 + 법률 검색 용어 + 인물별 쟁점 요약**을 전달합니다. 예를 들어 `subject_access`는 ‘본인 영상 열람 요청에 대한 제공’과 ‘정보주체 개인영상정보 열람 요구 제3자 보호’를 함께 사용합니다. `public`은 ‘불특정 다수에게 공개’와 ‘영상 공개 제3자 개인정보 보호’를 함께 사용합니다.
+
+매핑과 버전은 `backend/src/privframe/domain/inputs.py`에 있습니다. 인물 관계·동의·열람 요청자 정보에서 필요한 검색 쟁점을 중복 없이 추가하며 인물 ID·트랙 ID·bbox는 검색 문자열에 넣지 않습니다. 전체 구조화 사실과 인물↔트랙 연결은 별도로 LLM 판단에 전달합니다.
+
+이 매핑은 검색어를 구성하는 베이스라인입니다. 특정 법 조항을 확정하거나 동의 상태만으로 KEEP/BLUR를 결정하는 규칙 엔진은 아직 구현하지 않았습니다. 매핑 효과를 실제 OpenAI 임베딩으로 비교하는 성능 실험도 후속 과제입니다.
+
+## LangGraph 노드와 제어
+
+| 그래프 | 작업 노드 |
+|---|---|
+| 문서 추출 `extract` | `extract_document` |
+| 오프라인 색인 `index` | `chunk_documents` → `embed_index` |
+| 영상 분석 `analyze` | `analyze_video` → `group_identities` |
+| 검색·판단 `decide` | `build_query` → `retrieve` → `select_evidence` → `llm_decision` → `validate_output` |
+| 출력 `render` | `render_video` → `report` |
+| 검색 단독 `retrieval` | `build_query` → `retrieve` → `select_evidence` |
+| 판단 단독 `decision` | `llm_decision` → `validate_output` |
+
+각 작업 노드 뒤에는 `after_<노드명>` 정지 gate가 있습니다. 노드의 결과를 저장한 다음 gate에서 멈추므로 재개할 때 저장 완료한 계산을 재사용합니다. 정규화·장면 경계·검출·트래킹의 프레임 처리는 현재 `analyze_video` 내부에서 함께 실행합니다.
+
+Celery worker가 실제 작업을 실행하고 LangGraph가 다음 노드를 관리합니다. SQLite 체크포인트는 실행 위치와 결과 참조를 저장합니다. 노드별 상태·오류 유형/내용·재시도 가능 여부·처리 시간·요약·입출력 참조·가능한 모델 사용량은 개발 CLI/API로 확인할 수 있습니다. 상세 상태 대시보드와 자동 브리핑 생성은 후속 기능입니다.
+
+```bash
+# 인물 정보 저장을 마친 작업에서 검색 노드까지만 실행:
+uv run privframe decide RUN_ID --stop-after retrieve
+# owner_id가 RUN_ID이고 graph가 decide인 실행 ID 확인:
+uv run privframe list executions
+uv run privframe execution EXECUTION_ID
+uv run privframe execution EXECUTION_ID --node retrieve
+uv run privframe resume EXECUTION_ID
+
+# 실행 중 정지 요청은 현재 노드가 끝난 뒤 반영:
+uv run privframe pause EXECUTION_ID
+# 실제 그래프 정의 내보내기:
+uv run privframe graph decide --output /tmp/privframe-decide.mmd
+```
+
+`RUN_ID`는 사용자 작업, `EXECUTION_ID`는 해당 작업의 그래프 실행을 가리킵니다. resume는 정지·실패한 실행에서 사용합니다. 프로세스 재시작 후에도 같은 저장소와 호환되는 그래프 버전으로 재개할 수 있습니다. 원격 API 호출 후 결과 저장 전에 프로세스가 끊겼다면 그 호출은 재실행될 수 있습니다. 그래프의 무조건적인 자동 재시도 정책은 추가하지 않았습니다.
 
 ## 실행 기록과 재현성
 
@@ -102,7 +151,7 @@ uv run privframe list documents
 uv run privframe upload-document ./my-law.txt
 uv run privframe index DOCUMENT_ID --profile fixture
 uv run privframe upload-video ./clip.mp4
-uv run privframe run --video-id VIDEO_ID --index-id INDEX_ID --context '공개할 영상의 제3자 얼굴을 검토' --profile fixture
+uv run privframe run --video-id VIDEO_ID --index-id INDEX_ID --purpose social_publish --audience public --profile fixture
 uv run privframe wait runs RUN_ID
 uv run privframe decide RUN_ID
 uv run privframe wait runs RUN_ID
@@ -130,4 +179,18 @@ npm run test:e2e
 
 Python 의존성은 `uv.lock`, 프런트엔드는 `package-lock.json`에 고정되어 있습니다. 외부 OpenAI 통신은 MockTransport 요청 직렬화 검증과 구분해서 보고합니다. 공개 seed는 지정 manifest의 세 출처만 가져오며 전체 법령 크롤링과 자동 갱신을 수행하지 않습니다.
 
-초기 얼굴 분석은 연속 구간의 IoU 트래킹입니다. 재등장 인물의 동일성은 판별하지 않고, 검출되지 않은 프레임의 얼굴 영역을 임의로 보간하지 않습니다. 누락 구간은 normalization 기록에 남습니다. 번호판·OCR·신원 재식별·CUDA·규칙 기반 법적 판단은 후속 확장 대상입니다.
+얼굴 분석은 PySceneDetect 장면 경계 + IoU 트래킹 + ArcFace 특징 + 동시 등장 제약을 적용한 그룹화입니다. 같은 영상 안의 재등장 연결을 제안하며 사용자가 확인합니다. 검출되지 않은 프레임의 얼굴 영역은 보간하지 않고, 누락 구간은 normalization 기록에 남습니다. 번호판·문서·OCR·CUDA·규칙 기반 법적 판단은 후속 확장 대상이며 객체 종류별 처리 경계는 마련했습니다.
+
+기본 실행 스크립트는 YuNet과 ArcFace 두 모델을 내려받고 checksum을 검사합니다. ArcFace 가중치는 비상업 연구용입니다. 인물 그룹화의 설정·API·실제 A_B_A 검증과 제한은 [사용법 문서](docs/Identity_Grouping.md)를 참고하세요.
+
+## GitHub 변경 기록
+
+팀의 [Notion 개발 가이드](https://app.notion.com/p/3e475ad03a308156a8fed250398b93fd)를 따릅니다.
+
+- GitHub Issue에 구현 목적·범위·완료 조건을 기록하고 Notion 작업 카드에서 연결합니다.
+- `main`에 직접 push하지 않습니다. `feat/<area>-<short-name>`, `fix/<area>-<short-name>`, `docs/<short-name>` 같은 작업 브랜치를 사용합니다.
+- 커밋은 `feat:`, `fix:`, `refactor:`, `docs:`, `test:`, `chore:` 접두어를 사용합니다.
+- PR에는 관련 Issue, 변경된 동작, 로컬 실행·검증 결과, 제한을 기록합니다. 최소 1명 리뷰 후 merge하고 작업 브랜치를 삭제합니다.
+- 현재 구현은 저장소 문서, 기술 선택 이유는 Notion 의사결정 기록, 코드 변경과 검증 근거는 PR에서 관리합니다. 아직 구현하지 않은 규칙 엔진·OCR·사물 검출·재식별 위험 검증을 완료 기능으로 기록하지 않습니다.
+
+`.env`, `data/`, `models/`, 의존성·빌드·테스트 출력은 Git에서 제외합니다. 공식 문서는 manifest/seed로, 얼굴 모델은 checksum을 고정한 다운로드 스크립트로 준비합니다. `A_B_A.mp4` 등 별도 테스트 원본은 팀이 승인한 공유 경로에서 준비해야 하며 저장소에는 자동 포함되지 않습니다. 원본이 없으면 해당 실제 영상 회귀 검사는 skip입니다. 공개 데모 기준 버전은 리뷰와 실행 검증 후 GitHub Release로 고정합니다.

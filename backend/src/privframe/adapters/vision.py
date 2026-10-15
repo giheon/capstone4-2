@@ -23,6 +23,8 @@ from typing import Any
 
 import cv2
 import numpy as np
+from scenedetect import __version__ as SCENEDETECT_VERSION
+from scenedetect.detectors import AdaptiveDetector
 
 from privframe.adapters.model_manifest import YUNET_MODEL
 from privframe.domain.models import (
@@ -31,7 +33,9 @@ from privframe.domain.models import (
 from privframe.infrastructure.storage import ArtifactStore, sha256_file
 
 
-ANALYSIS_VERSION = "opencv-frame-analysis-v1"
+ANALYSIS_VERSION = "opencv-frame-analysis-v2"
+TRACKER_VERSION = "iou-class-aware-v2"
+SCENE_DETECTOR = "pyscenedetect-adaptive-v1"
 RENDER_VERSION = "opencv-face-redaction-v1"
 NORMALIZATION_VERSION = "ffmpeg-autorotate-cfr-v2"
 
@@ -49,6 +53,10 @@ class VisionSettings:
     tracker_iou_threshold: float = 0.3
     tracker_max_gap: int = 2
     scene_cut_threshold: float = 0.45
+    scene_adaptive_threshold: float = 3.0
+    scene_min_length: int = 15
+    scene_window_width: int = 2
+    scene_min_content: float = 15.0
     video_timeout_seconds: float = 300.0
 
     @classmethod
@@ -70,6 +78,14 @@ class VisionSettings:
             raise VideoProcessingError("tracker_max_gap must be an integer between 0 and 2")
         if not 0 < settings.scene_cut_threshold <= 1:
             raise VideoProcessingError("scene_cut_threshold must be in (0, 1]")
+        if not math.isfinite(settings.scene_adaptive_threshold) or settings.scene_adaptive_threshold <= 0:
+            raise VideoProcessingError("scene_adaptive_threshold must be a positive finite value")
+        if not isinstance(settings.scene_min_length, int) or settings.scene_min_length < 1:
+            raise VideoProcessingError("scene_min_length must be a positive integer")
+        if not isinstance(settings.scene_window_width, int) or settings.scene_window_width < 1:
+            raise VideoProcessingError("scene_window_width must be a positive integer")
+        if not math.isfinite(settings.scene_min_content) or not 0 <= settings.scene_min_content <= 255:
+            raise VideoProcessingError("scene_min_content must be a finite value between 0 and 255")
         if not math.isfinite(settings.video_timeout_seconds) or settings.video_timeout_seconds <= 0:
             raise VideoProcessingError("video_timeout_seconds must be a positive finite value")
         return settings
@@ -181,7 +197,12 @@ class YuNetDetector:
             box = _clamp_box(x * x_scale, y * y_scale, width * x_scale, height * y_scale,
                              frame.shape[1], frame.shape[0])
             if box is not None:
-                detections.append(Detection(box=box, confidence=max(0.0, min(1.0, float(face[-1])))))
+                landmarks = [(float(face[index]) * x_scale, float(face[index + 1]) * y_scale)
+                             for index in range(4, 14, 2)]
+                if not all(math.isfinite(value) for point in landmarks for value in point):
+                    landmarks = None
+                detections.append(Detection(box=box, confidence=max(0.0, min(1.0, float(face[-1]))),
+                                            landmarks=landmarks, object_type="face"))
         return detections
 
 
@@ -246,7 +267,8 @@ class IoUTracker:
             (-box_iou(previous.box, current.box), key, index)
             for key, (_, previous) in self._active.items()
             for index, current in enumerate(detections)
-            if box_iou(previous.box, current.box) >= self.iou_threshold
+            if previous.object_type == current.object_type
+            and box_iou(previous.box, current.box) >= self.iou_threshold
         )
         used_tracks: set[str] = set()
         used_detections: set[int] = set()
@@ -259,7 +281,8 @@ class IoUTracker:
         for index, detection in enumerate(detections):
             if index not in used_detections:
                 self._counter += 1
-                result[f"face-{self._counter:04d}"] = detection
+                prefix = "face" if detection.object_type == "face" else "object"
+                result[f"{prefix}-{self._counter:04d}"] = detection
         for key, detection in result.items():
             self._active[key] = (frame, detection)
         return result
@@ -273,6 +296,40 @@ def scene_descriptor(frame: np.ndarray) -> np.ndarray:
 
 def is_scene_cut(previous: np.ndarray | None, current: np.ndarray, threshold: float) -> bool:
     return previous is not None and float(np.abs(previous - current).sum() / 2) >= threshold
+
+
+def detect_scene_cuts(path: Path, settings: VisionSettings, *, deadline: float | None = None) -> list[int]:
+    """Resolve the adaptive detector's lookahead before assigning any track IDs."""
+    detector = AdaptiveDetector(
+        adaptive_threshold=settings.scene_adaptive_threshold,
+        min_scene_len=settings.scene_min_length,
+        window_width=settings.scene_window_width,
+        min_content_val=settings.scene_min_content,
+    )
+    capture = cv2.VideoCapture(str(path))
+    if not capture.isOpened():
+        capture.release()
+        raise VideoProcessingError("OpenCV could not decode the normalized video for scene detection")
+    deadline = deadline if deadline is not None else time.monotonic() + settings.video_timeout_seconds
+    cuts: set[int] = set()
+    frame_index = 0
+    try:
+        while True:
+            if time.monotonic() > deadline:
+                raise VideoProcessingError("Video scene detection timed out")
+            success, frame = capture.read()
+            if not success:
+                break
+            small, _, _ = _small_frame(frame, 640)
+            cuts.update(detector.process_frame(frame_index, small))
+            frame_index += 1
+        if frame_index:
+            cuts.update(detector.post_process(frame_index - 1))
+    finally:
+        capture.release()
+    if not frame_index:
+        raise VideoProcessingError("Normalized video has no decodable frames for scene detection")
+    return sorted(frame for frame in cuts if 0 < frame < frame_index)
 
 
 class OpenCVVideoAnalyzer:
@@ -300,7 +357,9 @@ class OpenCVVideoAnalyzer:
             "ffmpeg_version": runtime,
             "analysis_version": ANALYSIS_VERSION,
             "normalization_version": NORMALIZATION_VERSION,
-            "tracker": "iou-greedy-v1",
+            "tracker": TRACKER_VERSION,
+            "scene_detector": SCENE_DETECTOR,
+            "scenedetect_version": SCENEDETECT_VERSION,
         }
         return hashlib.sha256(json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
@@ -334,6 +393,9 @@ class OpenCVVideoAnalyzer:
             raise VideoProcessingError("Normalized video frame rate does not match its configured basis")
         if metadata["audio_stream_count"] != original_metadata["audio_stream_count"]:
             raise VideoProcessingError("Normalization did not preserve all audio streams")
+        deadline = time.monotonic() + settings.video_timeout_seconds
+        cuts = detect_scene_cuts(working, settings, deadline=deadline)
+        cut_frames = set(cuts)
         detector = (YuNetDetector(self.model_path, settings.detector_threshold, settings.detector_max_side)
                     if settings.detector == "yunet" else
                     HaarDetector(settings.detector_threshold, settings.detector_max_side))
@@ -343,10 +405,9 @@ class OpenCVVideoAnalyzer:
             raise VideoProcessingError("OpenCV could not decode the normalized video")
         points: dict[str, list[TrackPoint]] = {}
         thumbnails: dict[str, str] = {}
-        cuts, gaps = [], []
-        previous = None
+        object_types: dict[str, str] = {}
+        gaps = []
         frame_index = 0
-        deadline = time.monotonic() + settings.video_timeout_seconds
         try:
             while True:
                 if time.monotonic() > deadline:
@@ -356,20 +417,16 @@ class OpenCVVideoAnalyzer:
                     break
                 if frame.shape[:2] != (metadata["height"], metadata["width"]):
                     raise VideoProcessingError("Decoded frame dimensions do not match the normalized video")
-                descriptor = scene_descriptor(frame)
-                cut = is_scene_cut(previous, descriptor, settings.scene_cut_threshold)
-                if cut:
-                    cuts.append(frame_index)
-                previous = descriptor
                 assignments = tracker.update(frame_index, frame_index / metadata["fps"],
-                                             detector.detect(frame), scene_cut=cut)
+                                             detector.detect(frame), scene_cut=frame_index in cut_frames)
                 for track_id, detection in assignments.items():
+                    object_types[track_id] = detection.object_type
                     if track_id in points and frame_index - points[track_id][-1].frame > 1:
                         gaps.append({"track_id": track_id, "after_frame": points[track_id][-1].frame,
                                      "before_frame": frame_index, "rendered": False})
                     points.setdefault(track_id, []).append(TrackPoint(
                         frame=frame_index, time=frame_index / metadata["fps"],
-                        box=detection.box, confidence=detection.confidence,
+                        box=detection.box, confidence=detection.confidence, landmarks=detection.landmarks,
                     ))
                     if track_id not in thumbnails:
                         box = detection.box
@@ -387,6 +444,7 @@ class OpenCVVideoAnalyzer:
         if not frame_index or (metadata["frame_count"] and frame_index != metadata["frame_count"]):
             raise VideoProcessingError("Normalized video could not be decoded completely")
         tracks = [Track(id=key, points=value, thumbnail=thumbnails[key], start=value[0].time,
+                        object_type=object_types[key],
                         end=min(frame_index / metadata["fps"], (value[-1].frame + 1) / metadata["fps"]))
                   for key, value in sorted(points.items())]
         return VideoObservation(
@@ -394,7 +452,7 @@ class OpenCVVideoAnalyzer:
             working_hash=sha256_file(working), width=metadata["width"], height=metadata["height"],
             fps=metadata["fps"], frame_count=frame_index, duration=frame_index / metadata["fps"],
             has_audio=metadata["has_audio"], tracks=tracks, detector=settings.detector,
-            tracker="iou-greedy-v1", analysis_fingerprint=fingerprint,
+            tracker=TRACKER_VERSION, analysis_fingerprint=fingerprint,
             normalization={
                 "version": NORMALIZATION_VERSION, "analysis_version": ANALYSIS_VERSION,
                 "ffmpeg_version": _run([_binary("ffmpeg"), "-version"], 10).stdout.splitlines()[0],
@@ -402,6 +460,7 @@ class OpenCVVideoAnalyzer:
                 "input_dimensions": [original_metadata["width"], original_metadata["height"]],
                 "input_rotation": original_metadata["rotation"], "settings": settings.__dict__,
                 "detector_model_hash": detector.model_hash, "scene_cut_frames": cuts,
+                "scene_detector": SCENE_DETECTOR, "scenedetect_version": SCENEDETECT_VERSION,
                 "detector_asset": dict(YUNET_MODEL) if settings.detector == "yunet" else {
                     "name": "haarcascade_frontalface_default.xml", "opencv_version": cv2.__version__,
                     "sha256": detector.model_hash,

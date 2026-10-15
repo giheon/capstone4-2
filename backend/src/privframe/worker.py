@@ -13,7 +13,7 @@ from privframe.config import Settings
 settings = Settings()
 celery_app = Celery("privframe", broker=settings.redis_url)
 celery_app.conf.update(
-    task_serializer="json", accept_content=["json"], task_ignore_result=True,
+    task_default_queue="privframe", task_serializer="json", accept_content=["json"], task_ignore_result=True,
     worker_prefetch_multiplier=1, task_acks_late=True,
     broker_connection_retry_on_startup=True,
     broker_transport_options={"visibility_timeout": 7200},
@@ -110,3 +110,9 @@ def seed():
         service.repository.insert("document", document)
         if not error:
             pipeline.extract(document.id)
+
+
+@celery_app.task(name="privframe.component")
+def component(execution_id: str):
+    from privframe.bootstrap import create_pipeline
+    create_pipeline(worker_service()).run_component(execution_id)

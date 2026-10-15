@@ -480,7 +480,7 @@ h1 {
 }
 .fact-fields {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
   gap: 0 15px;
   margin-top: 18px;
 }
@@ -1154,6 +1154,202 @@ code {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 13px;
+}
+.identity-intro {
+  color: #7488a6;
+  font-size: 11px;
+}
+.identity-video {
+  margin-bottom: 18px;
+  max-height: 320px;
+}
+.identity-grid {
+  display: grid;
+  gap: 16px;
+}
+.identity-card {
+  border: 1px solid #e2e9f3;
+  border-radius: 9px;
+  background: white;
+  padding: 15px;
+  min-width: 0;
+}
+.identity-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.identity-heading h3 {
+  margin: 0 0 5px;
+}
+.identity-heading > div > span {
+  color: #7488a6;
+  font-size: 10px;
+}
+.identity-heading > .override-tag {
+  margin-left: auto;
+}
+.identity-portrait,
+.identity-track-thumb {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 0 0 66px;
+  width: 66px;
+  height: 66px;
+  background: #eff3f8;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.identity-portrait img,
+.identity-track-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.identity-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.identity-warning {
+  background: #fff8e9;
+  border-radius: 5px;
+  padding: 8px 10px;
+  color: #886d35;
+  font-size: 10px;
+  overflow-wrap: anywhere;
+}
+.identity-tracks > summary,
+.identity-split > summary {
+  font-size: 11px;
+  color: #647894;
+  padding: 8px 0;
+}
+.identity-split > summary svg {
+  vertical-align: middle;
+  margin-right: 5px;
+}
+.identity-track {
+  border-top: 1px solid #eff2f6;
+  padding: 12px 0;
+}
+.identity-track-summary {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.identity-track-summary > div:last-child {
+  min-width: 0;
+}
+.identity-track-summary strong {
+  display: block;
+  overflow-wrap: anywhere;
+  font-size: 10px;
+}
+.identity-track-summary .text-button {
+  font-size: 10px;
+  text-align: left;
+  margin-top: 6px;
+}
+.identity-track-thumb {
+  flex-basis: 46px;
+  width: 46px;
+  height: 46px;
+}
+.identity-track-thumb .thumbnail-placeholder {
+  font-size: 6px;
+  gap: 2px;
+}
+.identity-track-actions {
+  margin-top: 10px;
+}
+.identity-merge {
+  display: flex;
+  align-items: end;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid #eff2f6;
+}
+.identity-merge .field {
+  margin-bottom: 0;
+  flex: 1;
+  min-width: 0;
+}
+.identity-merge .button {
+  margin-bottom: 1px;
+}
+.identity-split p {
+  font-size: 10px;
+  color: #7488a6;
+  margin-bottom: 8px;
+}
+.identity-split input[type="range"] {
+  width: 100%;
+  padding: 0;
+  accent-color: var(--accent);
+}
+.identity-split-controls {
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.identity-split-controls .field {
+  width: 90px;
+  margin-bottom: 0;
+}
+.identity-split-controls input {
+  padding: 7px;
+  min-width: 0;
+}
+.identity-candidates {
+  padding-left: 18px;
+  font-size: 11px;
+  color: #647894;
+}
+.identity-candidates li {
+  margin-bottom: 10px;
+}
+.identity-candidates small {
+  display: block;
+  overflow-wrap: anywhere;
+  margin-top: 4px;
+}
+.identity-save-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: end;
+  gap: 10px;
+}
+.identity-saved {
+  color: #42826b;
+  font-size: 11px;
+  margin: 16px 0 0;
+}
+.identity-person-facts {
+  font-size: 11px;
+  color: #7488a6;
+}
+.identity-treatments > summary {
+  color: #647894;
+  font-size: 11px;
+  padding: 8px 0 15px;
+}
+.identity-treatments .track-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr));
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 .track-card {
   border: 1px solid #e2e9f3;

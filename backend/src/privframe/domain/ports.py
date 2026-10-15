@@ -4,7 +4,7 @@ from typing import Any, Protocol, TypeVar
 
 from .models import (
     Chunk, DecisionResult, Detection, DocumentRecord, EvidenceBundle, IndexRecord,
-    Contract, RenderResult, ScenarioInput, SourceUnit, Treatment, VideoObservation, VideoRecord,
+    Contract, IdentityGrouping, RenderResult, ScenarioInput, SourceUnit, Treatment, VideoObservation, VideoRecord,
 )
 
 T = TypeVar("T", bound=Contract)
@@ -64,6 +64,21 @@ class VideoAnalyzer(Protocol):
     def analyze(self, video: VideoRecord, config: dict[str, Any], run_id: str) -> VideoObservation: ...
 
 
+class FaceEmbedder(Protocol):
+    def embed(self, frame: Any, landmarks: list[tuple[float, float]]) -> Any: ...
+
+
+class IdentityGrouper(Protocol):
+    def feature_fingerprint(self, observation: VideoObservation, config: dict[str, Any]) -> str: ...
+    def fingerprint(self, observation: VideoObservation, config: dict[str, Any]) -> str: ...
+    def group(self, observation: VideoObservation, config: dict[str, Any], run_id: str,
+              cached: IdentityGrouping | None = None) -> IdentityGrouping: ...
+
+
 class Renderer(Protocol):
     def render(self, observation: VideoObservation, treatments: dict[str, Treatment],
                run_id: str, attempt_id: str) -> RenderResult: ...
+
+
+class QueryBuilder(Protocol):
+    def build(self, scenario: ScenarioInput) -> dict[str, Any]: ...

@@ -6,3 +6,4 @@ embedding_dimensions: 256
 decider: fixture
 llm_model: fixture-only
 detector: haar
+identity_grouper: none

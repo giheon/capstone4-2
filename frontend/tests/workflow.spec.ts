@@ -1,3 +1,4 @@
+import { appConfig } from "./product-fixture";
 import { test, expect } from "@playwright/test";
 import type { Page } from "@playwright/test";
 
@@ -116,7 +117,8 @@ async function mockApi(page: Page, noFaces = false) {
     const path = new URL(request.url()).pathname.replace("/api", "");
     let body: unknown = null;
     let responseStatus = 200;
-    if (path === "/health")
+    if (path === "/app-config") body = appConfig;
+    else if (path === "/health")
       body = {
         status: "ok",
         api_key_configured: false,
@@ -132,7 +134,8 @@ async function mockApi(page: Page, noFaces = false) {
         },
         { name: "fixture", config },
       ];
-    else if (path === "/videos") body = [video];
+    else if (path === "/videos")
+      body = request.method() === "POST" ? video : [video];
     else if (path === "/documents" || path === "/indexes") body = [];
     else if (path === "/runs" && request.method() === "GET")
       body = [run, ...parents.values()];
@@ -254,7 +257,7 @@ async function mockApi(page: Page, noFaces = false) {
 
 async function openExisting(page: Page) {
   await page.goto("/");
-  await page.getByRole("button", { name: /실행 기록/ }).click();
+  await page.getByRole("button", { name: /작업 내역/ }).click();
   await page.getByRole("button", { name: /sample.mp4/ }).click();
   await expect(
     page.getByRole("button", { name: "이 설정으로 판정 생성" }),
@@ -266,12 +269,12 @@ test("검토 필요 실행은 모든 얼굴을 명시적으로 지정해야 출�
 }) => {
   const api = await mockApi(page);
   await openExisting(page);
-  await expect(
-    page.getByText("테스트 픽스처 · 실제 모델 결과가 아닙니다."),
-  ).toBeVisible();
+  await expect(page.getByRole("combobox", { name: "실험 구성" })).toHaveCount(
+    0,
+  );
   await page.getByRole("button", { name: "이 설정으로 판정 생성" }).click();
   const output = page.getByRole("button", {
-    name: "사용자 지정으로 실험 출력",
+    name: "사용자 지정으로 영상 생성",
   });
   await expect(output).toBeDisabled();
   await page.getByLabel("track-1 처리 방법").selectOption("KEEP");
@@ -300,7 +303,6 @@ test("전체 지정과 검색 후보, 실제 입력, 인용 근거를 구분한�
   const api = await mockApi(page);
   await openExisting(page);
   await page.getByRole("button", { name: "이 설정으로 판정 생성" }).click();
-  await page.getByRole("tab", { name: /모델에 전달/ }).click();
   await page.getByText("테스트 법령 자료", { exact: true }).click();
   await expect(
     page.getByText("모델에게 전달된 실제 근거 문구", { exact: true }),
@@ -308,18 +310,15 @@ test("전체 지정과 검색 후보, 실제 입력, 인용 근거를 구분한�
   await expect(
     page.getByText("모델에게 전달되지 않은 검색 후보", { exact: true }),
   ).toHaveCount(0);
-  await page.getByRole("tab", { name: /검색 후보/ }).click();
-  const sourceCards = page.locator(".evidence-card");
-  await expect(sourceCards).toHaveCount(2);
-  await page.getByRole("tab", { name: /인용/ }).click();
   await expect(page.locator(".evidence-card")).toHaveCount(1);
+  await expect(page.getByRole("tab")).toHaveCount(0);
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({
     path: test.info().outputPath("review.png"),
     fullPage: true,
   });
   await page.getByRole("button", { name: "전체 적용" }).click();
-  await page.getByRole("button", { name: "사용자 지정으로 실험 출력" }).click();
+  await page.getByRole("button", { name: "사용자 지정으로 영상 생성" }).click();
   await expect(page.getByRole("link", { name: "보고서 보기" })).toBeVisible();
   expect(api.overrides()).toEqual({
     treatments: {
@@ -340,7 +339,7 @@ test("얼굴 0개에서는 빈 처리 맵만으로 원본 출력을 허용하지
     page.getByText("얼굴이 검출되지 않았습니다.", { exact: true }),
   ).toBeVisible();
   const output = page.getByRole("button", {
-    name: "사용자 지정으로 실험 출력",
+    name: "사용자 지정으로 영상 생성",
   });
   await expect(output).toBeDisabled();
   expect(api.rendered()).toBe(0);
@@ -357,14 +356,14 @@ test("완료 출력에서 처리만 수정하면 이전 기록을 보존하고 �
   await openExisting(page);
   await page.getByRole("button", { name: "이 설정으로 판정 생성" }).click();
   await page.getByRole("button", { name: "전체 적용" }).click();
-  await page.getByRole("button", { name: "사용자 지정으로 실험 출력" }).click();
+  await page.getByRole("button", { name: "사용자 지정으로 영상 생성" }).click();
   const revise = page.getByRole("button", { name: "처리만 수정해 다시 출력" });
   await expect(revise).toBeVisible();
   const original = api.snapshot("run-1");
   await revise.click();
 
   await expect(
-    page.getByText("이전 실행의 분석·검색 근거·판정을 재사용합니다.", {
+    page.getByText("이전 분석과 판단을 불러왔습니다.", {
       exact: true,
     }),
   ).toBeVisible();
@@ -383,7 +382,7 @@ test("완료 출력에서 처리만 수정하면 이전 기록을 보존하고 �
   });
   await page.getByLabel("track-1 처리 방법").selectOption("MOSAIC");
   await page.getByLabel("track-1 처리 강도").selectOption("2");
-  await page.getByRole("button", { name: "사용자 지정으로 실험 출력" }).click();
+  await page.getByRole("button", { name: "사용자 지정으로 영상 생성" }).click();
   await expect(
     page.getByRole("link", { name: "영상 다운로드" }),
   ).toHaveAttribute("href", "/api/artifacts/runs/run-2/result.mp4");
@@ -402,42 +401,58 @@ test("완료 출력에서 처리만 수정하면 이전 기록을 보존하고 �
   });
 });
 
-test("임의 상황 입력과 선택한 실험 구성이 실행 생성 요청에 남는다", async ({
+test("두 선택지만으로 작업을 생성하고 실험·문서 관리 화면을 노출하지 않는다", async ({
   page,
 }) => {
   await mockApi(page);
   await page.goto("/");
-  await page.getByLabel("또는 업로드한 영상 사용").selectOption(video.id);
+  await expect(page.getByRole("combobox")).toHaveCount(2);
+  await expect(page.getByRole("textbox")).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "근거 자료" })).toHaveCount(0);
+  const start = page.getByRole("button", { name: "영상 분석 시작" });
+  await expect(start).toBeDisabled();
   await page
-    .getByLabel(/촬영 상황과 이용 목적/)
-    .fill("동아리 공연을 촬영했고, 참가자들과만 공유하려고 합니다.");
+    .locator("#video-file")
+    .setInputFiles({
+      name: "new.mp4",
+      mimeType: "video/mp4",
+      buffer: Buffer.from("test"),
+    });
   await page
-    .getByRole("combobox", { name: "실험 구성", exact: true })
-    .selectOption("fixture");
-  await expect(
-    page.getByText("테스트 픽스처 · 실제 모델 결과가 아닙니다."),
-  ).toBeVisible();
-  await page.evaluate(() => window.scrollTo(0, 0));
-  await page.screenshot({
-    path: test.info().outputPath("new-experiment.png"),
-    fullPage: true,
-  });
+    .getByLabel("이 영상을 어떤 목적으로 사용하려고 하나요?")
+    .selectOption("social_publish");
+  await page.getByLabel("이 영상을 누가 볼 수 있나요?").selectOption("public");
   const pending = page.waitForRequest(
     (request) =>
       request.url().endsWith("/api/runs") && request.method() === "POST",
   );
-  await page.getByRole("button", { name: "영상 분석 시작" }).click();
+  await start.click();
   const sent = (await pending).postDataJSON();
-  expect(sent.profile).toBe("fixture");
-  expect(sent.scenario.context).toBe(
-    "동아리 공연을 촬영했고, 참가자들과만 공유하려고 합니다.",
-  );
-  expect(sent.index_id).toBeNull();
-  await expect(
-    page.getByText("동아리 공연을 촬영했고, 참가자들과만 공유하려고 합니다.", {
-      exact: true,
+  expect(sent.profile).toBeUndefined();
+  expect(sent.index_id).toBeUndefined();
+  expect(sent.scenario).toEqual({
+    context: "",
+    use_purpose: "social_publish",
+    audience_scope: "public",
+  });
+});
+
+test("서비스 미준비 상태에서는 처리를 시작하지 않는다", async ({ page }) => {
+  await mockApi(page);
+  await page.route("**/api/app-config", (route) =>
+    route.fulfill({
+      json: {
+        ...appConfig,
+        ready: false,
+        messages: ["판단에 사용할 근거 자료를 준비하고 있습니다."],
+      },
     }),
-  ).toBeVisible();
+  );
+  await page.goto("/");
+  await expect(page.getByText("서비스 준비 중", { exact: true })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "영상 분석 시작" }),
+  ).toBeDisabled();
 });
 
 test("모바일 화면에서도 입력과 검토가 가로로 잘리지 않는다", async ({
@@ -458,7 +473,7 @@ test("모바일 화면에서도 입력과 검토가 가로로 잘리지 않는�
     path: test.info().outputPath("mobile.png"),
     fullPage: true,
   });
-  await page.getByRole("button", { name: /실행 기록/ }).click();
+  await page.getByRole("button", { name: /작업 내역/ }).click();
   await page.getByRole("button", { name: /sample.mp4/ }).click();
   await page.getByRole("button", { name: "이 설정으로 판정 생성" }).click();
   await expect(page.getByRole("button", { name: "전체 적용" })).toBeVisible();
