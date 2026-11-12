@@ -1,0 +1,12 @@
+flowchart LR
+  subgraph Corpus["코퍼스 (권위 등급 · 시행일 메타)"]
+    L1["법령 · 시행령 · 고시: 규범(1)"]
+    L2["판례 · 헌재 · 해석례: 해석(2)"]
+    L3["PIPC 결정문 · 분쟁조정: 적용 사례(2·3)"]
+    L4["안내서: 실무 기준(3)"]
+  end
+  Corpus --> IDX[("dense KURE + BM25 Kiwi")]
+  A[Legal Analyst] -- "search_law(query, kinds, as_of)" --> IDX
+  IDX --> RR[리랭커] --> A
+  A -- "get_document(citation)" --> DOC["조문 · 판례 본문"]
+  EV[("평가 데이터셋: 팀 시나리오 정답")] -. 코퍼스와 분리 .- A

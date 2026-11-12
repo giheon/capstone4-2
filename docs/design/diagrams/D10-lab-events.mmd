@@ -1,0 +1,12 @@
+flowchart LR
+  subgraph CORE["core (M4)"]
+    G["case 그래프 · 에이전트"] -- "astream: tasks · checkpoints · updates · messages · custom, subgraphs" --> AD["이벤트 정규화 어댑터"]
+  end
+  MOCK["모의 엔진 (M2)"] --> LOG
+  AD --> LOG[("실행 이벤트 로그 (seq)")]
+  LOG -- "SSE · Last-Event-ID 재개" --> ST["웹 이벤트 저장소 (실행당 1개)"]
+  ST --> FOLD["foldRun: 노드 상태 · 엣지 · 태스크 · 메모리 · 채널 · 예산 · 체크포인트"]
+  FOLD --> TOPO["토폴로지 캔버스"]
+  FOLD --> INS["검사기 · 태스크 흐름"]
+  INS -- "POST fork (체크포인트 · 모델 · 코퍼스)" --> CORE
+  ST --> SVC["서비스 화면: 케이스 스냅샷 다시 읽기"]

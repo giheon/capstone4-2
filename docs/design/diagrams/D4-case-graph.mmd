@@ -1,0 +1,16 @@
+sequenceDiagram
+  participant A as Legal Analyst
+  participant G as 질문 게이트(결정적)
+  participant U as 사용자
+  participant F as Facts
+  A->>G: ask_user([질문: fact_key, 답변 형식, 선택지, 근거, 영향])
+  G->>G: 중복 · 이미 아는 사실 · 영향 없음 제거, 라운드 ≤ 2, 질문 ≤ 6
+  alt 남은 질문 없음
+    G-->>A: 빈 답변 (질문 생략)
+  else 질문 있음
+    G->>U: interrupt(질문 묶음, 관련 썸네일)
+    U-->>G: 답변 (모름 · 나중에 허용)
+    G->>F: Fact 저장 (provenance=answered)
+    G-->>A: 답변 반환
+    A->>A: 영향받는 분석만 재평가 · 필요 시 재검색
+  end

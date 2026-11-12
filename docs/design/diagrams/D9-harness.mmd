@@ -1,0 +1,9 @@
+flowchart LR
+  P["프로필 · 프롬프트 커밋"] --> RUN[harness run]
+  DS[("데이터셋 버전")] --> RUN
+  RUN --> G["case 그래프 / 에이전트 단독"]
+  G -. "trace · 궤적" .-> LS[LangSmith]
+  G --> EV["평가기: 결정적 · 궤적 · LLM 패널 · 사람 주석"]
+  EV --> CMP["실험 비교 · 회귀 게이트"]
+  CMP -- 통과 --> PROMO[프로필 승격]
+  CMP -- 실패 --> DIAG["trace 진단 → 수정"] --> P

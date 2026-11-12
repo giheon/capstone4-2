@@ -1,0 +1,15 @@
+stateDiagram-v2
+  [*] --> Seed: 핵심 조문 묶음 + 관찰 요약 + 알려진 사실
+  Seed --> Reason
+  Reason --> Search: search_law
+  Reason --> Read: get_document
+  Reason --> Inspect: inspect_visual
+  Reason --> Ask: ask_user (게이트 통과 시)
+  Search --> Reason
+  Read --> Reason
+  Inspect --> Reason
+  Ask --> Reason: 답변 → Facts 갱신
+  Reason --> Finalize: 분석 완료 선언
+  Finalize --> Validate
+  Validate --> Reason: 인용 누락 · 커버리지 경고 (최대 2회)
+  Validate --> [*]: 통과 또는 예산 소진 (불확실 표시)

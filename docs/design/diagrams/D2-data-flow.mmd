@@ -1,0 +1,20 @@
+flowchart TB
+  IN[원본 영상] --> PROBE["ffprobe 메타 · 원본 보존"]
+  PROBE --> PROXY["분석 프록시 + PTS 맵"]
+  PROXY --> PER["지각 도구: 검출 · 추적 · OCR · 그룹화 · VLM 장면 설명"]
+  PER --> VU[(VideoUnderstanding)]
+  CTX["선택 입력: 상황 메모"] --> FACTS[(Facts)]
+  VU --> LA
+  FACTS --> LA
+  subgraph LA["Legal Analyst 루프"]
+    direction LR
+    S[검색 · 열람 · 시각 점검] --> E[적용 가능성 평가] --> Q{사실 부족?}
+    Q -- 예 --> ASK[[질문 interrupt]] --> E
+    Q -- 아니오 --> F[finalize]
+  end
+  LA --> REQ[(Requirements + Evidence)]
+  REQ --> PL["Planner + 검증기"] --> PLAN[(RedactionPlan)]
+  PLAN --> RV[["검토 interrupt (Loop B)"]] --> AU[Auditor] --> AF{권고?}
+  AF -- 예 --> RV
+  AF -- 아니오 --> RN["원본 스트림 렌더 + 검증"]
+  RN --> OUT["출력 영상 + 초 단위 보고서"]

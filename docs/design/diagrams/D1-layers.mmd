@@ -1,0 +1,15 @@
+flowchart LR
+  U[업로더] --> SVC["service: 서비스 UI · FastAPI · Celery"]
+  R[연구자] --> HAR["harness: 실험실 UI · CLI · 데이터셋 · 평가기"]
+  SVC --> CORE
+  HAR --> CORE
+  subgraph CORE["core: 도메인 · 그래프 · 에이전트 · 도구"]
+    WF[case 워크플로 그래프]
+    AG["에이전트: Legal Analyst · Auditor"]
+    TL["도구: 지각 · 검색 · 시각 점검 · 렌더"]
+    WF --> AG --> TL
+  end
+  TL --> VLM["VLM / LLM via OpenRouter"]
+  TL --> IDX[(법률 코퍼스 인덱스)]
+  CORE -. trace .-> LS[LangSmith]
+  CORE --> ST[(레코드 · artifact · 체크포인트)]
