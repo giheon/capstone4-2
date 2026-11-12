@@ -1,4 +1,0 @@
-extends: baseline
-name: haar
-detector: haar
-identity_grouper: none

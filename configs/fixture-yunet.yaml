@@ -1,4 +1,0 @@
-extends: fixture
-name: fixture-yunet
-detector: yunet
-identity_grouper: arcface
