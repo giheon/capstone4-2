@@ -1,0 +1,112 @@
+/* Design tokens. Two deliberate themes:
+   .theme-service — light "evidence ledger" for uploaders
+   .theme-lab     — dark instrument panel for researchers (topology, traces) */
+
+:root {
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+    "Noto Sans KR", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+
+  --fs-11: 11px;
+  --fs-12: 12px;
+  --fs-13: 13px;
+  --fs-14: 14px;
+  --fs-15: 15px;
+  --fs-16: 16px;
+  --fs-18: 18px;
+  --fs-20: 20px;
+  --fs-24: 24px;
+  --fs-28: 28px;
+
+  --r-sm: 4px;
+  --r-md: 6px;
+  --r-lg: 10px;
+
+  --header-h: 56px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.theme-service {
+  color-scheme: light;
+  --bg: #f2f4f5;
+  --surface: #ffffff;
+  --surface-2: #f7f8f9;
+  --surface-3: #edf0f2;
+  --ink: #121619;
+  --ink-2: #39424a;
+  --muted: #5d6770;
+  --line: #e0e5e8;
+  --line-2: #c9d1d7;
+  --accent: #0b5e74;
+  --accent-hover: #084b5d;
+  --accent-ink: #ffffff;
+  --accent-soft: #e1eef2;
+  --focus: #1c8aa6;
+  --ok: #1e7348;
+  --ok-soft: #e2f2e9;
+  --warn: #8f5a00;
+  --warn-soft: #fcf0d6;
+  --err: #b42318;
+  --err-soft: #fcebe9;
+  --shadow-1: 0 1px 2px rgba(18, 22, 25, 0.06);
+  --shadow-2: 0 8px 24px rgba(18, 22, 25, 0.12);
+
+  /* identity colours of what a decision does (keep · mosaic · remove from the file): validated as a categorical set (all pairs, light surface) */
+  --m-keep: #1b8a5a;
+  --m-mosaic: #2a78d6;
+  --m-remove: #a63d8c;
+  /* darker steps for white label text on scene overlays (>= 4.5:1) */
+  --m-keep-ink: #146b45;
+  --m-mosaic-ink: #1f62b8;
+
+  --a1: #1e3a62;
+  --a1-soft: #e2e9f4;
+  --a2: #59408a;
+  --a2-soft: #eee9f7;
+  --a3: #4a535c;
+  --a3-soft: #edf0f2;
+}
+
+.theme-lab {
+  color-scheme: dark;
+  --bg: #0e1012;
+  --surface: #15181b;
+  --surface-2: #1a1e22;
+  --surface-3: #21262b;
+  --ink: #e7eaed;
+  --ink-2: #b9c1c9;
+  --muted: #8d97a2;
+  --line: #262c32;
+  --line-2: #353d45;
+  --accent: #4fb8d0;
+  --accent-hover: #6cc6da;
+  --accent-ink: #052028;
+  --accent-soft: rgba(79, 184, 208, 0.13);
+  --focus: #6cc6da;
+  --ok: #5dbb8a;
+  --ok-soft: rgba(93, 187, 138, 0.14);
+  --warn: #e3a447;
+  --warn-soft: rgba(227, 164, 71, 0.15);
+  --err: #ec7066;
+  --err-soft: rgba(236, 112, 102, 0.15);
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 12px 32px rgba(0, 0, 0, 0.5);
+
+  --run: #4fb8d0;
+  --cached: #8d97a2;
+  --human: #e3a447;
+  --model: #b8a4f0;
+
+  --m-keep: #2fa86e;
+  --m-mosaic: #4f8fe0;
+  --m-remove: #c55aa8;
+  --m-keep-ink: #2fa86e;
+  --m-mosaic-ink: #4f8fe0;
+
+  --a1: #9fbbe6;
+  --a1-soft: rgba(159, 187, 230, 0.14);
+  --a2: #c3aef0;
+  --a2-soft: rgba(195, 174, 240, 0.14);
+  --a3: #b9c1c9;
+  --a3-soft: rgba(185, 193, 201, 0.12);
+}
