@@ -1,0 +1,42 @@
+# 참고 패턴 (설계 §5.5 · §11.3). 비구속 참고 지식이다.
+#   - checklist() 도구가 이 목록과 관찰 기반 힌트를 돌려준다.
+#   - 커버리지 점검이 "관찰에는 있는데 분석에서 다루지 않은 듯한 패턴"을 질문 형태로 한 번 되돌린다.
+#   - 평가 데이터셋의 라벨로 쓴다.
+# 에이전트의 분석은 pattern_ref가 없어도 유효하다(새 쟁점). 결정을 강제하는 규칙으로 쓰지 않는다.
+#
+# trigger: 관찰에서 계산한 신호 이름 (core/knowledge.py의 observation_signals)
+#   third_party · minor · sensitive · text · plate · private_space · many_people · location_metadata · always(항상 힌트로 보여 줌)
+# keywords: 분석이 이 패턴을 다뤘는지 가늠할 때 찾는 낱말 (하나라도 있으면 다룬 것으로 본다)
+version: 1
+patterns:
+  - {id: P01, name: 제3자 얼굴 (공개 범위에 따라), trigger: third_party, keywords: [제3자, 얼굴, 초상], hint: "동의가 확인되지 않은 사람의 얼굴이 공개 범위에서 식별 가능한지"}
+  - {id: P02, name: 아동 · 청소년, trigger: minor, keywords: [아동, 미성년, 청소년, 법정대리인], hint: "미성년자로 보이는 인물이 있는지, 법정대리인 동의가 필요한지"}
+  - {id: P03, name: 민감한 맥락, trigger: sensitive, keywords: [민감, 건강, 종교, 정치, 병원, 집회], hint: "장소·활동이 건강·종교·정치 성향 등 민감한 사정을 드러내는지"}
+  - {id: P04, name: 간접 식별 단서의 결합, trigger: third_party, keywords: [결합, 복장, 문신, 흉터, 유니폼, 소지품, 식별 단서], hint: "복장·문신·소지품·장소가 결합해 특정인을 알아볼 수 있는지"}
+  - {id: P05, name: 글자 · 자막 · 명찰, trigger: text, keywords: [명찰, 자막, 성명, 이름, 텍스트, 글자, 간판], hint: "화면의 글자가 성명·연락처·소속을 드러내는지"}
+  - {id: P06, name: 차량 번호판, trigger: plate, keywords: [번호판, 차량등록번호, 차량], hint: "차량등록번호가 개인을 알아볼 수 있는 정보인지"}
+  - {id: P07, name: 이동형 기기 촬영 사실 표시, trigger: always, keywords: [이동형, 촬영 사실, 제25조의2], hint: "업무 목적의 이동형 영상정보처리기기 촬영이면 촬영 사실을 알렸는지"}
+  - {id: P08, name: 고정형 기기 영상의 제공 · 열람, trigger: always, keywords: [고정형, CCTV, 제25조, 열람], hint: "고정형 영상정보처리기기 영상이면 목적 외 제공·열람 절차인지"}
+  - {id: P09, name: 초상권 · 영리 이용, trigger: third_party, keywords: [초상권, 영리, 광고, 상업], hint: "초상을 영리 목적으로 쓰는지, 동의 범위 안인지"}
+  - {id: P10, name: 언론 · 공익 예외, trigger: always, keywords: [언론, 보도, 공익, 공적 인물, 공적 관심사, 제58조], hint: "보도·공익 목적이나 공적 인물에 해당해 달리 볼 사정이 있는지"}
+  - {id: P11, name: 본인 열람 요청, trigger: always, keywords: [열람, 정보주체, 제35조], hint: "정보주체의 열람·제공 요청에 따른 처리인지(타인 부분 가림)"}
+  - {id: P12, name: 동의의 상태와 범위, trigger: third_party, keywords: [동의, 공표, 촬영 동의, 묵시], hint: "촬영 동의와 공개 동의가 각각 있는지, 범위를 넘지 않는지"}
+  - {id: P13, name: 가명 · 익명 처리 수준, trigger: third_party, keywords: [가명, 익명, 식별 불가, 복원], hint: "가린 뒤에도 남는 단서로 알아볼 수 있는지"}
+  - {id: P14, name: 사적 공간, trigger: private_space, keywords: [사적 공간, 주거, 화장실, 탈의, 사생활], hint: "사생활이 현저히 침해될 수 있는 장소인지"}
+  - {id: P15, name: 촬영자 본인, trigger: third_party, keywords: [본인, 업로더, 촬영자], hint: "화면의 인물이 업로더 본인인지(본인은 처리 대상이 아닐 수 있음)"}
+  - {id: P16, name: 사적 목적 촬영 (법 적용 범위), trigger: always, keywords: [개인정보처리자, 업무 목적, 사적, 적용 제외, 제58조], hint: "업무 목적의 개인정보처리자인지, 사적 촬영이라 초상권 법리가 주된 근거인지"}
+  - {id: P17, name: 증거 확보 목적, trigger: always, keywords: [증거, 이익형량, 위법성 조각], hint: "증거 확보 등 정당한 이익이 있어 이익형량이 필요한지"}
+  - {id: P18, name: 촬영 위치 메타데이터, trigger: location_metadata, keywords: [위치, GPS, 좌표, 메타데이터], hint: "파일에 기록된 촬영 위치 좌표가 공개 범위에서 특정 개인의 주거 · 직장 · 동선을 드러내는 개인정보인지, 지워야 하는지"}
+
+# 사실 키 참고 어휘 (설계 §5.3). 에이전트가 질문을 만들 때 참고하는 이름이며 강제하지 않는다.
+# 키는 소문자 점 표기, 사람은 person-N.<속성>.
+fact_keys:
+  - {key: purpose.publication_scope, label: 공개 범위, options: {public: 불특정 다수에게 공개, limited: 제한된 사람에게만 공유, private: 공개하지 않고 보관}}
+  - {key: uploader.role, label: 촬영 · 게시 주체, options: {business: 업무 목적 (사업자 · 기관), personal: 개인의 사적 목적, press: 언론 · 보도}}
+  - {key: recording.device, label: 촬영 기기, options: {mobile: 이동형 (휴대전화 · 액션캠 · 드론 등), fixed: 고정형 (CCTV 등)}}
+  - {key: recording.notice_displayed, label: 촬영 사실 표시, options: {yes: 알렸음, no: 알리지 않았음}}
+  - {key: person-N.is_uploader, label: 인물이 업로더 본인인지, options: {yes: 본인, no: 다른 사람}}
+  - {key: person-N.publication_consent, label: 인물의 공개 동의, options: {yes: 공개에 동의함, no: 동의하지 않음}}
+  - {key: person-N.is_minor, label: 인물이 미성년자인지, options: {yes: 미성년자, no: 성인}}
+  - {key: edit.caption_names, label: 자막에 이름을 적는지, options: {yes: 적음, no: 적지 않음}}
+  - {key: location.reveals_private_place, label: 촬영 위치가 사적 장소인지, options: {yes: 자택 · 직장 등 특정인과 이어지는 장소, no: 공개된 장소}}

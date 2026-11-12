@@ -1,0 +1,30 @@
+# M4-1 초안 목록 — 미확정. 서비스용 코퍼스의 선정 기준과 규모는 M4-1에서 정한다(docs/design/12-corpus-plan-draft.md).
+# M3에서 리서치(R6)를 바탕으로 적어 둔 출발 목록이며, 형식은 configs/corpus/smoke.yaml과 같다.
+# 아직 수집하지 않았다. 확정 뒤:  uv run privframe-corpus fetch configs/corpus/sources.yaml
+# 팀이 만든 시나리오·정답은 넣지 않는다 (ADR-0006: 평가 데이터이지 근거가 아님).
+
+documents:
+  # --- 규범 (국가법령정보 API) ---
+  - {id: pipa, source: lawgokr, target: law, kind: law, title: 개인정보 보호법, citation: 개인정보 보호법, authority: 1, search: {query: 개인정보 보호법}, match: {법령명한글: 개인정보 보호법}}
+  - {id: pipa-decree, source: lawgokr, target: law, kind: law, title: 개인정보 보호법 시행령, citation: 개인정보 보호법 시행령, authority: 1, search: {query: 개인정보 보호법 시행령}, match: {법령명한글: 개인정보 보호법 시행령}}
+  - {id: standard-guideline, source: lawgokr, target: admrul, kind: admrul, title: 표준 개인정보 보호지침, citation: 표준 개인정보 보호지침, authority: 1, search: {query: 표준 개인정보 보호지침}, match: {행정규칙명: 표준 개인정보 보호지침}}
+
+  # --- 사례 (국가법령정보 API). 2004다16280 · 2012다31628 · 2015헌마994는 원문을 받은 뒤 요약을 대조한다 ---
+  - {id: prec-2004da16280, source: lawgokr, target: prec, kind: prec, title: 대법원 2004다16280, citation: 대법원 2004다16280, authority: 2, search: {nb: 2004다16280}}
+  - {id: prec-2012da31628, source: lawgokr, target: prec, kind: prec, title: 대법원 2012다31628, citation: 대법원 2012다31628, authority: 2, search: {nb: 2012다31628}}
+  - {id: prec-2020da227455, source: lawgokr, target: prec, kind: prec, title: 대법원 2020다227455, citation: 대법원 2020다227455, authority: 2, search: {nb: 2020다227455}}
+  - {id: prec-2020da253423, source: lawgokr, target: prec, kind: prec, title: 대법원 2020다253423, citation: 대법원 2020다253423, authority: 2, search: {nb: 2020다253423}}
+  - {id: prec-2021da219116, source: lawgokr, target: prec, kind: prec, title: 대법원 2021다219116, citation: 대법원 2021다219116, authority: 2, search: {nb: 2021다219116}}
+  - {id: detc-2015hunma994, source: lawgokr, target: detc, kind: detc, title: 헌법재판소 2015헌마994, citation: 헌법재판소 2015헌마994, authority: 2, search: {query: 2015헌마994}}
+  - {id: expc-video, source: lawgokr, target: expc, kind: expc, title: 법령해석례 (영상정보처리기기), authority: 2, search: {query: 영상정보처리기기, display: 10}, limit: 10}
+  - {id: ppc-video, source: lawgokr, target: ppc, kind: ppc, title: PIPC 결정문 (영상정보처리기기), authority: 2, search: {query: 영상정보처리기기, display: 30}, limit: 30}
+
+  # --- 참고 (직접 받아 data/corpus/inbox/에 두는 PDF. PIPC 게시판은 자동 수집 요청을 막고, 개인정보 포털의
+  #     내려받기 주소는 시간이 지나면 만료된다) ---
+  - {id: guide-pseudonym-2026-03, source: local_file, kind: guideline, title: 가명정보 처리 가이드라인 (2026.3), citation: 가명정보 처리 가이드라인, authority: 3, path: data/corpus/inbox/가명정보_처리_가이드라인_2026.3.pdf, page: "https://www.pipc.go.kr/np/cop/bbs/selectBoardArticle.do?bbsId=BS217&mCode=G010030000&nttId=11931"}
+  - {id: guide-mobile-camera-2024-09, source: local_file, kind: guideline, title: 이동형 영상정보처리기기를 위한 개인영상정보 보호·활용 안내서 (2024.9), citation: 이동형 영상정보처리기기 안내서, authority: 3, path: data/corpus/inbox/이동형_영상정보처리기기_안내서_2024.9.pdf, page: "https://pipc.go.kr/np/cop/bbs/selectBoardArticle.do?bbsId=BS217&mCode=G010030000&nttId=10679"}
+  - {id: guide-fixed-camera-2024-12, source: local_file, kind: guideline, title: 고정형 영상정보처리기기 설치·운영 안내서 (2024.12), citation: 고정형 영상정보처리기기 설치·운영 안내서, authority: 3, path: data/corpus/inbox/고정형_영상정보처리기기_안내서_2024.12.pdf, page: "https://www.pipc.go.kr/np/cop/bbs/selectBoardArticle.do?bbsId=BS217&mCode=G010030000&nttId=10901"}
+  - {id: guide-biometric-2024-12, source: local_file, kind: guideline, title: 생체정보 보호 안내서 (2024.12), citation: 생체정보 보호 안내서, authority: 3, path: data/corpus/inbox/생체정보_보호_안내서_2024.12.pdf, page: "https://www.pipc.go.kr/np/cop/bbs/selectBoardArticle.do?bbsId=BS217&mCode=G010030000&nttId=10900"}
+  - {id: guide-children-2024-12, source: local_file, kind: guideline, title: 아동·청소년 개인정보 보호 안내서 (2024.12), citation: 아동·청소년 개인정보 보호 안내서, authority: 3, path: data/corpus/inbox/아동청소년_개인정보_보호_안내서_2024.12.pdf, page: "https://www.pipc.go.kr/np/cop/bbs/selectBoardList.do?bbsId=BS217&mCode=G010030000&pageIndex=4"}
+  - {id: guide-generative-ai-2025-08, source: local_file, kind: guideline, title: 생성형 AI 개발·활용을 위한 개인정보 처리 안내서 (2025.8), citation: 생성형 AI 개인정보 처리 안내서, authority: 3, path: data/corpus/inbox/생성형AI_개인정보_처리_안내서_2025.8.pdf, page: "https://www.pipc.go.kr/np/cop/bbs/selectBoardArticle.do?bbsId=BS217&mCode=G010030000&nttId=11439"}
+  - {id: mediation-cases-2025, source: local_file, kind: mediation, title: 2025년 개인정보 분쟁조정 사례집, citation: 2025년 개인정보 분쟁조정 사례집, authority: 3, path: data/corpus/inbox/분쟁조정_사례집_2025.pdf, page: "https://www.pipc.go.kr/np/cop/bbs/selectBoardArticle.do?bbsId=BS232&mCode=D070010020&nttId=12104"}

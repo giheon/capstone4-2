@@ -1,0 +1,1110 @@
+# PrivFrame 파이프라인 부품 카탈로그
+#
+# 프로필은 아래 부품(slot)마다 후보(candidate)를 하나씩 고른 조합이다 (configs/pipeline/profiles/*.yaml).
+# 실험실 > 프로필에서 고르고, 실험실 > 모델 후보에서 이 목록을 본다. M4 백엔드도 같은 파일을 읽는다.
+#
+# 후보를 추가하는 두 가지 방법
+#   1. 이 파일: 해당 slot의 candidates 끝에 항목을 붙이고 저장한다. 서버 재시작 없이 화면을 새로고침하면 보인다.
+#   2. 실험실 > 모델 후보 > 후보 추가: 이미 등록된 어댑터 계열이면 화면에서 바로 추가되고, 이 파일 끝에 기록된다
+#      (source: lab). OpenRouter 모델은 slug만 넣으면 가격·입력 형식·도구 지원을 OpenRouter 공개 목록에서 채운다.
+#   새 계열(예: 구조가 다른 검출기)은 adapters에 없으면 쓸 수 없다. 코드에 어댑터를 구현한 뒤 adapters에 등록한다.
+#
+# 후보 필드
+#   id       slot 안에서 유일한 키. 프로필이 이 값을 참조하므로 바꾸지 않는다.
+#   label    화면 이름 (short: 토폴로지 노드에 쓰는 짧은 이름)
+#   adapter  아래 adapters의 키
+#   ref      어댑터가 불러올 대상 (OpenRouter slug, Hugging Face 저장소, 가중치·클래스 이름)
+#   license  로컬 가중치·코드의 라이선스. AGPL·비상용이면 프로필 검사에서 경고한다
+#   price    API 단가, USD / 1M 토큰 {in, out}. 로컬 실행은 생략(0)
+#   caps     tools(도구 호출) · json(엄격한 JSON 스키마 출력) · image · video
+#   tier     LLM 등급 frontier(상위) | efficient(경량). M2 모의 실행이 동작을 바꾸는 데도 쓴다
+#   lawirko  임베딩의 LawIRKo nDCG@10 (조문 검색 공개 벤치마크)
+#   status   planned = 아직 구현 전이라 고를 수 없음
+#   note     근거 한 줄. (R1)~(R7)은 docs/research 문서, 가격은 2026-11-06 OpenRouter 공개 목록 기준
+#            (anthropic 어댑터 후보는 Anthropic API 정가, 2026-10-06 기준)
+
+version: 1
+
+adapters:
+  openrouter: {label: OpenRouter, kind: api, ref: "OpenRouter 모델 slug", example: "anthropic/claude-sonnet-5.5", lookup: openrouter}
+  anthropic: {label: Anthropic API (직접), kind: api, ref: "Claude 모델 ID", example: "claude-sonnet-5-5"}
+  gemini-api: {label: Gemini API (직접), kind: api, ref: "Gemini 모델 이름", example: "gemini-3.8-flash"}
+  openai-embeddings: {label: OpenAI 임베딩 API, kind: api, ref: "임베딩 모델 이름", example: "text-embedding-3-small"}
+  mlx-vlm: {label: mlx-vlm (로컬 VLM), kind: local, ref: "Hugging Face 저장소 (MLX 변환본)", example: "mlx-community/Qwen3-VL-8B-Instruct-4bit"}
+  sentence-transformers: {label: sentence-transformers, kind: local, ref: "Hugging Face 저장소", example: "nlpai-lab/KURE-v1"}
+  cross-encoder: {label: CrossEncoder 리랭커, kind: local, ref: "Hugging Face 저장소", example: "nlpai-lab/KURE-Reranker-nano"}
+  rfdetr: {label: rfdetr, kind: local, ref: "가중치 이름", example: "rf-detr-nano"}
+  transformers-detection: {label: transformers 검출 모델, kind: local, ref: "Hugging Face 저장소", example: "ustc-community/dfine-small-coco"}
+  ultralytics: {label: Ultralytics, kind: local, ref: "가중치 파일", example: "yolo26n.pt"}
+  efficienttam: {label: EfficientTAM, kind: local, ref: "체크포인트 이름", example: "efficienttam_s_512x512"}
+  opencv-dnn: {label: OpenCV DNN, kind: local, ref: "OpenCV Zoo ONNX 파일", example: "face_detection_yunet_2023mar.onnx"}
+  onnx: {label: ONNX Runtime, kind: local, ref: "ONNX 파일 또는 저장소", example: "retinaface_mv2.onnx"}
+  adaface: {label: AdaFace, kind: local, ref: "체크포인트 이름", example: "adaface_ir50_webface4m"}
+  trackers: {label: roboflow/trackers, kind: local, ref: "추적기 이름", example: "botsort"}
+  open-image-models: {label: open-image-models, kind: local, ref: "모델 이름", example: "yolo-v9-t-384-license-plate-end2end"}
+  rapidocr: {label: RapidOCR, kind: local, ref: "det=검출 모델 rec=인식 모델", example: "det=PP-OCRv6_det_tiny rec=korean_PP-OCRv5_rec_mobile"}
+  scenedetect: {label: PySceneDetect, kind: local, ref: "검출기 클래스", example: "AdaptiveDetector"}
+  kiwi: {label: Kiwi + bm25s, kind: local, ref: "형태소 분석기 버전", example: "kiwipiepy 0.24.1"}
+  vector-store: {label: 벡터 저장소, kind: local, ref: "저장소 종류", example: "chroma"}
+  pyav: {label: PyAV 인코더, kind: local, ref: "codec · crf · preset", example: "libx264 crf=16 preset=slow"}
+  builtin: {label: 코드에 구현된 방식, kind: builtin, ref: "코드 위치", addable: false}
+  option: {label: 설정값, kind: option, ref: "", addable: false}
+  none: {label: 사용 안 함, kind: option, ref: "", addable: false}
+
+stages:
+  - id: perception
+    label: 지각
+    description: 원본에서 사람·글자·번호판을 찾고 추적한다. 결정적 도구라 같은 입력이면 같은 결과를 낸다.
+    slots:
+      - id: perception.scene_cut
+        label: 장면 경계
+        used_by: [perceive/detect_track, perceive/describe_segments]
+        adapters: [scenedetect]
+        default: adaptive
+        candidates:
+          - id: adaptive
+            label: PySceneDetect AdaptiveDetector
+            short: Adaptive 컷
+            adapter: scenedetect
+            ref: AdaptiveDetector
+            license: BSD-3-Clause
+            note: 1.0 때부터 쓰는 검출기. 컷마다 트랙을 새로 시작한다.
+          - id: content
+            label: PySceneDetect ContentDetector
+            short: Content 컷
+            adapter: scenedetect
+            ref: ContentDetector
+            license: BSD-3-Clause
+            note: 고정 임계값 방식. AdaptiveDetector는 빠른 카메라 이동에서 오검출을 줄인 변형이다.
+
+      - id: perception.face_detector
+        label: 얼굴 검출
+        used_by: [perceive/detect_track]
+        adapters: [opencv-dnn, onnx]
+        default: yunet
+        candidates:
+          - id: yunet
+            label: YuNet 2023mar
+            adapter: opencv-dnn
+            ref: face_detection_yunet_2023mar.onnx
+            license: MIT
+            note: WIDER FACE Hard 0.708~0.750 · 233 kB · i7-12700K 0.69 ms (R2a)
+          - id: retinaface-mnv2
+            label: RetinaFace MobileNetV2
+            adapter: onnx
+            ref: yakhyo/retinaface-pytorch mobilenetv2
+            license: MIT
+            note: WIDER FACE Hard 83.59 (원 해상도) · 사전학습 ONNX 제공 (R2a)
+          - id: scrfd-2.5g
+            label: SCRFD-2.5GF
+            adapter: onnx
+            ref: insightface scrfd_2.5g_kps
+            license: 비상용 연구 전용 (가중치)
+            note: WIDER FACE Hard 77.13 · 코드 MIT, 가중치는 비상용 (R2a)
+
+      - id: perception.object_detector
+        label: 사람 · 물체 검출
+        used_by: [perceive/detect_track]
+        adapters: [rfdetr, open-image-models, transformers-detection, ultralytics]
+        default: rfdetr-nano
+        candidates:
+          - id: rfdetr-nano
+            label: RF-DETR Nano
+            adapter: rfdetr
+            ref: rf-detr-nano
+            license: Apache-2.0
+            note: COCO 48.4 · Apple M3 Pro CoreML fp16 20.8 ms (R2b)
+          - id: rfdetr-nano-onnx
+            label: RF-DETR Nano (ONNX)
+            short: RF-DETR Nano ONNX
+            adapter: open-image-models
+            ref: rf-detr-nano-384-coco
+            license: Apache-2.0
+            note: M3 측정 CPU 12 fps에서 1분 영상당 36.9 s (PyTorch판 약 49 s). torch 없이 ONNX Runtime으로 실행
+          - id: rfdetr-small
+            label: RF-DETR Small
+            adapter: rfdetr
+            ref: rf-detr-small
+            license: Apache-2.0
+            note: COCO 53.0 · T4 3.5 ms · Nano보다 느림 (R2b)
+          - id: dfine-s
+            label: D-FINE-S
+            adapter: transformers-detection
+            ref: ustc-community/dfine-small-coco
+            license: Apache-2.0
+            note: COCO 48.5 · HF transformers 지원. Obj365 체크포인트는 상업 사용 미확인 (R2b)
+          - id: yolo26n
+            label: YOLO26n
+            adapter: ultralytics
+            ref: yolo26n.pt
+            license: AGPL-3.0
+            note: COCO 40.9 · CPU ONNX 38.9 ms · 코드와 가중치 모두 AGPL (R2b)
+
+      - id: perception.segmenter
+        label: 윤곽 마스크
+        used_by: [perceive/detect_track, render_original]
+        adapters: [rfdetr, efficienttam, none]
+        default: rfdetr-seg-nano
+        candidates:
+          - id: rfdetr-seg-nano
+            label: RF-DETR-Seg Nano
+            adapter: rfdetr
+            ref: rf-detr-seg-nano
+            license: Apache-2.0
+            note: 마스크 AP 40.3 · Apple M3 Pro CPU+NE 23.5 ms (R2b)
+          - id: efficienttam-s
+            label: EfficientTAM-S (키프레임 마스크 전파)
+            short: EfficientTAM-S
+            adapter: efficienttam
+            ref: efficienttam_s_512x512
+            license: Apache-2.0
+            note: SA-V 71.5 (S@512) · iPhone 15 Pro Max 80.6 ms/프레임 · Mac MPS 지원 (R2d)
+          - id: none
+            label: 사용 안 함 (타원 · 박스만)
+            short: 마스크 없음
+            adapter: none
+            note: 윤곽 처리를 쓸 수 없어 과잉 가림 권고를 고칠 수 없다.
+
+      - id: perception.tracker
+        label: 추적
+        used_by: [perceive/detect_track]
+        adapters: [trackers, builtin]
+        default: botsort
+        candidates:
+          - id: botsort
+            label: BoT-SORT
+            adapter: trackers
+            ref: botsort
+            license: Apache-2.0
+            note: roboflow/trackers 2.6.1 · HOTA 63.7 (패키지 자체 측정) (R2e)
+          - id: cbiou
+            label: C-BIoU
+            adapter: trackers
+            ref: cbiou
+            license: Apache-2.0
+            note: HOTA 63.0 · 움직임만 사용 (R2e)
+          - id: bytetrack
+            label: ByteTrack
+            adapter: trackers
+            ref: bytetrack
+            license: Apache-2.0
+            note: HOTA 60.1 · 움직임만 사용 (R2e)
+          - id: iou-legacy
+            label: 기존 IoU 추적
+            adapter: builtin
+            ref: core/perception/tracking.py
+            note: 1.0의 추적 방식 (IoU 0.3 · 최대 간격 2). 베이스라인 비교용
+
+      - id: perception.face_embedding
+        label: 인물 묶음 (얼굴 특징)
+        used_by: [perceive/group_identities]
+        adapters: [opencv-dnn, adaface, onnx]
+        default: sface
+        candidates:
+          - id: sface
+            label: SFace 2021dec
+            adapter: opencv-dnn
+            ref: face_recognition_sface_2021dec.onnx
+            license: Apache-2.0
+            note: LFW 0.9940 · i7-12700K 5.09 ms. 특징 벡터는 케이스 완료 시 삭제 (R2a)
+          - id: adaface-ir50
+            label: AdaFace IR-50 (WebFace4M)
+            short: AdaFace IR-50
+            adapter: adaface
+            ref: adaface_ir50_webface4m
+            license: MIT
+            note: IJB-C 96.98 (R2a)
+          - id: arcface-w600k
+            label: ArcFace w600k_r50 (기존)
+            short: ArcFace (기존)
+            adapter: onnx
+            ref: insightface buffalo_l w600k_r50
+            license: 비상용 연구 전용 (가중치)
+            note: 1.0이 쓰던 묶음 모델. 가중치가 비상용이라 서비스 전 교체 대상 (R2a)
+
+      - id: perception.plate_detector
+        label: 번호판 검출
+        used_by: [perceive/detect_track]
+        adapters: [open-image-models, none]
+        default: yolo-v9-t-384
+        candidates:
+          - id: yolo-v9-t-384
+            label: open-image-models yolo-v9-t-384
+            short: 번호판 v9-t
+            adapter: open-image-models
+            ref: yolo-v9-t-384-license-plate-end2end
+            license: MIT
+            note: P 0.942 · R 0.863 · mAP50 0.92 · 학습 데이터 미공개 (R2g)
+          - id: yolo-v9-s-608
+            label: open-image-models yolo-v9-s-608
+            short: 번호판 v9-s
+            adapter: open-image-models
+            ref: yolo-v9-s-608-license-plate-end2end
+            license: MIT
+            note: P 0.957 · R 0.917 · mAP50 0.966 (R2g)
+          - id: none
+            label: 사용 안 함
+            adapter: none
+            note: 번호판을 찾지 않는다. 감사자가 번호판을 지적해도 처리할 트랙이 없다.
+
+      - id: perception.ocr
+        label: 글자 인식 (OCR)
+        used_by: [perceive/ocr]
+        adapters: [rapidocr, gemini-api]
+        default: rapidocr-tiny
+        candidates:
+          - id: rapidocr-tiny
+            label: RapidOCR · PP-OCRv6 det tiny + 한국어 PP-OCRv5 rec
+            short: RapidOCR tiny
+            adapter: rapidocr
+            ref: det=PP-OCRv6_det_tiny rec=korean_PP-OCRv5_rec_mobile
+            license: Apache-2.0
+            note: Apple M4 ONNX Runtime 검출+인식 0.35 s/장 · 한국어 인식 88.0% (PaddleOCR 문서) (R2f)
+          - id: rapidocr-small
+            label: RapidOCR · PP-OCRv6 det small + 한국어 PP-OCRv5 rec
+            short: RapidOCR small
+            adapter: rapidocr
+            ref: det=PP-OCRv6_det_small rec=korean_PP-OCRv5_rec_mobile
+            license: Apache-2.0
+            note: Apple M4 1.29 s/장 · 검출 Hmean 84.1 (tiny 80.6) (R2f)
+          - id: gemini-3.8-flash
+            label: VLM OCR · Gemini 3.8 Flash
+            short: Gemini OCR
+            adapter: gemini-api
+            ref: gemini-3.8-flash
+            price: {in: 0.75, out: 3.75}
+            caps: [json, image, video]
+            note: 한국어 문서 WER 4.85 (Gemini-3-Flash 기준) · 프레임이 외부로 나감 (R1)
+
+  - id: scene
+    label: 장면 이해 (VLM)
+    description: 장면 설명 · 인물 속성 · 시각 재점검. 클라우드 VLM이면 프레임이 외부로 나가므로 입력 방식과 함께 고른다.
+    slots:
+      - id: vlm.input_mode
+        label: VLM 입력 방식
+        used_by: [perceive/describe_segments, perceive/describe_persons]
+        adapters: [option]
+        default: v2
+        candidates:
+          - id: v2
+            label: V-2 축소 + 얼굴 익명화 후 전송
+            adapter: option
+            note: 기본. 얼굴 픽셀은 보내지 않는다 (설계 §7.3)
+          - id: v1
+            label: V-1 원본 프레임 (ZDR · 동의 영상만)
+            adapter: option
+            note: 품질 상한 측정용. 동의받은 출연자나 합성 영상에만 쓴다.
+          - id: v3
+            label: V-3 로컬 VLM만
+            adapter: option
+            note: 프레임이 컴퓨터 밖으로 나가지 않는다. VLM 부품을 모두 로컬 후보로 골라야 한다.
+
+      - id: vlm.scene
+        label: 장면 설명
+        used_by: [perceive/describe_segments]
+        adapters: [openrouter, anthropic, gemini-api, mlx-vlm]
+        requires: [json]
+        default: qwen3.6-35b-a3b
+        candidates:
+          - id: qwen3.6-35b-a3b
+            label: Qwen3.6-35B-A3B
+            adapter: openrouter
+            ref: qwen/qwen3.6-35b-a3b
+            price: {in: 0.10, out: 0.90}
+            caps: [tools, json, image, video]
+            license: Apache-2.0
+            note: Video-MME 86.6 · OpenRouter video_url 입력 (R1)
+          - id: gemini-3.8-flash
+            label: Gemini 3.8 Flash
+            adapter: gemini-api
+            ref: gemini-3.8-flash
+            price: {in: 0.75, out: 3.75}
+            caps: [tools, json, image, video]
+            note: 네이티브 영상 1 FPS · Files API · 유료 티어는 학습에 쓰지 않음 (R1)
+          - id: qwen3.6-27b
+            label: Qwen3.6-27B
+            adapter: openrouter
+            ref: qwen/qwen3.6-27b
+            price: {in: 0.32, out: 3.2}
+            caps: [tools, json, image, video]
+            license: Apache-2.0
+            note: Video-MME 87.7 (R1) · 단가는 2026-11-11 OpenRouter 목록 (11-06에는 $0.45 / $2.70)
+          - id: qwen3-vl-8b-mlx
+            label: Qwen3-VL-8B (로컬 · 4-bit)
+            short: Qwen3-VL-8B 로컬
+            adapter: mlx-vlm
+            ref: mlx-community/Qwen3-VL-8B-Instruct-4bit
+            caps: [json, image, video]
+            license: Apache-2.0
+            note: 약 5.8 GB · 프레임이 외부로 나가지 않음 · 클립당 수십 초. 저장소 존재 확인 2026-11-06 (R1)
+          - id: glm-4.6v
+            label: GLM-4.6V
+            adapter: openrouter
+            ref: z-ai/glm-4.6v
+            price: {in: 0.30, out: 0.90}
+            caps: [tools, image, video]
+            license: MIT
+            note: OpenRouter에서 엄격한 JSON 스키마 출력 미지원 → 장면 JSON 계약을 보장하지 못함 (R1)
+          - id: claude-opus-5-5-api
+            label: Claude Opus 5.5 · Anthropic API
+            short: Opus 5.5 API
+            adapter: anthropic
+            ref: claude-opus-5-5
+            price: {in: 4, out: 20}
+            caps: [tools, json, image]
+            tier: frontier
+            note: Anthropic API 직접 호출 (ANTHROPIC_API_KEY). 사고를 끌 수 없어 effort로 조절한다.
+          - id: claude-sonnet-5-5-api
+            label: Claude Sonnet 5.5 · Anthropic API
+            short: Sonnet 5.5 API
+            adapter: anthropic
+            ref: claude-sonnet-5-5
+            price: {in: 2, out: 10}
+            caps: [tools, json, image]
+            tier: frontier
+            note: Anthropic API 직접 호출 (ANTHROPIC_API_KEY). OpenRouter의 같은 모델과 경로만 다르다.
+          - id: claude-haiku-5-5-api
+            label: Claude Haiku 5.5 · Anthropic API
+            short: Haiku 5.5 API
+            adapter: anthropic
+            ref: claude-haiku-5-5
+            price: {in: 0.10, out: 0.50}
+            caps: [tools, json, image]
+            tier: efficient
+            note: Anthropic API 직접 호출 (ANTHROPIC_API_KEY). 프롬프트 10만 토큰 이하 단가.
+
+      - id: vlm.person
+        label: 인물 속성
+        used_by: [perceive/describe_persons]
+        adapters: [openrouter, anthropic, gemini-api, mlx-vlm]
+        requires: [json]
+        default: qwen3.6-35b-a3b
+        candidates:
+          - id: qwen3.6-35b-a3b
+            label: Qwen3.6-35B-A3B
+            adapter: openrouter
+            ref: qwen/qwen3.6-35b-a3b
+            price: {in: 0.10, out: 0.90}
+            caps: [tools, json, image, video]
+            license: Apache-2.0
+            note: 인물당 얼굴 익명화 전신 크롭 ≤2장 (설계 §7.4)
+          - id: gemini-3.8-flash
+            label: Gemini 3.8 Flash
+            adapter: gemini-api
+            ref: gemini-3.8-flash
+            price: {in: 0.75, out: 3.75}
+            caps: [tools, json, image, video]
+            note: (R1)
+          - id: qwen3-vl-8b-mlx
+            label: Qwen3-VL-8B (로컬 · 4-bit)
+            short: Qwen3-VL-8B 로컬
+            adapter: mlx-vlm
+            ref: mlx-community/Qwen3-VL-8B-Instruct-4bit
+            caps: [json, image, video]
+            license: Apache-2.0
+            note: 프레임이 외부로 나가지 않음 (R1)
+          - id: claude-opus-5-5-api
+            label: Claude Opus 5.5 · Anthropic API
+            short: Opus 5.5 API
+            adapter: anthropic
+            ref: claude-opus-5-5
+            price: {in: 4, out: 20}
+            caps: [tools, json, image]
+            tier: frontier
+            note: Anthropic API 직접 호출 (ANTHROPIC_API_KEY). 사고를 끌 수 없어 effort로 조절한다.
+          - id: claude-sonnet-5-5-api
+            label: Claude Sonnet 5.5 · Anthropic API
+            short: Sonnet 5.5 API
+            adapter: anthropic
+            ref: claude-sonnet-5-5
+            price: {in: 2, out: 10}
+            caps: [tools, json, image]
+            tier: frontier
+            note: Anthropic API 직접 호출 (ANTHROPIC_API_KEY). OpenRouter의 같은 모델과 경로만 다르다.
+          - id: claude-haiku-5-5-api
+            label: Claude Haiku 5.5 · Anthropic API
+            short: Haiku 5.5 API
+            adapter: anthropic
+            ref: claude-haiku-5-5
+            price: {in: 0.10, out: 0.50}
+            caps: [tools, json, image]
+            tier: efficient
+            note: Anthropic API 직접 호출 (ANTHROPIC_API_KEY). 프롬프트 10만 토큰 이하 단가.
+
+      - id: vlm.inspect
+        label: 시각 재점검 (inspect_visual)
+        used_by: [legal_analyst/inspect_visual, auditor/inspect_visual]
+        adapters: [openrouter, anthropic, gemini-api, mlx-vlm]
+        requires: [json]
+        default: qwen3.6-35b-a3b
+        candidates:
+          - id: qwen3.6-35b-a3b
+            label: Qwen3.6-35B-A3B
+            adapter: openrouter
+            ref: qwen/qwen3.6-35b-a3b
+            price: {in: 0.10, out: 0.90}
+            caps: [tools, json, image, video]
+            license: Apache-2.0
+            note: 에이전트가 요청할 때만 호출 (R1)
+          - id: gemini-3.8-flash
+            label: Gemini 3.8 Flash
+            adapter: gemini-api
+            ref: gemini-3.8-flash
+            price: {in: 0.75, out: 3.75}
+            caps: [tools, json, image, video]
+            note: (R1)
+          - id: qwen3-vl-8b-mlx
+            label: Qwen3-VL-8B (로컬 · 4-bit)
+            short: Qwen3-VL-8B 로컬
+            adapter: mlx-vlm
+            ref: mlx-community/Qwen3-VL-8B-Instruct-4bit
+            caps: [json, image, video]
+            license: Apache-2.0
+            note: 프레임이 외부로 나가지 않음 · 호출마다 수 초 (R1)
+          - id: claude-opus-5-5-api
+            label: Claude Opus 5.5 · Anthropic API
+            short: Opus 5.5 API
+            adapter: anthropic
+            ref: claude-opus-5-5
+            price: {in: 4, out: 20}
+            caps: [tools, json, image]
+            tier: frontier
+            note: Anthropic API 직접 호출 (ANTHROPIC_API_KEY). 사고를 끌 수 없어 effort로 조절한다.
+          - id: claude-sonnet-5-5-api
+            label: Claude Sonnet 5.5 · Anthropic API
+            short: Sonnet 5.5 API
+            adapter: anthropic
+            ref: claude-sonnet-5-5
+            price: {in: 2, out: 10}
+            caps: [tools, json, image]
+            tier: frontier
+            note: Anthropic API 직접 호출 (ANTHROPIC_API_KEY). OpenRouter의 같은 모델과 경로만 다르다.
+          - id: claude-haiku-5-5-api
+            label: Claude Haiku 5.5 · Anthropic API
+            short: Haiku 5.5 API
+            adapter: anthropic
+            ref: claude-haiku-5-5
+            price: {in: 0.10, out: 0.50}
+            caps: [tools, json, image]
+            tier: efficient
+            note: Anthropic API 직접 호출 (ANTHROPIC_API_KEY). 프롬프트 10만 토큰 이하 단가.
+
+  - id: retrieval
+    label: 법률 검색 (RAG)
+    description: search_law 도구가 쓰는 검색 방식. 코퍼스 색인은 이 설정의 fingerprint로 고정된다.
+    slots:
+      - id: rag.chunking
+        label: 청킹
+        used_by: [legal_analyst/search_law, auditor/search_law]
+        adapters: [builtin]
+        default: article-prefix
+        candidates:
+          - id: article-prefix
+            label: 조문 · 섹션 단위 + 계층 접두어
+            short: 조문 단위
+            adapter: builtin
+            ref: 법령=조 · 판례=판시사항/판결요지 · 800토큰 초과 시 항 단위
+            note: 설계 §9.3 · SearchFireSafety 근거 (R3)
+          - id: contextual
+            label: 조문 단위 + 문맥 문장 (Contextual Retrieval)
+            short: 문맥 청크
+            adapter: builtin
+            ref: 청크마다 LLM이 문맥 문장 생성
+            note: 색인할 때 LLM 비용이 든다. 실험 변수 (R3)
+          - id: fixed-1200
+            label: 고정 길이 1200 / 겹침 150 (기존)
+            short: 1200자 청크
+            adapter: builtin
+            ref: core/retrieval.py
+            note: 1.0의 청킹 설정. 비교용
+
+      - id: rag.embedding
+        label: 임베딩
+        used_by: [legal_analyst/search_law, auditor/search_law]
+        adapters: [sentence-transformers, openai-embeddings]
+        default: kure-v1
+        candidates:
+          - id: kure-v1
+            label: KURE-v1
+            adapter: sentence-transformers
+            ref: nlpai-lab/KURE-v1
+            license: MIT
+            lawirko: 0.743
+            note: 568M · 1024차원 · 한국어 9과제 평균 0.762 (R3)
+          - id: kure-v3
+            label: KURE-v3
+            adapter: sentence-transformers
+            ref: nlpai-lab/KURE-v3
+            license: Apache-2.0
+            lawirko: 0.816
+            note: "1.1B · query:/passage: 접두어 필요 · 9과제 0.803 (R3)"
+          - id: qwen3-embedding-8b
+            label: Qwen3-Embedding-8B
+            adapter: sentence-transformers
+            ref: Qwen/Qwen3-Embedding-8B
+            license: Apache-2.0
+            lawirko: 0.817
+            note: 4096차원 · 9과제 0.783 (R3)
+          - id: bge-m3
+            label: BGE-M3
+            adapter: sentence-transformers
+            ref: BAAI/bge-m3
+            license: MIT
+            lawirko: 0.717
+            note: 9과제 0.751 (R3)
+          - id: openai-3-small
+            label: OpenAI text-embedding-3-small (기존)
+            short: OpenAI 3-small
+            adapter: openai-embeddings
+            ref: text-embedding-3-small
+            price: {in: 0.02, out: 0}
+            note: 1.0의 설정. 공개 한국어 점수 없음 (3-large는 8과제 0.617) (R3)
+
+      - id: rag.retrieval
+        label: 검색 방식
+        used_by: [legal_analyst/search_law, auditor/search_law]
+        adapters: [builtin]
+        default: hybrid-rrf
+        candidates:
+          - id: hybrid-rrf
+            label: 하이브리드 (dense + BM25, RRF)
+            short: 하이브리드
+            adapter: builtin
+            ref: EnsembleRetriever 가중 RRF
+            note: 로컬 Chroma에는 BM25가 없어 앱에서 결합한다 (R3)
+          - id: dense
+            label: dense만
+            adapter: builtin
+            ref: 벡터 검색
+          - id: bm25
+            label: BM25만
+            adapter: builtin
+            ref: 형태소 BM25
+
+      - id: rag.bm25_tokenizer
+        label: BM25 토크나이저
+        used_by: [legal_analyst/search_law, auditor/search_law]
+        adapters: [kiwi, builtin]
+        default: kiwi
+        candidates:
+          - id: kiwi
+            label: Kiwi 형태소 (kiwipiepy + bm25s)
+            short: Kiwi BM25
+            adapter: kiwi
+            ref: kiwipiepy 0.24.1
+            license: Apache-2.0 · bm25s MIT
+            note: 법률 용어 사용자 사전 지원 · Apple Silicon 휠 제공 (R3)
+          - id: whitespace
+            label: 공백 분리
+            adapter: builtin
+            ref: str.split
+            note: 비교용. 조사가 붙은 어절이 서로 다른 토큰이 된다.
+
+      - id: rag.reranker
+        label: 리랭커
+        used_by: [legal_analyst/search_law, auditor/search_law]
+        adapters: [cross-encoder, none]
+        default: kure-reranker-nano
+        candidates:
+          - id: kure-reranker-nano
+            label: KURE-Reranker-nano
+            adapter: cross-encoder
+            ref: nlpai-lab/KURE-Reranker-nano
+            license: Apache-2.0
+            note: 149M · LawIRKo 0.837 · 482쌍/초 (A6000) (R3)
+          - id: qwen3-reranker-4b
+            label: Qwen3-Reranker-4B
+            adapter: cross-encoder
+            ref: Qwen/Qwen3-Reranker-4B
+            license: Apache-2.0
+            note: LawIRKo 0.877 · 24.3쌍/초 (R3)
+          - id: bge-reranker-v2-m3
+            label: bge-reranker-v2-m3
+            adapter: cross-encoder
+            ref: BAAI/bge-reranker-v2-m3
+            license: Apache-2.0
+            note: LawIRKo 0.791 (R3)
+          - id: none
+            label: 사용 안 함
+            adapter: none
+            note: LegalBench-RAG에서 리랭커가 정밀도를 낮춘 사례가 있어 비교 대상으로 둔다 (R3)
+
+      - id: rag.store
+        label: 벡터 저장소
+        used_by: [legal_analyst/search_law, auditor/search_law]
+        adapters: [vector-store]
+        default: chroma
+        candidates:
+          - id: chroma
+            label: Chroma (로컬)
+            adapter: vector-store
+            ref: chroma
+            license: Apache-2.0
+            note: dense + 메타데이터. 하이브리드 결합은 앱에서 (R3)
+          - id: qdrant-local
+            label: Qdrant (로컬 모드)
+            adapter: vector-store
+            ref: qdrant
+            license: Apache-2.0
+            note: dense + sparse를 서버에서 RRF 결합. 한국어 BM25 토큰은 직접 넣어야 한다 (R3)
+
+      - id: rag.seed
+        label: 시드 묶음
+        used_by: [legal_analyst/model]
+        adapters: [option]
+        default: enabled
+        candidates:
+          - id: enabled
+            label: 사용 (핵심 조문 9건 사전 로딩)
+            adapter: option
+            note: 제2조 · 제15·17조 · 제25조 · 제25조의2 · 제58조 · 제58조의2 · 표준지침 영상 조항 · 가명 가이드라인 영상 절
+          - id: disabled
+            label: 사용 안 함
+            adapter: option
+            note: 기능 제거 실험용. 에이전트가 핵심 조문부터 직접 검색한다.
+
+  - id: agents
+    label: 에이전트 · LLM
+    description: Legal Analyst와 Auditor는 도구를 쓰는 에이전트, 나머지는 한 번 호출하는 단계다. 감사자는 분석가 · 계획자와 다른 회사 모델을 권장한다.
+    slots:
+      - id: agent.strategy
+        label: 계획 전략
+        used_by: [legal_analyst, plan]
+        adapters: [builtin]
+        default: proposed
+        candidates:
+          - id: proposed
+            label: 제안 구조 (에이전트 루프 · 동적 질문 · 독립 감사)
+            short: 제안 구조
+            adapter: builtin
+            ref: case 그래프 (설계 D4)
+          - id: naive-rag
+            label: 단순 RAG (1회 검색 · 고정 질문)
+            adapter: builtin
+            status: planned
+            note: M5 베이스라인
+          - id: llm-only
+            label: LLM 단독 (검색 없음)
+            adapter: builtin
+            status: planned
+            note: M5 베이스라인
+          - id: rule-based
+            label: 규칙 기반 + LLM 설명
+            adapter: builtin
+            status: planned
+            note: M5 베이스라인
+          - id: static
+            label: 전부 가림
+            adapter: builtin
+            status: planned
+            note: M5 베이스라인
+
+      - id: llm.analyst
+        label: Legal Analyst
+        used_by: [legal_analyst/model]
+        adapters: [openrouter, anthropic]
+        requires: [tools]
+        default: claude-sonnet-5.5
+        candidates:
+          - id: claude-sonnet-5.5
+            label: Claude Sonnet 5.5
+            adapter: openrouter
+            ref: anthropic/claude-sonnet-5.5
+            price: {in: 2, out: 10}
+            caps: [tools, json, image]
+            tier: frontier
+            note: 근거 제공 한국어 법률(KCL)에서 Sonnet 4.5가 85.2. 5.5는 미측정 (R4)
+          - id: claude-opus-5.5
+            label: Claude Opus 5.5
+            adapter: openrouter
+            ref: anthropic/claude-opus-5.5
+            price: {in: 4, out: 20}
+            caps: [tools, json, image]
+            tier: frontier
+            note: 품질 상한 측정용 (R4)
+          - id: gpt-5.4
+            label: GPT-5.4
+            adapter: openrouter
+            ref: openai/gpt-5.4
+            price: {in: 2.5, out: 15}
+            caps: [tools, json, image]
+            tier: frontier
+            note: KCL에서 GPT-5가 84.2 (R4)
+          - id: gemini-3.1-pro
+            label: Gemini 3.1 Pro (preview)
+            adapter: openrouter
+            ref: google/gemini-3.1-pro-preview
+            price: {in: 2, out: 12}
+            caps: [tools, json, image, video]
+            tier: frontier
+            note: KCL에서 Gemini 2.5 Pro가 89.3 (계열 기준) (R4)
+          - id: gemini-3.8-flash
+            label: Gemini 3.8 Flash
+            adapter: openrouter
+            ref: google/gemini-3.8-flash
+            price: {in: 0.825, out: 4.125}
+            caps: [tools, json, image, video]
+            tier: efficient
+            note: 경량 · 2027-01부터 직접 API 단가 2배 예정 (R4)
+          - id: gpt-5.4-mini
+            label: GPT-5.4 mini
+            adapter: openrouter
+            ref: openai/gpt-5.4-mini
+            price: {in: 0.75, out: 4.5}
+            caps: [tools, json, image]
+            tier: efficient
+            note: 1.0의 판단 모델 (R4)
+          - id: claude-haiku-5.5
+            label: Claude Haiku 5.5
+            adapter: openrouter
+            ref: anthropic/claude-haiku-5.5
+            price: {in: 0.10, out: 0.50}
+            caps: [tools, json, image]
+            tier: efficient
+            note: 프롬프트 10만 토큰 이하 단가 (R4)
+          - id: claude-opus-5-5-api
+            label: Claude Opus 5.5 · Anthropic API
+            short: Opus 5.5 API
+            adapter: anthropic
+            ref: claude-opus-5-5
+            price: {in: 4, out: 20}
+            caps: [tools, json, image]
+            tier: frontier
+            note: Anthropic API 직접 호출 (ANTHROPIC_API_KEY). 사고를 끌 수 없어 effort로 조절한다.
+          - id: claude-sonnet-5-5-api
+            label: Claude Sonnet 5.5 · Anthropic API
+            short: Sonnet 5.5 API
+            adapter: anthropic
+            ref: claude-sonnet-5-5
+            price: {in: 2, out: 10}
+            caps: [tools, json, image]
+            tier: frontier
+            note: Anthropic API 직접 호출 (ANTHROPIC_API_KEY). OpenRouter의 같은 모델과 경로만 다르다.
+          - id: claude-haiku-5-5-api
+            label: Claude Haiku 5.5 · Anthropic API
+            short: Haiku 5.5 API
+            adapter: anthropic
+            ref: claude-haiku-5-5
+            price: {in: 0.10, out: 0.50}
+            caps: [tools, json, image]
+            tier: efficient
+            note: Anthropic API 직접 호출 (ANTHROPIC_API_KEY). 프롬프트 10만 토큰 이하 단가.
+
+      - id: llm.planner
+        label: Planner (계획 + 검증)
+        used_by: [plan]
+        adapters: [openrouter, anthropic]
+        requires: [json]
+        default: gpt-5.4
+        candidates:
+          - id: gpt-5.4
+            label: GPT-5.4
+            adapter: openrouter
+            ref: openai/gpt-5.4
+            price: {in: 2.5, out: 15}
+            caps: [tools, json, image]
+            tier: frontier
+            note: strict json_schema (R4)
+          - id: gemini-4-argon
+            label: Gemini 4 Argon
+            adapter: openrouter
+            ref: google/gemini-4-argon
+            price: {in: 2, out: 10}
+            caps: [tools, json, image, video]
+            tier: frontier
+            note: 2026-12부터 $4 / $20 예정 (R4)
+          - id: claude-sonnet-5.5
+            label: Claude Sonnet 5.5
+            adapter: openrouter
+            ref: anthropic/claude-sonnet-5.5
+            price: {in: 2, out: 10}
+            caps: [tools, json, image]
+            tier: frontier
+            note: (R4)
+          - id: gpt-5.4-mini
+            label: GPT-5.4 mini
+            adapter: openrouter
+            ref: openai/gpt-5.4-mini
+            price: {in: 0.75, out: 4.5}
+            caps: [tools, json, image]
+            tier: efficient
+            note: (R4)
+          - id: claude-opus-5-5-api
+            label: Claude Opus 5.5 · Anthropic API
+            short: Opus 5.5 API
+            adapter: anthropic
+            ref: claude-opus-5-5
+            price: {in: 4, out: 20}
+            caps: [tools, json, image]
+            tier: frontier
+            note: Anthropic API 직접 호출 (ANTHROPIC_API_KEY). 사고를 끌 수 없어 effort로 조절한다.
+          - id: claude-sonnet-5-5-api
+            label: Claude Sonnet 5.5 · Anthropic API
+            short: Sonnet 5.5 API
+            adapter: anthropic
+            ref: claude-sonnet-5-5
+            price: {in: 2, out: 10}
+            caps: [tools, json, image]
+            tier: frontier
+            note: Anthropic API 직접 호출 (ANTHROPIC_API_KEY). OpenRouter의 같은 모델과 경로만 다르다.
+          - id: claude-haiku-5-5-api
+            label: Claude Haiku 5.5 · Anthropic API
+            short: Haiku 5.5 API
+            adapter: anthropic
+            ref: claude-haiku-5-5
+            price: {in: 0.10, out: 0.50}
+            caps: [tools, json, image]
+            tier: efficient
+            note: Anthropic API 직접 호출 (ANTHROPIC_API_KEY). 프롬프트 10만 토큰 이하 단가.
+
+      - id: llm.review_guide
+        label: Review Guide (검토 안내 · 질문 문구)
+        used_by: [review_guide]
+        adapters: [openrouter, anthropic]
+        default: claude-sonnet-5.5
+        candidates:
+          - id: claude-sonnet-5.5
+            label: Claude Sonnet 5.5
+            adapter: openrouter
+            ref: anthropic/claude-sonnet-5.5
+            price: {in: 2, out: 10}
+            caps: [tools, json, image]
+            tier: frontier
+            note: (R4)
+          - id: claude-haiku-5.5
+            label: Claude Haiku 5.5
+            adapter: openrouter
+            ref: anthropic/claude-haiku-5.5
+            price: {in: 0.10, out: 0.50}
+            caps: [tools, json, image]
+            tier: efficient
+            note: (R4)
+          - id: solar-pro4
+            label: Solar Pro 4
+            adapter: openrouter
+            ref: upstage/solar-pro4
+            price: {in: 0.15, out: 0.60}
+            caps: [tools, json]
+            tier: efficient
+            note: 한국어 네이티브 (R4)
+          - id: claude-opus-5-5-api
+            label: Claude Opus 5.5 · Anthropic API
+            short: Opus 5.5 API
+            adapter: anthropic
+            ref: claude-opus-5-5
+            price: {in: 4, out: 20}
+            caps: [tools, json, image]
+            tier: frontier
+            note: Anthropic API 직접 호출 (ANTHROPIC_API_KEY). 사고를 끌 수 없어 effort로 조절한다.
+          - id: claude-sonnet-5-5-api
+            label: Claude Sonnet 5.5 · Anthropic API
+            short: Sonnet 5.5 API
+            adapter: anthropic
+            ref: claude-sonnet-5-5
+            price: {in: 2, out: 10}
+            caps: [tools, json, image]
+            tier: frontier
+            note: Anthropic API 직접 호출 (ANTHROPIC_API_KEY). OpenRouter의 같은 모델과 경로만 다르다.
+          - id: claude-haiku-5-5-api
+            label: Claude Haiku 5.5 · Anthropic API
+            short: Haiku 5.5 API
+            adapter: anthropic
+            ref: claude-haiku-5-5
+            price: {in: 0.10, out: 0.50}
+            caps: [tools, json, image]
+            tier: efficient
+            note: Anthropic API 직접 호출 (ANTHROPIC_API_KEY). 프롬프트 10만 토큰 이하 단가.
+
+      - id: llm.auditor
+        label: Auditor
+        used_by: [auditor/model]
+        adapters: [openrouter, anthropic, none]
+        requires: [tools]
+        default: gemini-3.1-pro
+        candidates:
+          - id: gemini-3.1-pro
+            label: Gemini 3.1 Pro (preview)
+            adapter: openrouter
+            ref: google/gemini-3.1-pro-preview
+            price: {in: 2, out: 12}
+            caps: [tools, json, image, video]
+            tier: frontier
+            note: 분석가(Claude) · 계획자(GPT)와 다른 회사 모델 (설계 §5.6)
+          - id: claude-opus-5.5
+            label: Claude Opus 5.5
+            adapter: openrouter
+            ref: anthropic/claude-opus-5.5
+            price: {in: 4, out: 20}
+            caps: [tools, json, image]
+            tier: frontier
+            note: 분석가가 Claude면 같은 회사 모델이 된다 (R4)
+          - id: grok-4.7
+            label: Grok 4.7
+            adapter: openrouter
+            ref: x-ai/grok-4.7
+            price: {in: 2, out: 6}
+            caps: [tools, json, image]
+            tier: frontier
+            note: (R4)
+          - id: claude-haiku-5.5
+            label: Claude Haiku 5.5
+            adapter: openrouter
+            ref: anthropic/claude-haiku-5.5
+            price: {in: 0.10, out: 0.50}
+            caps: [tools, json, image]
+            tier: efficient
+            note: (R4)
+          - id: claude-opus-5-5-api
+            label: Claude Opus 5.5 · Anthropic API
+            short: Opus 5.5 API
+            adapter: anthropic
+            ref: claude-opus-5-5
+            price: {in: 4, out: 20}
+            caps: [tools, json, image]
+            tier: frontier
+            note: Anthropic API 직접 호출 (ANTHROPIC_API_KEY). 사고를 끌 수 없어 effort로 조절한다.
+          - id: claude-sonnet-5-5-api
+            label: Claude Sonnet 5.5 · Anthropic API
+            short: Sonnet 5.5 API
+            adapter: anthropic
+            ref: claude-sonnet-5-5
+            price: {in: 2, out: 10}
+            caps: [tools, json, image]
+            tier: frontier
+            note: Anthropic API 직접 호출 (ANTHROPIC_API_KEY). OpenRouter의 같은 모델과 경로만 다르다.
+          - id: claude-haiku-5-5-api
+            label: Claude Haiku 5.5 · Anthropic API
+            short: Haiku 5.5 API
+            adapter: anthropic
+            ref: claude-haiku-5-5
+            price: {in: 0.10, out: 0.50}
+            caps: [tools, json, image]
+            tier: efficient
+            note: Anthropic API 직접 호출 (ANTHROPIC_API_KEY). 프롬프트 10만 토큰 이하 단가.
+          - id: none
+            label: 감사 생략
+            adapter: none
+            note: 기능 제거 실험용. 검토가 끝나면 바로 렌더한다.
+
+      - id: llm.report
+        label: Report Writer
+        used_by: [report]
+        adapters: [openrouter, anthropic]
+        default: solar-pro4
+        candidates:
+          - id: solar-pro4
+            label: Solar Pro 4
+            adapter: openrouter
+            ref: upstage/solar-pro4
+            price: {in: 0.15, out: 0.60}
+            caps: [tools, json]
+            tier: efficient
+            note: 한국어 네이티브 · 공식가 $0.30 / $1.20, OpenRouter 출시 할인가 (R4)
+          - id: claude-haiku-5.5
+            label: Claude Haiku 5.5
+            adapter: openrouter
+            ref: anthropic/claude-haiku-5.5
+            price: {in: 0.10, out: 0.50}
+            caps: [tools, json, image]
+            tier: efficient
+            note: (R4)
+          - id: gpt-5.4-mini
+            label: GPT-5.4 mini
+            adapter: openrouter
+            ref: openai/gpt-5.4-mini
+            price: {in: 0.75, out: 4.5}
+            caps: [tools, json, image]
+            tier: efficient
+            note: (R4)
+          - id: claude-opus-5-5-api
+            label: Claude Opus 5.5 · Anthropic API
+            short: Opus 5.5 API
+            adapter: anthropic
+            ref: claude-opus-5-5
+            price: {in: 4, out: 20}
+            caps: [tools, json, image]
+            tier: frontier
+            note: Anthropic API 직접 호출 (ANTHROPIC_API_KEY). 사고를 끌 수 없어 effort로 조절한다.
+          - id: claude-sonnet-5-5-api
+            label: Claude Sonnet 5.5 · Anthropic API
+            short: Sonnet 5.5 API
+            adapter: anthropic
+            ref: claude-sonnet-5-5
+            price: {in: 2, out: 10}
+            caps: [tools, json, image]
+            tier: frontier
+            note: Anthropic API 직접 호출 (ANTHROPIC_API_KEY). OpenRouter의 같은 모델과 경로만 다르다.
+          - id: claude-haiku-5-5-api
+            label: Claude Haiku 5.5 · Anthropic API
+            short: Haiku 5.5 API
+            adapter: anthropic
+            ref: claude-haiku-5-5
+            price: {in: 0.10, out: 0.50}
+            caps: [tools, json, image]
+            tier: efficient
+            note: Anthropic API 직접 호출 (ANTHROPIC_API_KEY). 프롬프트 10만 토큰 이하 단가.
+
+      - id: agent.questions
+        label: 동적 질문
+        used_by: [legal_analyst/ask_user, await_answers]
+        adapters: [option]
+        default: enabled
+        candidates:
+          - id: enabled
+            label: 사용 (게이트를 통과한 질문만)
+            adapter: option
+          - id: disabled
+            label: 사용 안 함 (보수적 가정으로 진행)
+            adapter: option
+            note: 기능 제거 실험용
+
+  - id: render
+    label: 렌더
+    description: 원본 스트림에 결정을 입힌다. 영상만 재인코딩하고 오디오 · 자막 · 메타데이터는 바이트 복사한다.
+    slots:
+      - id: render.encoder
+        label: 영상 인코더
+        used_by: [render_original, verify_output]
+        adapters: [pyav]
+        default: x264-crf16
+        candidates:
+          - id: x264-crf16
+            label: libx264 CRF 16 · slow
+            short: x264 CRF 16
+            adapter: pyav
+            ref: libx264 crf=16 preset=slow (원본 profile · level · pix_fmt)
+            license: GPL-2.0-or-later (x264)
+            note: 기본. HEVC · 10-bit · HDR 원본은 libx265로 자동 전환 (설계 §6.2)
+          - id: x264-crf14
+            label: libx264 CRF 14 · slow
+            short: x264 CRF 14
+            adapter: pyav
+            ref: libx264 crf=14 preset=slow
+            license: GPL-2.0-or-later (x264)
+            note: 품질 우선 · 파일이 커짐. 마스크 밖 PSNR 임계(U9)는 M4 측정으로 38 dB
+          - id: videotoolbox
+            label: h264_videotoolbox (Apple 하드웨어)
+            short: VideoToolbox
+            adapter: pyav
+            ref: h264_videotoolbox q:v
+            note: 빠름 · 상수 품질은 Apple Silicon 전용 · HDR 메타 처리는 미확인 (R7)
+          - id: ffv1
+            label: FFV1 무손실
+            adapter: pyav
+            ref: ffv1 level=3
+            status: planned
+            note: M6 · 파일이 매우 커짐 (R7)
+
+params:
+  - {id: perception.analysis_fps, stage: perception, label: 분석 프레임레이트, unit: fps, default: 12, min: 5, max: 30, step: 1}
+  - {id: perception.proxy_short_side, stage: perception, label: 분석 프록시 짧은 변, unit: px, default: 640, min: 360, max: 1080, step: 40}
+  - {id: rag.top_k, stage: retrieval, label: 검색 결과 수 (k), unit: 건, default: 8, min: 3, max: 20, step: 1}
+  - {id: analyst.max_tool_calls, stage: agents, label: Legal Analyst 도구 호출 상한, unit: 회, default: 25, min: 5, max: 60, step: 1}
+  - {id: analyst.max_searches, stage: agents, label: Legal Analyst 검색 상한, unit: 회, default: 12, min: 2, max: 30, step: 1}
+  - {id: analyst.max_question_rounds, stage: agents, label: 질문 라운드 상한, unit: 라운드, default: 2, min: 0, max: 3, step: 1}
+  - {id: analyst.max_questions, stage: agents, label: 라운드당 질문 상한, unit: 개, default: 6, min: 1, max: 10, step: 1}
+  - {id: analyst.max_retries, stage: agents, label: 인용 검증 재시도 상한, unit: 회, default: 2, min: 0, max: 3, step: 1}
+  - {id: planner.max_generations, stage: agents, label: 계획 생성 상한, unit: 회, default: 3, min: 1, max: 5, step: 1}
+  - {id: auditor.max_tool_calls, stage: agents, label: Auditor 도구 호출 상한, unit: 회, default: 10, min: 3, max: 30, step: 1}
+  - {id: auditor.max_rounds, stage: agents, label: 감사 후 재검토 라운드, unit: 라운드, default: 1, min: 0, max: 2, step: 1}
+  - {id: case.cost_cap_usd, stage: agents, label: 케이스 비용 상한 (넘으면 멈춤 · 0이면 상한 없음), unit: USD, default: 1.00, min: 0, max: 20.00, step: 0.25}

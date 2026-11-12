@@ -1,40 +1,52 @@
 [project]
 name = "privframe"
 version = "0.1.0"
-description = "Replaceable video privacy redaction research baseline"
+description = "PrivFrame 2.0: a LangGraph multi-agent pipeline that de-identifies video under Korean privacy law"
 requires-python = ">=3.12,<3.13"
 dependencies = [
-  "fastapi>=0.115,<1",
+  "fastapi[standard-no-fastapi-cloud-cli]>=0.115,<1",
   "uvicorn[standard]>=0.34,<1",
   "python-multipart>=0.0.20",
   "pydantic>=2.10,<3",
   "pydantic-settings>=2.7,<3",
-  "python-dotenv>=1,<2",
-  "sqlalchemy>=2.0,<3",
-  "celery[redis]>=5.6,<6",
   "httpx>=0.28,<1",
   "pyyaml>=6,<7",
   "pdfplumber>=0.11,<1",
   "beautifulsoup4>=4.13,<5",
-  "jinja2>=3.1,<4",
   "langchain-core>=1,<2",
-  "langchain-text-splitters>=1,<2",
-  "langchain-openai>=1,<2",
-  "langchain-chroma>=1,<2",
   "chromadb>=1,<2",
   "opencv-python-headless>=4.11,<5",
   "numpy>=2,<3",
   "onnxruntime>=1.20,<2",
   "scenedetect>=0.6.7,<0.7",
-  "langgraph>=1,<2",
+  "langgraph>=1.2.15,<1.3",
   "langgraph-checkpoint-sqlite>=3,<4",
+  "langchain>=1.4.9,<1.5",
+  "langsmith>=0.14.17,<0.15",
+  "langchain-openrouter>=0.2.9,<0.3",
+  "av>=19.0.2,<20",
+  "kiwipiepy>=0.24.1,<0.25",
+  "bm25s>=0.3.16,<0.4",
+  "langchain-anthropic>=1.0",
 ]
 
 [project.scripts]
-privframe = "privframe.cli:main"
+privframe-smoke = "privframe.harness.smoke:main"
+privframe-corpus = "privframe.harness.corpus:main"
+privframe-case = "privframe.harness.case:main"
+
+[tool.fastapi]
+entrypoint = "privframe.service.app:app"
 
 [dependency-groups]
 dev = ["pytest>=8,<10", "ruff>=0.11,<1"]
+models = [
+    "open-image-models>=0.6,<0.7",
+    "rapidocr>=3.10,<4",
+    "rfdetr>=1.11.2,<1.12",
+    "sentence-transformers>=6.2,<7",
+    "trackers>=2.6.1,<2.7",
+]
 
 [build-system]
 requires = ["hatchling"]
@@ -45,6 +57,11 @@ packages = ["backend/src/privframe"]
 
 [tool.pytest.ini_options]
 testpaths = ["backend/tests"]
+
+[tool.uv]
+# trackers asks for the GUI build of OpenCV; the project uses opencv-python-headless (same cv2 API, no libGL),
+# and two OpenCV wheels in one environment overwrite each other's cv2 package.
+override-dependencies = ["opencv-python ; sys_platform == 'never'"]
 
 [tool.ruff]
 line-length = 110

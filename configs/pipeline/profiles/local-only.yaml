@@ -1,0 +1,52 @@
+# 프로필: catalog.yaml의 부품마다 후보 하나를 고른 조합. 실험실 > 프로필에서 만들고 고칠 수 있다.
+id: local-only
+name: local-only
+description: 프레임을 밖으로 보내지 않는 조합. 서비스에서 '이 컴퓨터에서만 처리'를 고르면 쓰인다.
+base: baseline-v2
+source: file
+selections:
+  # 지각
+  perception.scene_cut: adaptive
+  perception.face_detector: yunet
+  perception.object_detector: rfdetr-nano
+  perception.segmenter: rfdetr-seg-nano
+  perception.tracker: botsort
+  perception.face_embedding: sface
+  perception.plate_detector: yolo-v9-t-384
+  perception.ocr: rapidocr-tiny
+  # 장면 이해 (VLM)
+  vlm.input_mode: v3
+  vlm.scene: qwen3-vl-8b-mlx
+  vlm.person: qwen3-vl-8b-mlx
+  vlm.inspect: qwen3-vl-8b-mlx
+  # 법률 검색 (RAG)
+  rag.chunking: article-prefix
+  rag.embedding: kure-v1
+  rag.retrieval: hybrid-rrf
+  rag.bm25_tokenizer: kiwi
+  rag.reranker: kure-reranker-nano
+  rag.store: chroma
+  rag.seed: enabled
+  # 에이전트 · LLM
+  agent.strategy: proposed
+  llm.analyst: claude-sonnet-5.5
+  llm.planner: gpt-5.4
+  llm.review_guide: claude-sonnet-5.5
+  llm.auditor: gemini-3.1-pro
+  llm.report: solar-pro4
+  agent.questions: enabled
+  # 렌더
+  render.encoder: x264-crf16
+params:
+  perception.analysis_fps: 12
+  perception.proxy_short_side: 640
+  rag.top_k: 8
+  analyst.max_tool_calls: 25
+  analyst.max_searches: 12
+  analyst.max_question_rounds: 2
+  analyst.max_questions: 6
+  analyst.max_retries: 2
+  planner.max_generations: 3
+  auditor.max_tool_calls: 10
+  auditor.max_rounds: 1
+  case.cost_cap_usd: 1.00
