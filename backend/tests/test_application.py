@@ -33,7 +33,7 @@ class InlineDispatcher:
 
     def deliver(self, task, *args):
         operation = {"extract": self.pipeline.extract, "index": self.pipeline.build_index,
-                     "stage": self.pipeline.run_stage}[task]
+                     "stage": self.pipeline.run_stage, "component": self.pipeline.run_component}[task]
         operation(*args)
 
 

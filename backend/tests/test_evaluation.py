@@ -6,10 +6,16 @@ import httpx
 import pytest
 
 from privframe.adapters.rag import LangChainChunker
-from privframe.domain.models import DocumentRecord, SourceMetadata, SourceUnit
-from privframe.evaluation import (
-    EvaluationManifest, ManualFaceExpectation, decision_quality, evaluate_manifest, face_metrics, source_span_recall,
+from privframe.adapters.report import SnapshotReporter
+from privframe.domain.models import (
+    DocumentRecord, IdentityGroup, IdentityGrouping, IdentityTrackSummary, PersonContext,
+    RunSnapshot, ScenarioInput, SourceMetadata, SourceUnit,
 )
+from privframe.evaluation import (
+    EvaluationManifest, FaceAnnotations, ManualFaceExpectation, decision_quality, evaluate_manifest,
+    face_metrics, identity_grouping_metrics, source_span_recall,
+)
+from privframe.infrastructure.storage import ArtifactStore
 
 
 def test_reference_span_survives_chunking_and_ids_but_not_missing_source_characters():
@@ -78,6 +84,133 @@ def test_face_metrics_require_explicit_annotations_in_normalized_basis():
     expectation.annotations.fps = 15
     assert face_metrics(observation, expectation)["annotated_box_metrics"] is None
     assert "annotation_error" in face_metrics(observation, expectation)
+
+
+def identity_example():
+    left = {"x": 10, "y": 10, "width": 20, "height": 20}
+    right = {"x": 60, "y": 10, "width": 20, "height": 20}
+    observation = {"width": 100, "height": 80, "fps": 30, "frame_count": 6, "tracks": [
+        {"id": "one", "start": 0, "end": 3 / 30, "points": [{"frame": 0, "box": left},
+                                                                    {"frame": 2, "box": left}]},
+        {"id": "two", "start": 1 / 30, "end": 2 / 30, "points": [{"frame": 1, "box": left}]},
+        {"id": "three", "points": [{"frame": 0, "box": right}]},
+        {"id": "mixed", "points": [{"frame": 3, "box": left}, {"frame": 4, "box": left}]},
+        {"id": "plate", "object_type": "license_plate", "points": [{"frame": 0, "box": right}]},
+    ]}
+    annotations = FaceAnnotations.model_validate({
+        "width": 100, "height": 80, "fps": 30, "faces": [
+            {"frame": 0, "box": left, "identity_label": "A"},
+            {"frame": 1, "box": left, "identity_label": "A"},
+            {"frame": 2, "box": left, "identity_label": "A"},
+            {"frame": 0, "box": right, "identity_label": "B"},
+            {"frame": 3, "box": left, "identity_label": "C"},
+            {"frame": 4, "box": left, "identity_label": "D"},
+            {"frame": 5, "box": left, "identity_label": "E"},
+        ],
+    })
+    identity = {
+        "automatic_groups": [{"id": "auto-1", "track_ids": ["one", "three"]},
+                             {"id": "auto-2", "track_ids": ["two"]},
+                             {"id": "auto-3", "track_ids": ["mixed"], "review_reasons": ["inconsistent"]}],
+        "groups": [{"id": "person-A", "track_ids": ["one", "two"]},
+                   {"id": "person-B", "track_ids": ["three"]},
+                   {"id": "person-CD", "track_ids": ["mixed"]}],
+    }
+    return observation, identity, annotations
+
+
+def test_identity_metrics_compare_auto_and_reviewed_groups_and_detect_mixed_tracks():
+    observation, identity, annotations = identity_example()
+    result = identity_grouping_metrics(observation, identity, annotations)
+    assert result["mixed_identity_track_ids"] == ["mixed"]
+    assert result["labeled_track_count"] == 4 and result["unlabeled_track_count"] == 0
+    assert result["matched_identity_annotations"] == 6 and result["unmatched_identity_annotations"] == 1
+    automatic, current = result["automatic"], result["current"]
+    assert automatic["evaluated_track_pair_count"] == 3
+    assert automatic["false_merged_track_pairs"] == automatic["split_same_person_track_pairs"] == 1
+    assert automatic["unresolved_track_count"] == automatic["simultaneous_track_pair_count"] == 1
+    assert current["false_merged_track_pairs"] == current["split_same_person_track_pairs"] == 0
+    assert current["same_person_pair_recall"] == current["grouped_pair_precision"] == 1
+    # one and two have overlapping start/end ranges but never share an observed frame.
+    assert current["simultaneous_track_pair_count"] == 0
+    faces = face_metrics(observation, ManualFaceExpectation(annotations=annotations))["annotated_box_metrics"]
+    assert faces["detected_boxes"] == 6  # The future non-face object is excluded.
+
+
+def test_identity_metrics_do_not_claim_zero_errors_without_matched_identity_truth():
+    observation, identity, annotations = identity_example()
+    assert identity_grouping_metrics(observation, identity, None) is None
+    assert identity_grouping_metrics(observation, None, annotations) is None
+    unlabeled = annotations.model_copy(deep=True)
+    for face in unlabeled.faces:
+        face.identity_label = None
+    assert identity_grouping_metrics(observation, identity, unlabeled) is None
+    unmatched = annotations.model_copy(deep=True)
+    unmatched.faces = [unmatched.faces[-1]]
+    result = identity_grouping_metrics(observation, identity, unmatched)
+    assert result["matched_identity_annotations"] == 0
+    assert result["automatic"]["false_merged_track_pairs"] is None
+    assert result["automatic"]["split_same_person_track_pairs"] is None
+    annotations.fps = 15
+    invalid = identity_grouping_metrics(observation, identity, annotations)
+    assert "annotation_error" in invalid and invalid["automatic"] is None and invalid["current"] is None
+
+
+def test_identity_metrics_record_missing_and_duplicate_group_memberships():
+    observation, identity, annotations = identity_example()
+    identity["groups"] = [{"id": "first", "track_ids": ["one", "two"]},
+                          {"id": "second", "track_ids": ["two", "missing"]}]
+    current = identity_grouping_metrics(observation, identity, annotations)["current"]
+    assert current["invalid_membership_track_ids"] == ["mixed", "three", "two"]
+    assert current["unresolved_track_count"] == 3 and current["unknown_track_ids"] == ["missing"]
+    assert current["false_merged_track_pairs"] is None  # Only one valid, labeled track remains.
+
+
+def test_exhaustive_identity_annotations_still_validate_explicit_frame_bounds():
+    observation, identity, annotations = identity_example()
+    annotations.exhaustive = True
+    annotations.faces[0].frame = 6
+    result = identity_grouping_metrics(observation, identity, annotations)
+    assert "outside" in result["annotation_error"] and result["automatic"] is None
+    face_result = face_metrics(observation, ManualFaceExpectation(annotations=annotations))
+    assert "outside" in face_result["annotation_error"] and face_result["annotated_box_metrics"] is None
+
+
+def test_report_preserves_auto_groups_person_facts_and_model_provenance_without_reading_features(tmp_path):
+    store = ArtifactStore(tmp_path / "artifacts")
+    private = store.put_bytes("private/face-features.json", b"private-vector-sentinel")
+    run = RunSnapshot(
+        id="report-test", video_id="video", config={"mode": "real"}, reused_stages={"analyze": "parent-analysis"},
+        scenario=ScenarioInput(context="test", persons={
+            "person-reviewed": PersonContext(track_ids=["face-1", "face-2"], relationship="third", consent="denied"),
+        }),
+        identity=IdentityGrouping(
+            feature_fingerprint="feature-hash", grouping_fingerprint="grouping-hash", features_artifact=private,
+            automatic_groups=[IdentityGroup(id="person-auto-1", track_ids=["face-1"]),
+                              IdentityGroup(id="person-auto-2", track_ids=["face-2"])],
+            groups=[IdentityGroup(id="person-reviewed", track_ids=["face-1", "face-2"], source="user")],
+            tracks=[IdentityTrackSummary(track_id="face-1", sample_frames=[1, 30], quality=0.9, consistency=0.8)],
+            reviewed=True, revision=1, elapsed_seconds=1.25,
+            model={"name": "<script>ArcFace</script>", "sha256": "model-hash"},
+            metrics={"embedding_count": 2}, user_changes=[{"operation": "review"}],
+        ),
+    )
+    paths = SnapshotReporter(store).generate(run)
+    html = store.resolve(paths["html"]).read_text()
+    snapshot = json.loads(store.resolve(paths["json"]).read_text())
+    assert "인물 그룹과 사용자 확인" in html and "1명" in html
+    assert "본인이 아닌 다른 사람" in html and "동의 여부를 알 수 없음" in html
+    assert "feature-hash" not in html and "grouping-hash" not in html
+    assert "<script>ArcFace</script>" not in html
+    assert snapshot["identity"]["model"]["name"] == "<script>ArcFace</script>"
+    assert snapshot["identity"]["feature_fingerprint"] == "feature-hash"
+    assert snapshot["identity"]["grouping_fingerprint"] == "grouping-hash"
+    assert snapshot["identity"]["elapsed_seconds"] == 1.25
+    assert snapshot["reused_stages"] == {"analyze": "parent-analysis"}
+    assert "private-vector-sentinel" not in html and "private-vector-sentinel" not in json.dumps(snapshot)
+    assert len(snapshot["identity"]["automatic_groups"]) == 2
+    assert snapshot["scenario"]["persons"]["person-reviewed"]["consent"] == "unknown"
+    assert snapshot["scenario"]["persons"]["person-reviewed"]["legacy_values"]["consent"] == "denied"
 
 
 def manifest_fixture(tmp_path, *, mode="fixture", render=False, confirmed=False):
@@ -164,10 +297,55 @@ def test_evaluator_uses_api_and_preserves_synthetic_label_hashes_ids_and_null_qu
     assert case["run_id"] == "run-id" and case["working_hash"] == "normalized-hash"
     assert case["config"]["runtime"]["lock_hash"] == "runtime-hash"
     assert case["track_count"] == 0 and case["face_metrics"]["annotated_box_metrics"] is None
+    assert case["identity_metrics"] is None
     assert case["review_reasons"] == ["NO_FACES_DETECTED"]
     assert not any(route.endswith("/render") for _, route, _ in api.requests)
     assert ("GET", "/api/documents") in [(method, route) for method, route, _ in api.requests]
     json.dumps(result, ensure_ascii=False)  # Entire CLI result remains JSON-compatible.
+
+
+def test_evaluator_measures_automatic_groups_before_waiting_for_human_review(tmp_path):
+    path, document, video = manifest_fixture(tmp_path)
+    box = {"x": 10, "y": 10, "width": 20, "height": 20}
+    data = json.loads(path.read_text())
+    data["cases"][0]["manual_face_expectation"] = {"has_actual_faces": True, "annotations": {
+        "width": 100, "height": 80, "fps": 30, "faces": [
+            {"frame": 0, "box": box, "identity_label": "A"},
+            {"frame": 2, "box": box, "identity_label": "A"},
+        ],
+    }}
+    path.write_text(json.dumps(data))
+    api = EvaluationAPI(document, video, tracks=[
+        {"id": "a-first", "points": [{"frame": 0, "box": box}]},
+        {"id": "a-later", "points": [{"frame": 2, "box": box}]},
+    ])
+    groups = [{"id": "person-A", "track_ids": ["a-first", "a-later"]}]
+    api.run["identity"] = {"automatic_groups": groups, "groups": groups, "reviewed": False,
+                           "feature_fingerprint": "face-model-hash", "grouping_fingerprint": "cluster-hash",
+                           "model": {"name": "ArcFace"}, "elapsed_seconds": 0.25}
+    with httpx.Client(base_url="http://evaluation.test", transport=httpx.MockTransport(api)) as client:
+        result = evaluate_manifest(client, path, "selected")
+    assert result["status"] == "AWAITING_LABELS"
+    assert result["summary"]["review_pending_case_count"] == 1 and result["summary"]["failed_case_count"] == 0
+    assert result["summary"]["completed_decisions"] == 0
+    case = result["cases"][0]
+    assert case["review_pending"] and case["identity"]["feature_fingerprint"] == "face-model-hash"
+    assert case["identity_metrics"]["automatic"]["split_same_person_track_pairs"] == 0
+    assert case["identity_metrics"]["automatic"]["false_merged_track_pairs"] == 0
+    assert not any(route.endswith(("/decide", "/labels", "/identity-review", "/render"))
+                   for _, route, _ in api.requests)
+
+
+def test_evaluator_does_not_wait_for_identity_review_when_no_person_groups_exist(tmp_path):
+    path, document, video = manifest_fixture(tmp_path)
+    api = EvaluationAPI(document, video)
+    api.run["identity"] = {"automatic_groups": [], "groups": [], "reviewed": False}
+    with httpx.Client(base_url="http://evaluation.test", transport=httpx.MockTransport(api)) as client:
+        result = evaluate_manifest(client, path, "selected")
+    assert result["status"] == "COMPLETED" and result["summary"]["review_pending_case_count"] == 0
+    assert result["cases"][0]["identity_metrics"] is None
+    assert any(route.endswith("/decide") for _, route, _ in api.requests)
+    assert not any(route.endswith("/identity-review") for _, route, _ in api.requests)
 
 
 def test_mode_mismatch_is_rejected_before_mutation_and_real_label_is_distinct(tmp_path):

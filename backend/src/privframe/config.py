@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="PRIVFRAME_", env_file=ROOT / ".env", extra="ignore")
     data_dir: Path = ROOT / "data"
     model_path: Path = ROOT / "models/face_detection_yunet_2023mar.onnx"
+    identity_model_path: Path = ROOT / "models/w600k_r50.onnx"
     profiles_dir: Path = ROOT / "configs"
     redis_url: str = "redis://127.0.0.1:6379/0"
     frontend_origin: str = "http://localhost:5173"
@@ -50,6 +51,16 @@ class PipelineConfig(Contract):
     tracker_iou_threshold: float = Field(default=0.3, gt=0, le=1)
     tracker_max_gap: int = Field(default=2, ge=0, le=2)
     scene_cut_threshold: float = Field(default=0.45, gt=0, le=1)
+    scene_adaptive_threshold: float = Field(default=3.0, gt=0)
+    scene_min_length: int = Field(default=15, ge=1)
+    scene_window_width: int = Field(default=2, ge=1)
+    scene_min_content: float = Field(default=15.0, ge=0)
+    identity_grouper: Literal["none", "arcface"] = "arcface"
+    identity_similarity_threshold: float = Field(default=0.60, ge=-1, le=1)
+    identity_candidate_threshold: float = Field(default=0.40, ge=-1, le=1)
+    identity_consistency_threshold: float = Field(default=0.35, ge=-1, le=1)
+    identity_min_face_size: int = Field(default=48, ge=8)
+    identity_max_samples: int = Field(default=5, ge=2, le=20)
     normalization_fps: int = Field(default=30, ge=1, le=60)
     video_timeout_seconds: int = Field(default=300, ge=30, le=3600)
     renderer: Literal["opencv-ffmpeg-v1"] = "opencv-ffmpeg-v1"
@@ -58,6 +69,8 @@ class PipelineConfig(Contract):
     def consistent(self):
         if self.chunk_overlap >= self.chunk_size:
             raise ValueError("chunk_overlap must be smaller than chunk_size")
+        if self.identity_candidate_threshold > self.identity_similarity_threshold:
+            raise ValueError("Identity candidate threshold must not exceed the merge threshold")
         if self.mode == "fixture" and (self.decider != "fixture" or not self.embedding_model.startswith("fixture-")):
             raise ValueError("fixture mode requires explicit fixture adapters")
         if self.mode == "real" and (self.decider == "fixture" or self.embedding_model.startswith("fixture-")):

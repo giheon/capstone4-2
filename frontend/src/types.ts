@@ -1,5 +1,6 @@
 import type { components } from "./api-schema";
 
+export type AppConfig = components["schemas"]["AppConfig"];
 export type Run = components["schemas"]["RunSnapshot"];
 export type Track = components["schemas"]["Track"];
 export type Treatment = components["schemas"]["Treatment"];
@@ -9,6 +10,8 @@ export type DocumentRecord = components["schemas"]["DocumentRecord"];
 export type IndexRecord = components["schemas"]["IndexRecord"];
 export type VideoRecord = components["schemas"]["VideoRecord"];
 export type ScenarioInput = components["schemas"]["ScenarioInput"];
+export type IdentityGroup = components["schemas"]["IdentityGroup"];
+export type PersonInput = NonNullable<ScenarioInput["persons"]>[string];
 export type Profile = { name: string; config: Record<string, unknown> };
 export type Health = {
   status: string;
@@ -26,8 +29,15 @@ export const actionNames: Record<Action, string> = {
 };
 export const labelNames: Record<string, string> = {
   unknown: "관계 미확인",
-  self: "본인 / 요청자",
-  third: "제3자",
+  self: "본인(업로더)",
+  other: "다른 사람",
+};
+export const consentNames: Record<string, string> = {
+  unknown: "미확인",
+  granted: "동의함",
+  not_obtained: "동의를 받지 않음",
+  refused: "명시적으로 거부함",
+  not_applicable: "해당 없음",
 };
 export const statusNames: Record<string, string> = {
   QUEUED: "대기 중",
@@ -38,7 +48,8 @@ export const statusNames: Record<string, string> = {
   REVIEW_REQUIRED: "사용자 검토 필요",
   RENDERING: "영상 생성 중",
   COMPLETED: "출력 완료",
-  FAILED: "실행 실패",
+  FAILED: "처리 실패",
+  PAUSED: "일시 정지",
 };
 export const profileNames: Record<string, string> = {
   baseline: "기본 실험",

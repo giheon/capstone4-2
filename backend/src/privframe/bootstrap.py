@@ -13,7 +13,7 @@ from privframe.infrastructure.storage import ArtifactStore, Repository, sha256_f
 
 def runtime_metadata() -> dict:
     packages = ["privframe", "langchain-core", "langchain-openai", "langchain-chroma", "chromadb",
-                "opencv-python-headless", "numpy", "pdfplumber", "celery"]
+                "opencv-python-headless", "numpy", "pdfplumber", "celery", "onnxruntime", "scenedetect", "langgraph", "langgraph-checkpoint-sqlite"]
     versions = {}
     for name in packages:
         try:
@@ -38,11 +38,14 @@ def create_service(settings: Settings | None = None, dispatcher=None) -> Service
     settings = settings or Settings()
     artifacts = ArtifactStore(settings.data_dir)
     repository = Repository(settings.data_dir / "state.sqlite3")
-    return Service(settings, repository, artifacts, dispatcher or CeleryDispatcher(), runtime_metadata)
+    from privframe.adapters.track_editing import TrackThumbnailer
+    return Service(settings, repository, artifacts, dispatcher or CeleryDispatcher(), runtime_metadata,
+                   thumbnailer=TrackThumbnailer(artifacts))
 
 
 def create_pipeline(service: Service) -> Pipeline:
     from privframe.adapters.decision import create_decider
+    from privframe.adapters.identity import ArcFaceIdentityGrouper
     from privframe.adapters.rag import DocumentExtractor, LangChainChunker, create_reranker, create_retriever
     from privframe.adapters.report import SnapshotReporter
     from privframe.adapters.vision import OpenCVRenderer, OpenCVVideoAnalyzer
@@ -52,6 +55,7 @@ def create_pipeline(service: Service) -> Pipeline:
         analyzer=OpenCVVideoAnalyzer(service.artifacts, service.settings.model_path),
         renderer=OpenCVRenderer(service.artifacts), reporter=SnapshotReporter(service.artifacts).generate,
         reranker=create_reranker,
+        identity_grouper=ArcFaceIdentityGrouper(service.artifacts, service.settings.identity_model_path),
     )
     return Pipeline(service.repository, service.artifacts, adapters)
 

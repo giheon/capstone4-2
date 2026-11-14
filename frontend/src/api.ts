@@ -45,9 +45,9 @@ export function artifactUrl(artifact: string) {
 }
 export function createRun(body: {
   video_id: string;
-  index_id: string | null;
+  index_id?: string | null;
   scenario: ScenarioInput;
-  profile: string;
+  profile?: string;
 }) {
   return post<Run>("/runs", body);
 }

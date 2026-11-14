@@ -12,7 +12,7 @@ import pytest
 from privframe.adapters.vision import (
     HaarDetector, IoUTracker, OpenCVRenderer, OpenCVVideoAnalyzer, VideoProcessingError,
     VisionSettings, YuNetDetector, _clamp_box, _small_frame, apply_treatment, box_iou,
-    is_scene_cut, probe_video, scene_descriptor,
+    detect_scene_cuts, is_scene_cut, probe_video, scene_descriptor,
 )
 from privframe.domain.models import Action, Box, Detection, Track, TrackPoint, Treatment, VideoObservation, VideoRecord
 from privframe.infrastructure.storage import ArtifactStore, sha256_file
@@ -106,6 +106,34 @@ def test_tracker_never_assigns_one_track_to_two_detections():
     assert set(result) == {"face-0001", "face-0002"}
 
 
+def test_tracker_does_not_reuse_face_track_for_another_object_type():
+    tracker = IoUTracker()
+    face = detection()
+    plate = Detection(box=face.box, confidence=0.9, object_type="license_plate")
+    assert set(tracker.update(0, 0, [face])) == {"face-0001"}
+    assert set(tracker.update(1, 1 / 30, [plate])) == {"object-0002"}
+    assert set(tracker.update(2, 2 / 30, [face, plate])) == {"face-0001", "object-0002"}
+
+
+def test_yunet_landmarks_are_scaled_to_the_normalized_frame():
+    class Model:
+        def setInputSize(self, size):
+            assert size == (64, 32)
+
+        def detect(self, frame):
+            return None, np.array([[10, 4, 20, 20, 14, 8, 25, 8, 20, 14, 15, 20, 24, 20, 0.99]],
+                                  dtype=np.float32)
+
+    detector = object.__new__(YuNetDetector)
+    detector.model, detector.max_side = Model(), 64
+    result = detector.detect(np.zeros((128, 256, 3), dtype=np.uint8))
+    assert len(result) == 1
+    assert result[0].box == Box(x=40, y=16, width=80, height=80)
+    assert result[0].landmarks == [(56.0, 32.0), (100.0, 32.0), (80.0, 56.0),
+                                   (60.0, 80.0), (96.0, 80.0)]
+    assert result[0].object_type == "face"
+
+
 def test_downsampling_bounds_and_scene_change():
     frame = np.zeros((1080, 1920, 3), dtype=np.uint8)
     resized, x_scale, y_scale = _small_frame(frame, 640)
@@ -120,6 +148,56 @@ def test_downsampling_bounds_and_scene_change():
     assert is_scene_cut(black, white, 0.45)
     assert not is_scene_cut(black, black, 0.45)
     assert not is_scene_cut(None, white, 0.45)
+
+
+def test_adaptive_cut_prepass_resets_tracks_even_when_histograms_match(store, ffmpeg, monkeypatch):
+    from privframe.adapters import vision
+
+    first = np.zeros((64, 96, 3), dtype=np.uint8)
+    first[:, :48] = 255
+    second = np.ascontiguousarray(first[:, ::-1])
+    assert np.array_equal(scene_descriptor(first), scene_descriptor(second))
+    path = store.resolve("videos/spatial-cuts.mp4")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    subprocess.run([
+        ffmpeg, "-v", "error", "-n", "-f", "rawvideo", "-pix_fmt", "bgr24", "-s:v", "96x64",
+        "-r", "30", "-i", "pipe:0", "-c:v", "libx264", "-crf", "0", "-pix_fmt", "yuv420p",
+        "-threads", "1", str(path),
+    ], input=first.tobytes() * 30 + second.tobytes() * 30 + first.tobytes() * 30,
+        capture_output=True, check=True, timeout=30)
+    assert detect_scene_cuts(path, VisionSettings()) == [30, 60]
+
+    class FixedDetector:
+        model_hash = "stub"
+
+        def detect(self, frame):
+            return [Detection(box=Box(x=10, y=10, width=30, height=30), confidence=0.9,
+                              landmarks=[(15, 15), (30, 15), (23, 22), (18, 30), (28, 30)])]
+
+    monkeypatch.setattr(vision, "HaarDetector", lambda *args: FixedDetector())
+    video = VideoRecord(id="spatial", filename=path.name, artifact=store.relative(path),
+                        content_hash=sha256_file(path))
+    observation = OpenCVVideoAnalyzer(store, Path("unused")).analyze(video, {"detector": "haar"}, "cuts-run")
+    assert observation.normalization["scene_cut_frames"] == [30, 60]
+    assert [(track.points[0].frame, track.points[-1].frame) for track in observation.tracks] == [
+        (0, 29), (30, 59), (60, 89),
+    ]
+    assert all(track.object_type == "face" for track in observation.tracks)
+    assert all(point.landmarks == [(15, 15), (30, 15), (23, 22), (18, 30), (28, 30)]
+               for track in observation.tracks for point in track.points)
+
+
+def test_adaptive_cut_prepass_has_a_deadline(store, ffmpeg):
+    video = make_video(store, ffmpeg)
+    with pytest.raises(VideoProcessingError, match="scene detection timed out"):
+        detect_scene_cuts(store.resolve(video.artifact), VisionSettings(), deadline=time.monotonic() - 1)
+
+
+def test_aba_video_scene_boundaries_when_available():
+    path = Path(__file__).resolve().parents[2] / "data/videos/PrivFrame_ABA/A_B_A.mp4"
+    if not path.is_file():
+        pytest.skip("Local A_B_A acceptance video is not installed")
+    assert detect_scene_cuts(path, VisionSettings()) == [300, 600]
 
 
 @pytest.mark.parametrize("action", [Action.BLUR, Action.MOSAIC, Action.MASK])
@@ -292,6 +370,7 @@ def test_normalization_rotation_audio_cfr_and_fingerprint_reuse(store, ffmpeg, r
         observation.analysis_fingerprint
     )
     assert analyzer.fingerprint(video, {**config, "detector_threshold": 0.6}) != observation.analysis_fingerprint
+    assert analyzer.fingerprint(video, {**config, "scene_adaptive_threshold": 4}) != observation.analysis_fingerprint
     again = analyzer.analyze(video, config, "rotation-run")
     assert observation.working_artifact != again.working_artifact
     assert store.resolve(observation.working_artifact).is_file()
@@ -315,7 +394,9 @@ def test_pinned_yunet_model_cpu_smoke():
 
 
 @pytest.mark.parametrize("config", [{"detector": "invalid"}, {"detector_max_side": 1000},
-                                    {"tracker_max_gap": 3}, {"normalization_fps": 0}])
+                                    {"tracker_max_gap": 3}, {"normalization_fps": 0},
+                                    {"scene_adaptive_threshold": float("nan")}, {"scene_min_length": 0},
+                                    {"scene_window_width": 0}, {"scene_min_content": -1}])
 def test_invalid_vision_configuration(config):
     with pytest.raises(VideoProcessingError):
         VisionSettings.from_config(config)
