@@ -58,6 +58,7 @@ uv run privframe-corpus index [--profile baseline-v2]      # 프로필의 rag.* 
 uv run privframe-corpus search "촬영 동의와 공표" [-k 5] [--kind prec] [--mode bm25] [--no-rerank]
 uv run privframe-corpus show pipa 제25조의2                 # 원문 열람
 uv run privframe-corpus status
+uv run privframe-corpus select configs/corpus/selection.yaml --version v1   # 선정 규칙으로 후보 탐색 → 원문 확보 → 채점 → 수집 목록 (M4-1, 17)
 ```
 
 | 대상 | 키 | 확인 내용 |

@@ -3,7 +3,7 @@ import json
 import pytest
 
 from privframe.core.corpus import CorpusStore, DocRecord
-from privframe.core.parsers import ParseError, law_html, lawgokr_json, parse_all, parser_for, units_from_pages
+from privframe.core.parsers import OCR_REF, ParseError, law_html, lawgokr_json, parse_all, parser_for, pdf_ocr, units_from_pages
 
 
 def record(doc_id: str = "d", source: str = "lawgokr", fmt: str = "json") -> DocRecord:
@@ -53,6 +53,33 @@ def test_judgment_fields_become_units_and_identifiers_do_not():
 def test_empty_pdf_pages_are_dropped():
     units = units_from_pages(["첫 쪽", "", "셋째 쪽"])
     assert [(u.unit_id, u.label) for u in units] == [("p1", "1쪽"), ("p3", "3쪽")]
+
+
+ONE_BLANK_PAGE = b"%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj\n3 0 obj<</Type/Page/Parent 2 0 R/MediaBox[0 0 200 200]>>endobj\nxref\n0 4\n0000000000 65535 f \n0000000009 00000 n \n0000000052 00000 n \n0000000101 00000 n \ntrailer<</Size 4/Root 1 0 R>>\nstartxref\n164\n%%EOF\n"
+
+
+def test_a_pdf_without_a_text_layer_is_read_page_by_page_as_upright_lines(monkeypatch):
+    asked = []
+
+    class Reader:  # stands in for the OCR models: boxes (x, y, width, height) in any order, as the real reader gives them
+        def read(self, image, *, upright=False):
+            asked.append((image.shape[2], upright))
+            return [
+                ((300.0, 100.0, 200.0, 30.0), "2014가합508066 판결", 0.9),
+                ((20.0, 160.0, 480.0, 30.0), "개인정보에 해당한다.", 1.0),
+                ((20.0, 102.0, 260.0, 30.0), "서울중앙지방법원 2017. 9. 11. 선고", 0.8),
+                ((530.0, 60.0, 20.0, 200.0), "&리Y", 0.5),  # the chapter tab printed sideways in the margin
+            ]
+
+    monkeypatch.setattr("privframe.core.perception.models._rapidocr", lambda ref: Reader())
+    (unit,) = pdf_ocr(record(source="local_file", fmt="pdf"), ONE_BLANK_PAGE)
+    assert asked == [(3, True)]  # a rendered page stands upright: no line is checked for being upside down
+    assert unit.text == "서울중앙지방법원 2017. 9. 11. 선고 2014가합508066 판결\n개인정보에 해당한다."
+    assert (unit.unit_id, unit.meta) == ("p1", {"page": 1, "ocr": OCR_REF, "cls": "off", "score": 0.9})  # a reading, and it says so
+
+    monkeypatch.setattr(Reader, "read", lambda self, image, *, upright=False: [])
+    with pytest.raises(ParseError, match="OCR로도"):
+        pdf_ocr(record(source="local_file", fmt="pdf"), ONE_BLANK_PAGE)
 
 
 def test_parser_choice_and_reparse_only_when_needed(tmp_path):

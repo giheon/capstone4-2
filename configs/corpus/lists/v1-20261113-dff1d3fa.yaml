@@ -1,0 +1,6784 @@
+# 법률 코퍼스 수집 목록 v1-20261113-dff1d3fa (M4-1)
+# 선정 규칙(configs/corpus/selection.yaml)으로 만든 결과다. 손으로 고치지 않는다: 규칙을 바꾸고 다시 만든다.
+#   uv run privframe-corpus fetch <이 파일>      # 같은 원문을 받는다 (색인하지 않는다: defaults.index = false)
+# selection: 왜 들어왔는지의 기록 (purpose: main 주요 근거 · trail 같은 사건의 경과 확인용). 수집기는 읽지 않는다.
+# missing: 찾았지만 원문을 확보하지 못한 것. 없다는 뜻이 아니다.
+version:
+  id: v1-20261113-dff1d3fa
+  name: v1
+  basis_date: '2026-11-13'
+  rules: selection.yaml
+  rules_sha256: a7f5bee402d38e9c90068679c2ab001901918aa6e23a32a943c132b9452ae3c4
+  rubric: 67e0a298dc65
+  made_at: '2026-11-13T10:02:54+00:00'
+defaults:
+  index: false
+documents:
+- id: pipa
+  source: lawgokr
+  target: law
+  params:
+    MST: '283839'
+  kind: law
+  title: 개인정보 보호법
+  citation: 개인정보 보호법
+  authority: 1
+  dates:
+    promulgated_on: '2026-03-10'
+    effective_from: '2026-09-11'
+  selection:
+    purpose: main
+    units: all
+    decision: ''
+    sha256: cc7d185e55f511f1482cf6184a1cca18d483d1523e4edb1cb3641b2487b59fcf
+- id: pipa-decree
+  source: lawgokr
+  target: law
+  params:
+    MST: '291731'
+  kind: law
+  title: 개인정보 보호법 시행령
+  citation: 개인정보 보호법 시행령
+  authority: 1
+  dates:
+    promulgated_on: '2026-11-10'
+    effective_from: '2026-11-10'
+  selection:
+    purpose: main
+    units: all
+    decision: ''
+    sha256: 3883e4edd57043db05ed9e43307103eb764a1d02c0dc35b8c9de4157f237aa7d
+- id: standard-guideline
+  source: lawgokr
+  target: admrul
+  params:
+    ID: '2100000257592'
+  kind: admrul
+  title: 표준 개인정보 보호지침
+  citation: 표준 개인정보 보호지침
+  authority: 1
+  dates:
+    promulgated_on: '2025-04-11'
+    effective_from: '2025-04-11'
+  selection:
+    purpose: main
+    units: all
+    decision: ''
+    sha256: 5b90a7e44a699b4a1db54679f7f180b446b2b1f4c9398a42294b62d966d95d0c
+- id: constitution
+  source: lawgokr
+  target: law
+  params:
+    MST: '61603'
+  kind: law
+  title: 대한민국헌법
+  citation: 대한민국헌법
+  authority: 1
+  dates:
+    promulgated_on: '1987-10-29'
+    effective_from: '1988-02-25'
+  selection:
+    purpose: main
+    units:
+    - 제10조
+    - 제17조
+    - 제21조
+    decision: ①-A
+    sha256: 69a1712e2c79df781270f8f612eb3e43f5d26513a6d3d2e0011e65b4cde83eeb
+- id: civil-act
+  source: lawgokr
+  target: law
+  params:
+    MST: '284415'
+  kind: law
+  title: 민법
+  citation: 민법
+  authority: 1
+  dates:
+    promulgated_on: '2026-03-17'
+    effective_from: '2026-03-17'
+  selection:
+    purpose: main
+    units:
+    - 제750조
+    - 제751조
+    decision: ①-A
+    sha256: 25c58a126c5b3f3127fd2781487b53655c64b907a2073d5aa63f61f93bab5c5a
+- id: press-arbitration-act
+  source: lawgokr
+  target: law
+  params:
+    MST: '253581'
+  kind: law
+  title: 언론중재 및 피해구제 등에 관한 법률
+  citation: 언론중재 및 피해구제 등에 관한 법률
+  authority: 1
+  dates:
+    promulgated_on: '2023-08-08'
+    effective_from: '2023-08-08'
+  selection:
+    purpose: main
+    units:
+    - 제5조
+    decision: ①-A
+    sha256: 6e197e78e761bb40394736600e7ee930bb653f32d5368b48ce06a4c3768b1e7c
+- id: location-act
+  source: lawgokr
+  target: law
+  params:
+    MST: '277359'
+  kind: law
+  title: 위치정보의 보호 및 이용 등에 관한 법률
+  citation: 위치정보의 보호 및 이용 등에 관한 법률
+  authority: 1
+  dates:
+    promulgated_on: '2025-10-01'
+    effective_from: '2025-10-01'
+  selection:
+    purpose: main
+    units:
+    - 제15조
+    - 제2조
+    decision: 보완 제안
+    sha256: 424a5caa28c5a734e5873ed27bfb11a421b345165abf1fb1f42a749ccb6b5f5f
+- id: guide-fixed-camera-2024-12
+  source: local_file
+  path: data/corpus/inbox/고정형_영상정보처리기기_안내서_2024.12.pdf
+  page: https://www.pipc.go.kr/np/cop/bbs/selectBoardArticle.do?bbsId=BS217&mCode=G010030000&nttId=10901
+  kind: guideline
+  title: 고정형 영상정보처리기기 설치·운영 안내서 (2024.12)
+  citation: 고정형 영상정보처리기기 설치·운영 안내서 (2024.12)
+  authority: 3
+  dates:
+    published_at: 2024-12
+  selection:
+    purpose: main
+    units: all
+    sha256: 1f725b27f3c57a3d459233ca0df1346cf63a4c627037ab39ee86f6448c9ba807
+- id: guide-mobile-camera-2024-09
+  source: local_file
+  path: data/corpus/inbox/이동형_영상정보처리기기_안내서_2024.9.pdf
+  page: https://pipc.go.kr/np/cop/bbs/selectBoardArticle.do?bbsId=BS217&mCode=G010030000&nttId=10679
+  kind: guideline
+  title: 이동형 영상정보처리기기를 위한 개인영상정보 보호·활용 안내서 (2024.9)
+  citation: 이동형 영상정보처리기기를 위한 개인영상정보 보호·활용 안내서 (2024.9)
+  authority: 3
+  dates:
+    published_at: 2024-09
+  selection:
+    purpose: main
+    units: all
+    sha256: 0156948d50985844b523ae1c1ac0943f44e040112dfa4663a8ce623d6a2bbdb7
+- id: detc-134509
+  source: lawgokr
+  target: detc
+  params:
+    ID: '134509'
+  kind: detc
+  title: 헌법재판소 2001. 8. 30. 선고 2000헌바36 결정
+  citation: 헌법재판소 2000헌바36
+  authority: 2
+  dates:
+    decided_on: '2001-08-30'
+  selection:
+    purpose: main
+    sha256: e84a136c8f91be30e3936c05b1f659ae172a72da160463015771f71b32cf9e0f
+    complete: true
+    questions:
+      Q6: 3
+      Q3: 2
+      Q5: 1
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: detc-137747
+  source: lawgokr
+  target: detc
+  params:
+    ID: '137747'
+  kind: detc
+  title: 헌법재판소 2005. 5. 26. 선고 99헌마513 결정
+  citation: 헌법재판소 99헌마513
+  authority: 2
+  dates:
+    decided_on: '2005-05-26'
+  selection:
+    purpose: main
+    sha256: 8f3b759742bc8232d048f0cc3afac52aa6e3f6ccbb32d4afe484683daba74691
+    complete: true
+    questions:
+      Q1: 3
+      Q2: 2
+      Q3: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    - ④
+    cited_by: 14
+    change: 검사 안 함
+- id: detc-134679
+  source: lawgokr
+  target: detc
+  params:
+    ID: '134679'
+  kind: detc
+  title: 헌법재판소 2005. 7. 21. 선고 2003헌마282 결정
+  citation: 헌법재판소 2003헌마282
+  authority: 2
+  dates:
+    decided_on: '2005-07-21'
+  selection:
+    purpose: main
+    sha256: 30ebbdf441afd8d74bd6d54a621efef86e0288fba8b4484dc73da0ff942d4e2c
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q2: 2
+      Q3: 2
+      Q5: 3
+      Q6: 2
+      Q7: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ①
+    - ④
+    cited_by: 12
+    change: 검사 안 함
+- id: detc-137496
+  source: lawgokr
+  target: detc
+  params:
+    ID: '137496'
+  kind: detc
+  title: 헌법재판소 2008. 5. 29. 선고 2005헌마137 결정
+  citation: 헌법재판소 2005헌마137
+  authority: 2
+  dates:
+    decided_on: '2008-05-29'
+  selection:
+    purpose: main
+    sha256: f570fe5565658731b41cb7239f6951408e456dd68a43d35ef9c18322a49fde2e
+    complete: true
+    questions:
+      Q2: 3
+      Q5: 2
+      Q3: 2
+      Q7: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    - ④
+    cited_by: 6
+    change: 검사 안 함
+- id: detc-17015
+  source: lawgokr
+  target: detc
+  params:
+    ID: '17015'
+  kind: detc
+  title: 헌법재판소 2011. 9. 29. 선고 2010헌마413 결정
+  citation: 헌법재판소 2010헌마413
+  authority: 2
+  dates:
+    decided_on: '2011-09-29'
+  selection:
+    purpose: main
+    sha256: f9835b6c979edb7cf27f2f59c63ed7d13ef441176c5cd4009aeda598312288cb
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+      Q5: 3
+      Q6: 3
+      Q3: 2
+      Q7: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 6
+    change: 검사 안 함
+- id: detc-35610
+  source: lawgokr
+  target: detc
+  params:
+    ID: '35610'
+  kind: detc
+  title: 헌법재판소 2014. 3. 27. 선고 2012헌마652 결정
+  citation: 헌법재판소 2012헌마652
+  authority: 2
+  dates:
+    decided_on: '2014-03-27'
+  selection:
+    purpose: main
+    sha256: 2d59e04051aa9bb8b1f7b7f2d0edfcd76a120d65df4b388625660cd2a9bc1a7f
+    complete: true
+    questions:
+      Q1: 3
+      Q2: 3
+      Q3: 3
+      Q4: 2
+      Q5: 2
+      Q6: 3
+      Q7: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 1
+    change: 검사 안 함
+- id: detc-35882
+  source: lawgokr
+  target: detc
+  params:
+    ID: '35882'
+  kind: detc
+  title: 헌법재판소 2014. 4. 16. 선고 2014헌마250 결정
+  citation: 헌법재판소 2014헌마250
+  authority: 2
+  dates:
+    decided_on: '2014-04-16'
+  selection:
+    purpose: main
+    sha256: 77f99c8b2b47810c6cf84f37ecad602d01e46426a2f1d782d1f87b541ae2d217
+    complete: true
+    questions:
+      Q2: 3
+      Q5: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: detc-39002
+  source: lawgokr
+  target: detc
+  params:
+    ID: '39002'
+  kind: detc
+  title: 헌법재판소 2014. 7. 24. 선고 2013헌마426 결정
+  citation: 헌법재판소 2013헌마426
+  authority: 2
+  dates:
+    decided_on: '2014-07-24'
+  selection:
+    purpose: main
+    sha256: 08e5f7287b1da75c581f7e983f36b46e9da2f39ee23b38ac0c1b6b25d13d9073
+    complete: true
+    questions:
+      Q1: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 1
+    change: 검사 안 함
+- id: detc-39636
+  source: lawgokr
+  target: detc
+  params:
+    ID: '39636'
+  kind: detc
+  title: 헌법재판소 2014. 9. 2. 선고 2014헌마649 결정
+  citation: 헌법재판소 2014헌마649
+  authority: 2
+  dates:
+    decided_on: '2014-09-02'
+  selection:
+    purpose: main
+    sha256: 896e8666efa91f85bd475a6d3cb6552aa4bc6de386133e23b857601ef4c968db
+    complete: true
+    questions:
+      Q0: 3
+      Q1: 3
+      Q2: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: detc-50068
+  source: lawgokr
+  target: detc
+  params:
+    ID: '50068'
+  kind: detc
+  title: 헌법재판소 2016. 4. 28. 선고 2015헌마243 결정
+  citation: 헌법재판소 2015헌마243
+  authority: 2
+  dates:
+    decided_on: '2016-04-28'
+  selection:
+    purpose: main
+    sha256: c41d8a787611de2a42a55181120cd6b4ee340dcbb2a7a544e67d2ca8fc5ae843
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q2: 3
+      Q5: 2
+      Q6: 2
+      Q7: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: detc-53172
+  source: lawgokr
+  target: detc
+  params:
+    ID: '53172'
+  kind: detc
+  title: 헌법재판소 2016. 12. 29. 선고 2016헌바153 결정
+  citation: 헌법재판소 2016헌바153
+  authority: 2
+  dates:
+    decided_on: '2016-12-29'
+  selection:
+    purpose: main
+    sha256: 9ad05bb447538548d8419e50db722914c9aabc554340780bc5eb827a6fb22c36
+    complete: true
+    questions:
+      Q2: 2
+      Q3: 3
+      Q4: 3
+      Q5: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    - ④
+    cited_by: 7
+    change: 검사 안 함
+- id: detc-55476
+  source: lawgokr
+  target: detc
+  params:
+    ID: '55476'
+  kind: detc
+  title: 헌법재판소 2017. 6. 29. 선고 2015헌바243 결정
+  citation: 헌법재판소 2015헌바243
+  authority: 2
+  dates:
+    decided_on: '2017-06-29'
+  selection:
+    purpose: main
+    sha256: 45263d9a83fceed866889db431df26b09eacd2e4c881e86e9c6244e41b453886
+    complete: true
+    questions:
+      Q2: 3
+      Q3: 2
+      Q4: 2
+      Q5: 3
+      Q6: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 2
+    change: 검사 안 함
+- id: detc-2015hunma994
+  source: lawgokr
+  target: detc
+  params:
+    ID: '144160'
+  kind: detc
+  title: 헌법재판소 2017. 12. 28. 선고 2015헌마994 결정
+  citation: 헌법재판소 2015헌마994
+  authority: 2
+  dates:
+    decided_on: '2017-12-28'
+  selection:
+    purpose: main
+    sha256: 93251e0f6e80efe06bd07bcc22e4399793f6cd0548e5d00eb98e58cfb164c2b5
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 3
+      Q2: 3
+      Q3: 3
+      Q4: 2
+      Q5: 3
+      Q6: 3
+      Q8: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ①
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+    unconfirmed:
+    - '근거 문장의 위치 미확인: Q3'
+- id: detc-146826
+  source: lawgokr
+  target: detc
+  params:
+    ID: '146826'
+  kind: detc
+  title: 헌법재판소 2018. 4. 26. 선고 2017헌마747 결정
+  citation: 헌법재판소 2017헌마747
+  authority: 2
+  dates:
+    decided_on: '2018-04-26'
+  selection:
+    purpose: main
+    sha256: bb6d0751295161ac503c659e17965517542a0ffebe1ff782660ee62136df1548
+    complete: true
+    questions:
+      Q0: 3
+      Q1: 1
+      Q3: 2
+      Q4: 1
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: detc-148661
+  source: lawgokr
+  target: detc
+  params:
+    ID: '148661'
+  kind: detc
+  title: 헌법재판소 2018. 8. 30. 선고 2014헌마843 결정
+  citation: 헌법재판소 2014헌마843
+  authority: 2
+  dates:
+    decided_on: '2018-08-30'
+  selection:
+    purpose: main
+    sha256: 9e0af2b00ae6dc3c42825e465e3c2cfd1d60429734ca938225ee97c1834f6733
+    complete: false
+    questions:
+      Q0: 2
+      Q1: 2
+      Q2: 3
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ①
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+    unconfirmed:
+    - '원문 일부만 확보: 전문 없음'
+- id: detc-162711
+  source: lawgokr
+  target: detc
+  params:
+    ID: '162711'
+  kind: detc
+  title: 헌법재판소 2020. 12. 23. 선고 2017헌마416 결정
+  citation: 헌법재판소 2017헌마416
+  authority: 2
+  dates:
+    decided_on: '2020-12-23'
+  selection:
+    purpose: main
+    sha256: fa349900777c7a76da2e4efd5fb8aa8c7c4f03f0216f190c1a9bb556840f4493
+    complete: true
+    questions:
+      Q1: 3
+      Q3: 2
+      Q5: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: detc-177917
+  source: lawgokr
+  target: detc
+  params:
+    ID: '177917'
+  kind: detc
+  title: 헌법재판소 2022. 9. 29. 선고 2020헌마1204 결정
+  citation: 헌법재판소 2020헌마1204
+  authority: 2
+  dates:
+    decided_on: '2022-09-29'
+  selection:
+    purpose: main
+    sha256: 82b20f3724aea24c6f4730ab1d40317e03daa0f170e2868875892c00dfe339c4
+    complete: true
+    questions:
+      Q0: 3
+      Q3: 2
+      Q1: 1
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: detc-188921
+  source: lawgokr
+  target: detc
+  params:
+    ID: '188921'
+  kind: detc
+  title: 헌법재판소 2024. 2. 28. 선고 2021헌마40 결정
+  citation: 헌법재판소 2021헌마40
+  authority: 2
+  dates:
+    decided_on: '2024-02-28'
+  selection:
+    purpose: main
+    sha256: 06e218a0c96ab5cdccabcd152a3021116323c509219b60c3b7ea45f8ccf6c0f8
+    complete: true
+    questions:
+      Q1: 2
+      Q2: 2
+      Q3: 3
+      Q7: 1
+      Q6: 3
+      Q8: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: detc-191115
+  source: lawgokr
+  target: detc
+  params:
+    ID: '191115'
+  kind: detc
+  title: 헌법재판소 2024. 5. 30. 선고 2022헌마707 결정
+  citation: 헌법재판소 2022헌마707
+  authority: 2
+  dates:
+    decided_on: '2024-05-30'
+  selection:
+    purpose: main
+    sha256: b8984d0f9203ab9efb65abaf4816997455e1fdffaf0a2bb679c3f3c786885ed3
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q2: 3
+      Q5: 3
+      Q7: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: expc-325075
+  source: lawgokr
+  target: expc
+  params:
+    ID: '325075'
+  kind: expc
+  title: 법제처 2014. 9. 17. 회신 14-0411 해석례 (국무조정실 - 국회가 안건심의 또는 국정감사나 국정조사와 관련하여 국가기관이 보유한 영상물의 제출을 요구한 )
+  citation: 법령해석례 14-0411
+  authority: 2
+  dates:
+    decided_on: '2014-09-17'
+  selection:
+    purpose: main
+    sha256: afeb164c0006658da85aee7ec9b1f2fcc1c1ea5b61bcd9492b7b7bc121ab4d4f
+    complete: true
+    questions:
+      Q0: 2
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: expc-325029
+  source: lawgokr
+  target: expc
+  params:
+    ID: '325029'
+  kind: expc
+  title: 법제처 2014. 10. 14. 회신 14-0438 해석례 (송파구 - 「지방세기본법」 제134조의6제2항ㆍ제3항 및 「질서위반행위규제법」 제23조는 「개인정보 보호법」)
+  citation: 법령해석례 14-0438
+  authority: 2
+  dates:
+    decided_on: '2014-10-14'
+  selection:
+    purpose: main
+    sha256: c6a8e63d4b6ada450b80d9e7d6179f7b6d75c0a2d5aa362f59fa2b5fc83a7731
+    complete: true
+    questions:
+      Q0: 2
+      Q3: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: expc-342213
+  source: lawgokr
+  target: expc
+  params:
+    ID: '342213'
+  kind: expc
+  title: 법제처 2025. 11. 14. 회신 25-0702 해석례 (민원인 - 「여객자동차 운수사업법」 제27조의3제4항 각 호에 해당하지 않는 경우로서 국토교통부장관 등이 여)
+  citation: 법령해석례 25-0702
+  authority: 2
+  dates:
+    decided_on: '2025-11-14'
+  selection:
+    purpose: main
+    sha256: 1f8e1746efdaa6b7bea3bb4737a65d1a3108a7895c5a0e6154522767a0a1b5f3
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 1
+      Q3: 3
+      Q6: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-957
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '957'
+  kind: ppc
+  title: 개인정보보호위원회 2012. 11. 12. 의결 (관악구 CCTV 영상정보 제공 관련 법령해석 요청 건)
+  citation: 개인정보보호위원회 결정문 957
+  authority: 2
+  dates:
+    decided_on: '2012-11-12'
+  selection:
+    purpose: main
+    sha256: a51f5f42a6dcb92f877315bbe8848766b6cf87326a8458ba9eff70ccfd998a7a
+    complete: false
+    questions:
+      Q0: 2
+      Q1: 2
+      Q2: 1
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+    unconfirmed:
+    - '원문 일부만 확보: 이유 없음'
+- id: ppc-1113
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1113'
+  kind: ppc
+  title: 개인정보보호위원회 2012. 12. 24. 의결 (교통영상정보 외부기관 연계ㆍ송출의 개인정보보호법 저촉 여부 질의 건)
+  citation: 개인정보보호위원회 결정문 1113
+  authority: 2
+  dates:
+    decided_on: '2012-12-24'
+  selection:
+    purpose: main
+    sha256: 645f2fe581035a6c380da86622b3281da9630eea1b2f1fd69ce65136f5202b32
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 3
+      Q2: 2
+      Q3: 3
+      Q6: 2
+      Q7: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-411
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '411'
+  kind: ppc
+  title: 개인정보보호위원회 2013. 5. 27. 의결 (「쓰레기 불법투기행위 촬영 영상자료 공개」관련 법령 해석)
+  citation: 개인정보보호위원회 결정문 411
+  authority: 2
+  dates:
+    decided_on: '2013-05-27'
+  selection:
+    purpose: main
+    sha256: de19fa0746d1af69fec9eed8ac516c07b47ff96e3e05d0137c0616f6089a3c7f
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q2: 2
+      Q3: 3
+      Q6: 3
+      Q7: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-421
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '421'
+  kind: ppc
+  title: 개인정보보호위원회 2013. 5. 27. 의결 (CCTV를 이용한 동의 없는 개인정보 수집처리에 관한 법령해석)
+  citation: 개인정보보호위원회 결정문 421
+  authority: 2
+  dates:
+    decided_on: '2013-05-27'
+  selection:
+    purpose: main
+    sha256: 38bf63c844458f781cd307447a883e0501e00c574489c59ce47d10254c09aa7d
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+      Q3: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1007
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1007'
+  kind: ppc
+  title: 개인정보보호위원회 2014. 6. 23. 의결 2014 의결 제13호(2014. 6. 23.) (송파구의 자동차 체납세 등 징수를 위한 공영주차장 입ㆍ출차 차량번호 및 입ㆍ출차 시간 제공 관련 심의 요청 )
+  citation: 개인정보보호위원회 2014 의결 제13호(2014. 6. 23.)
+  authority: 2
+  dates:
+    decided_on: '2014-06-23'
+  selection:
+    purpose: main
+    sha256: 86c6319e4574bd18ac7993bcbc19f520e6534d34ce0a54f6e7aa90ecdf6f8a42
+    complete: true
+    questions:
+      Q1: 3
+      Q3: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-sample
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1145'
+  kind: ppc
+  title: 개인정보보호위원회 2014. 9. 29. 의결 제2014-19-21호 (교통정보수집용 영상정보처리기기의 영상정보 제공 관련 심의요청 건)
+  citation: 개인정보보호위원회 제2014-19-21호
+  authority: 2
+  dates:
+    decided_on: '2014-09-29'
+  selection:
+    purpose: main
+    sha256: 2dc9323e9bbca59a21e71d33343d179e2d4c4d602d4558b0b8b945bfe592e56c
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 1
+      Q2: 2
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1127
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1127'
+  kind: ppc
+  title: 개인정보보호위원회 2014. 10. 13. 의결 제2014-19-22호 (국무총리 공관 정문 주변 영상정보처리기기 녹화영상 제공 관련 심의 요청 건)
+  citation: 개인정보보호위원회 제2014-19-22호
+  authority: 2
+  dates:
+    decided_on: '2014-10-13'
+  selection:
+    purpose: main
+    sha256: 68c05948ae0e8fead7aa95c92164ccd99d58094cbef2e8a28ce848e7cfbd3a49
+    complete: true
+    questions:
+      Q0: 2
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1125
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1125'
+  kind: ppc
+  title: 개인정보보호위원회 2014. 10. 27. 의결 제2014-21-25호 (육군 제1288부대의 강원도산림개발연구원 산불감시용 CCTV 영상정보 공유에 대한 심의ㆍ의결 요청 건)
+  citation: 개인정보보호위원회 제2014-21-25호
+  authority: 2
+  dates:
+    decided_on: '2014-10-27'
+  selection:
+    purpose: main
+    sha256: c2be35755890d9c380a23a9264d4f621c751d08b124a95751b06b62894063662
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 2
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-205
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '205'
+  kind: ppc
+  title: 개인정보보호위원회 2015. 4. 13. 의결 제2015-07-12호 (포항시 통합관제센터 영상정보의 해병대 제1사단 제공 관련 질의 건)
+  citation: 개인정보보호위원회 제2015-07-12호
+  authority: 2
+  dates:
+    decided_on: '2015-04-13'
+  selection:
+    purpose: main
+    sha256: ffbe6b4435bb90329d97073ae891040dc961ffe42880099edd5fbe8508172efc
+    complete: true
+    questions:
+      Q0: 2
+      Q3: 3
+      Q6: 3
+      Q8: 1
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-187
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '187'
+  kind: ppc
+  title: 개인정보보호위원회 2015. 4. 27. 의결 제2015-08-14호 (서울특별시 건설공사장 영상정보처리기기의 영상정보 공개에 관한 건)
+  citation: 개인정보보호위원회 제2015-08-14호
+  authority: 2
+  dates:
+    decided_on: '2015-04-27'
+  selection:
+    purpose: main
+    sha256: bf04a70aa319caaa7d1a566514b65a9484f50382930ac36a25db733d3abf7f2f
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q2: 2
+      Q3: 3
+      Q4: 1
+      Q6: 2
+      Q7: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-171
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '171'
+  kind: ppc
+  title: 개인정보보호위원회 2015. 6. 8. 의결 제2015-10-18호 (경찰청의 웨어러블 카메라 사용의 개인정보보호법령상 가능여부 질의 건)
+  citation: 개인정보보호위원회 제2015-10-18호
+  authority: 2
+  dates:
+    decided_on: '2015-06-08'
+  selection:
+    purpose: main
+    sha256: b30379c526f80a78d22695ddb6544d1cfcd6d0e4372773289e16d414f4dba24f
+    complete: true
+    questions:
+      Q0: 3
+      Q2: 3
+      Q6: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-189
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '189'
+  kind: ppc
+  title: 개인정보보호위원회 2015. 6. 8. 의결 제2015-10-17호 (안양시 교통ㆍ방범 영상정보의 경찰서ㆍ소방서ㆍ군부대 제공 관련 질의 건)
+  citation: 개인정보보호위원회 제2015-10-17호
+  authority: 2
+  dates:
+    decided_on: '2015-06-08'
+  selection:
+    purpose: main
+    sha256: 2371fbe291d21dde74e7942bc6f998c67fc4893a675749e526e19217314aae63
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 3
+      Q2: 2
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-197
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '197'
+  kind: ppc
+  title: 개인정보보호위원회 2015. 6. 22. 의결 제2015-11-20호 (청주시 영상정보의 방송ㆍ신문사 제공 관련 질의 건)
+  citation: 개인정보보호위원회 제2015-11-20호
+  authority: 2
+  dates:
+    decided_on: '2015-06-22'
+  selection:
+    purpose: main
+    sha256: 031b6642180ec6751388aa62a411e94b1a5f95b51bb353b7aeb4b81531e4d0b1
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q3: 3
+      Q6: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-321
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '321'
+  kind: ppc
+  title: 개인정보보호위원회 2015. 7. 13. 의결 제2015-12-21호 (종로구 영상정보의 국회 제공 관련 질의 건)
+  citation: 개인정보보호위원회 제2015-12-21호
+  authority: 2
+  dates:
+    decided_on: '2015-07-13'
+  selection:
+    purpose: main
+    sha256: 29268830bc61938bf3b1621aa8ec4f6b1ab0d8154dd4bd68d5e5c112a860325c
+    complete: true
+    questions:
+      Q0: 2
+      Q3: 3
+      Q6: 3
+      Q7: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-323
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '323'
+  kind: ppc
+  title: 개인정보보호위원회 2015. 7. 13. 의결 제2015-12-22호 (철도차량 운전실 폐쇄회로 텔레비전 설치 관련 심의ㆍ의결 건)
+  citation: 개인정보보호위원회 제2015-12-22호
+  authority: 2
+  dates:
+    decided_on: '2015-07-13'
+  selection:
+    purpose: main
+    sha256: 8ed9d6934d9d13ab6cc977d8041a744e82d948bf317afc803820d493123d7f7a
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 3
+      Q2: 3
+      Q3: 2
+      Q5: 2
+      Q6: 3
+      Q7: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-329
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '329'
+  kind: ppc
+  title: 개인정보보호위원회 2015. 8. 24. 의결 제2015-14-27호 (상주시 굴착공사 장소에 관한 정보의 주식회사 영남에너지서비스 제공 관련질의 건)
+  citation: 개인정보보호위원회 제2015-14-27호
+  authority: 2
+  dates:
+    decided_on: '2015-08-24'
+  selection:
+    purpose: main
+    sha256: c82d3ade55b95a60666e49bf92cf07c1bd1825f95468ee56f3c1afc33a5756ce
+    complete: true
+    questions:
+      Q1: 3
+      Q3: 1
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-341
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '341'
+  kind: ppc
+  title: 개인정보보호위원회 2015. 8. 24. 의결 제2015-14-26호 (포항시 교통영상정보의 도로교통공단 제공 관련 질의 건)
+  citation: 개인정보보호위원회 제2015-14-26호
+  authority: 2
+  dates:
+    decided_on: '2015-08-24'
+  selection:
+    purpose: main
+    sha256: 5e2d9b25f55da16b89d1994089b7f7f2475a219892390579008cde2e99331b1b
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q3: 3
+      Q7: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-343
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '343'
+  kind: ppc
+  title: 개인정보보호위원회 2015. 9. 14. 의결 제2015-15-28호 (국토교통부ㆍ한국도로공사 교통사고 영상정보의 손해보험사 제공 관련 질의 건)
+  citation: 개인정보보호위원회 제2015-15-28호
+  authority: 2
+  dates:
+    decided_on: '2015-09-14'
+  selection:
+    purpose: main
+    sha256: 97879666e821bffac0920b292c208f950ceebcc8acfc87e4ed6171d0f42c5565
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 3
+      Q3: 3
+      Q4: 3
+      Q7: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1045
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1045'
+  kind: ppc
+  title: 개인정보보호위원회 2015. 11. 9. 의결 제2015-18-32호 (육군 제6755부대의 대구ㆍ경북지역 통합관제센터 및 경찰 상황실 영상정보 제공에 대한 질의 건)
+  citation: 개인정보보호위원회 제2015-18-32호
+  authority: 2
+  dates:
+    decided_on: '2015-11-09'
+  selection:
+    purpose: main
+    sha256: 678b4a793cdac8a408193961e0dfc82a5027cd524d32e6a6f53607f078ce6006
+    complete: true
+    questions:
+      Q0: 2
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1039
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1039'
+  kind: ppc
+  title: 개인정보보호위원회 2015. 11. 23. 의결 제2015-19-33호 (충주시 교통, 방범 영상의 경찰서, 소방서, 군부대 제공 관련 질의 건)
+  citation: 개인정보보호위원회 제2015-19-33호
+  authority: 2
+  dates:
+    decided_on: '2015-11-23'
+  selection:
+    purpose: main
+    sha256: ea1f40df18362f29da65beae401cde974aba0816bced18bc5e96671d6da02bd9
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 2
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1091
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1091'
+  kind: ppc
+  title: 개인정보보호위원회 2015. 12. 28. 의결 제2015-21-36호 (인천광역시 소방본부의 인천광역시 관내 영상 관련 질의 건)
+  citation: 개인정보보호위원회 제2015-21-36호
+  authority: 2
+  dates:
+    decided_on: '2015-12-28'
+  selection:
+    purpose: main
+    sha256: d4a0bdd0263300855d16769b455d58fefbe26d0a88e128d1ac74fa4bd1eb9493
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1087
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1087'
+  kind: ppc
+  title: 개인정보보호위원회 2016. 1. 11. 의결 제2016-01-01호 (쓰레기 무단투기 영상제공 관련 질의 건)
+  citation: 개인정보보호위원회 제2016-01-01호
+  authority: 2
+  dates:
+    decided_on: '2016-01-11'
+  selection:
+    purpose: main
+    sha256: 498cc17b2347b0d9c8958a578c2534a83803beb00bccea53497eb12b1b1005a3
+    complete: true
+    questions:
+      Q0: 3
+      Q2: 3
+      Q3: 3
+      Q6: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1097
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1097'
+  kind: ppc
+  title: 개인정보보호위원회 2016. 1. 25. 의결 제2016-02-05호 (대구광역시 북구청 영상정보 제공 관련 질의 건)
+  citation: 개인정보보호위원회 제2016-02-05호
+  authority: 2
+  dates:
+    decided_on: '2016-01-25'
+  selection:
+    purpose: main
+    sha256: 1f2301b22e1efdfbffe329694fc1baa011975f25ba960713de482f854b4626b2
+    complete: true
+    questions:
+      Q3: 3
+      Q6: 3
+      Q0: 1
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1109
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1109'
+  kind: ppc
+  title: 개인정보보호위원회 2016. 1. 25. 의결 제2016-02-04호 (대구광역시 남구청 영상정보 제공 관련 질의 건)
+  citation: 개인정보보호위원회 제2016-02-04호
+  authority: 2
+  dates:
+    decided_on: '2016-01-25'
+  selection:
+    purpose: main
+    sha256: a3d8a1b52a0c92b769a47f5da72801a5d1c77a16aec9c84a03467d1ed20b701c
+    complete: true
+    questions:
+      Q0: 2
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-985
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '985'
+  kind: ppc
+  title: 개인정보보호위원회 2016. 3. 14. 의결 제2016-04-10호 (육군 제7516부대의 경주시 통합관제센터 영상정보 제공에 대한 질의 건)
+  citation: 개인정보보호위원회 제2016-04-10호
+  authority: 2
+  dates:
+    decided_on: '2016-03-14'
+  selection:
+    purpose: main
+    sha256: 5c2cf5a2b5dfef53177c1677f652ec742f14924332f1a9b9801f5bcde5eeecab
+    complete: true
+    questions:
+      Q0: 2
+      Q3: 3
+      Q6: 3
+      Q7: 1
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1101
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1101'
+  kind: ppc
+  title: 개인정보보호위원회 2016. 9. 12. 의결 제2016-14-23호 (고양시의 영상정보제공 관련 질의 건)
+  citation: 개인정보보호위원회 제2016-14-23호
+  authority: 2
+  dates:
+    decided_on: '2016-09-12'
+  selection:
+    purpose: main
+    sha256: a5c7779c774381bed49a3544a1d91782126e37afe07e56e2930f96a89b254394
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 3
+      Q2: 2
+      Q3: 3
+      Q6: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1117
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1117'
+  kind: ppc
+  title: 개인정보보호위원회 2016. 11. 14. 의결 제2016-14-22호 (부산광역시 건설안전시험사업소의 과적차량 단속정보 관련 질의 건)
+  citation: 개인정보보호위원회 제2016-14-22호
+  authority: 2
+  dates:
+    decided_on: '2016-11-14'
+  selection:
+    purpose: main
+    sha256: 38b6cb3cb469697af58b26114797359018d59e03e23d0439f58a2948f984a3cd
+    complete: true
+    questions:
+      Q1: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1131
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1131'
+  kind: ppc
+  title: 개인정보보호위원회 2016. 11. 14. 의결 제2016-15-24호 (쓰레기 무단투기 단속을 위한 영상 수집ㆍ이용 관련 질의 건)
+  citation: 개인정보보호위원회 제2016-15-24호
+  authority: 2
+  dates:
+    decided_on: '2016-11-14'
+  selection:
+    purpose: main
+    sha256: ff889e0a37898881b218ca138bd97c92e4db23f17b35cc8cd9e1790ac9aee76f
+    complete: true
+    questions:
+      Q0: 3
+      Q1: 2
+      Q2: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1021
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1021'
+  kind: ppc
+  title: 개인정보보호위원회 2017. 7. 10. 의결 제2017-13-100호 (부산광역시 남구의 쓰레기 무단투기 단속을 위한 시민 봉사단 운영에 관한 건)
+  citation: 개인정보보호위원회 제2017-13-100호
+  authority: 2
+  dates:
+    decided_on: '2017-07-10'
+  selection:
+    purpose: main
+    sha256: 17d40d85966029048a4bf7c87b05bf89ed0008808ce3afb6636130b7914bc230
+    complete: true
+    questions:
+      Q0: 3
+      Q1: 2
+      Q2: 3
+      Q3: 3
+      Q6: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-945
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '945'
+  kind: ppc
+  title: 개인정보보호위원회 2017. 7. 10. 의결 제2017-15-124호 (서울특별시(한양도성도감)와 중구의 영상정보 공유에 관한 건)
+  citation: 개인정보보호위원회 제2017-15-124호
+  authority: 2
+  dates:
+    decided_on: '2017-07-10'
+  selection:
+    purpose: main
+    sha256: d9cbe1fb9c34f0daf270dc6a286d7d99beb8db5bbb369ce0b0c05fb6adebdab4
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+      Q3: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1061
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1061'
+  kind: ppc
+  title: 개인정보보호위원회 2017. 10. 16. 의결 제2017-20-167호 (지방자치단체 통합관제센터 영상정보의 군부대 제공에 관한 건)
+  citation: 개인정보보호위원회 제2017-20-167호
+  authority: 2
+  dates:
+    decided_on: '2017-10-16'
+  selection:
+    purpose: main
+    sha256: 2da2ba3acdf9978c47c9005ec6ea2fafcf82bb30da5016dd2e4d00573642b0ac
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 3
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1063
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1063'
+  kind: ppc
+  title: 개인정보보호위원회 2017. 10. 30. 의결 제2017-23-175호 (서울특별시 강서구의 영상정보 목적 외 이용 및 제공에 관한 건)
+  citation: 개인정보보호위원회 제2017-23-175호
+  authority: 2
+  dates:
+    decided_on: '2017-10-30'
+  selection:
+    purpose: main
+    sha256: 25cd413e3d13d690a379fc0b0f69b9c506859065df263ee3d8e3fc310a9fd956
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 1
+      Q3: 3
+      Q6: 3
+      Q8: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1043
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1043'
+  kind: ppc
+  title: 개인정보보호위원회 2017. 12. 11. 의결 제2017-27-211호 (교통량 분석 통계작성을 위한 개인정보 제공에 관한 건)
+  citation: 개인정보보호위원회 제2017-27-211호
+  authority: 2
+  dates:
+    decided_on: '2017-12-11'
+  selection:
+    purpose: main
+    sha256: 9254ac586c6e33cac8da15cff84efeae402bc6cc3a80d776b89171124bcfd12b
+    complete: true
+    questions:
+      Q1: 2
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-939
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '939'
+  kind: ppc
+  title: 개인정보보호위원회 2018. 5. 14. 의결 제2018-08-077호 (제주특별자치도 제주시의 쓰레기 불법 투기자 신원 확인을 위한 영상정보 제공에 관한 건)
+  citation: 개인정보보호위원회 제2018-08-077호
+  authority: 2
+  dates:
+    decided_on: '2018-05-14'
+  selection:
+    purpose: main
+    sha256: 6966c80fc62ac0869c2b1e3132e7addf73c96fb97f54f425eaf704e9d58273e7
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+      Q3: 3
+      Q6: 3
+      Q1: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-43
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '43'
+  kind: ppc
+  title: 개인정보보호위원회 2018. 10. 1. 의결 제2018-18-190호 (시ㆍ군 영상정보의 광역자치단체 연계에 관한 건)
+  citation: 개인정보보호위원회 제2018-18-190호
+  authority: 2
+  dates:
+    decided_on: '2018-10-01'
+  selection:
+    purpose: main
+    sha256: 9b5160bce3e1bb6e2d5f5ad5a7328eafb7462d331590028c1416976d5a40e15e
+    complete: true
+    questions:
+      Q0: 2
+      Q3: 3
+      Q6: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-107
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '107'
+  kind: ppc
+  title: 개인정보보호위원회 2018. 10. 15. 의결 제2018-21-230호 (울산광역시의 통합방위작전 지원을 위한 CCTV 영상정보 이용ㆍ제공 요청에 관한 건)
+  citation: 개인정보보호위원회 제2018-21-230호
+  authority: 2
+  dates:
+    decided_on: '2018-10-15'
+  selection:
+    purpose: main
+    sha256: 55b9613eae8f10e8dae8235bbb2444fab8cb6ccf749be30c7809a642b2508eb6
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 2
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-31
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '31'
+  kind: ppc
+  title: 개인정보보호위원회 2018. 10. 15. 의결 제2018-21-231호 (경기도 광명시 통합관제센터 영상정보 제공 업무의 광명경찰서 위탁에 관한 건)
+  citation: 개인정보보호위원회 제2018-21-231호
+  authority: 2
+  dates:
+    decided_on: '2018-10-15'
+  selection:
+    purpose: main
+    sha256: b027318ac77d11f6619c1e72f0a90e8fbc808712950204972c9deb539c20d80e
+    complete: true
+    questions:
+      Q3: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-109
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '109'
+  kind: ppc
+  title: 개인정보보호위원회 2018. 10. 29. 의결 제2018-22-247호 (아산경찰서의 업무수행을 위한 아산시 보유 영상정보 제공에 관한 건)
+  citation: 개인정보보호위원회 제2018-22-247호
+  authority: 2
+  dates:
+    decided_on: '2018-10-29'
+  selection:
+    purpose: main
+    sha256: 13cd52998801c0df1a43bb610ea14c907b4f8ec1c0c32af9f2eb98bf4b6fdda8
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q2: 2
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-153
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '153'
+  kind: ppc
+  title: 개인정보보호위원회 2018. 11. 26. 의결 제2018-24-287호 (경기도 연천군의 쓰레기 불법투기 단속을 위한 군부대 보유 개인정보 제공에관한 건)
+  citation: 개인정보보호위원회 제2018-24-287호
+  authority: 2
+  dates:
+    decided_on: '2018-11-26'
+  selection:
+    purpose: main
+    sha256: 4febbd45ddcb490f038e2bc3c2d6990ce4919a37f4b85fdc4e7f8f58caeb7f2a
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q3: 3
+      Q6: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-139
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '139'
+  kind: ppc
+  title: 개인정보보호위원회 2018. 12. 10. 의결 제2018-25-309호 (유실물을 찾기 위한 충청남도 청양군 보유 개인영상정보 제공에 관한 건)
+  citation: 개인정보보호위원회 제2018-25-309호
+  authority: 2
+  dates:
+    decided_on: '2018-12-10'
+  selection:
+    purpose: main
+    sha256: cd37ad41c24f1afb018969ab3435cec7eaf8f71dc7a82458dee000f114bd0ed4
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 1
+      Q3: 3
+      Q6: 3
+      Q7: 3
+      Q8: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-157
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '157'
+  kind: ppc
+  title: 개인정보보호위원회 2018. 12. 24. 의결 제2018-26-324호 (의정부시의 영상정보처리기기 설치목적 추가를 위한 법령해석에 관한 건)
+  citation: 개인정보보호위원회 제2018-26-324호
+  authority: 2
+  dates:
+    decided_on: '2018-12-24'
+  selection:
+    purpose: main
+    sha256: 75f3a19cc631b36537ab35f9c7f73005637e175d738cbf4e5c4d945662a8370e
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+      Q3: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-181
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '181'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 1. 14. 의결 제2018-25-307호 (동두천시와 연천군의 차량 방범용 CCTV 공유에 관한 건)
+  citation: 개인정보보호위원회 제2018-25-307호
+  authority: 2
+  dates:
+    decided_on: '2019-01-14'
+  selection:
+    purpose: main
+    sha256: 79375adab0bef5fc4884985ee2525e3d1527c75436df0d8acdcbfac386baef37
+    complete: true
+    questions:
+      Q0: 2
+      Q3: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-183
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '183'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 1. 14. 의결 제2019-01-001호 (대구지방경찰청의 순찰차 카메라를 이용한 개인정보 처리에 관한 건)
+  citation: 개인정보보호위원회 제2019-01-001호
+  authority: 2
+  dates:
+    decided_on: '2019-01-14'
+  selection:
+    purpose: main
+    sha256: 68b6ad55522276337be435a6e31aba6660939d99b40222cb59f5caf2d84183e1
+    complete: true
+    questions:
+      Q0: 3
+      Q2: 3
+      Q6: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-929
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '929'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 1. 14. 의결 제2018-25-305호 (행정안전부의 승강기 사고조사 등을 위한 승강기 관리주체 보유 CCTV 영상정보 제공에 관한 건)
+  citation: 개인정보보호위원회 제2018-25-305호
+  authority: 2
+  dates:
+    decided_on: '2019-01-14'
+  selection:
+    purpose: main
+    sha256: c6a3acadfb77ab1063af0ef48c6639748c1790036c303e24a2828771feed1038
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q3: 3
+      Q6: 3
+      Q7: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-179
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '179'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 1. 28. 의결 제2019-02-014호 (한국도로공사의 차량영상 인식기술 향상을 위한 비정상 처리 차량번호판 정보 제공에 관한 건)
+  citation: 개인정보보호위원회 제2019-02-014호
+  authority: 2
+  dates:
+    decided_on: '2019-01-28'
+  selection:
+    purpose: main
+    sha256: 03813b25322092ad728b8696320d488a2c13a0ba4af8df30a07196e43819a2c4
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 3
+      Q3: 3
+      Q6: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-219
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '219'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 1. 28. 의결 제2019-02-015호 (경찰청의 실종아동등 및 가출인에 대한 CCTV 영상정보 제공에 관한 건)
+  citation: 개인정보보호위원회 제2019-02-015호
+  authority: 2
+  dates:
+    decided_on: '2019-01-28'
+  selection:
+    purpose: main
+    sha256: 536b23eadba4738321a6e446b222ff867ef98972fdb945280e8cd84bb0bbb616
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q3: 3
+      Q4: 3
+      Q5: 2
+      Q6: 2
+      Q8: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-225
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '225'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 2. 25. 의결 제2019-04-044호 (보령시의 통합방위작전 지원을 위한 CCTV 영상정보 처리에 관한 건)
+  citation: 개인정보보호위원회 제2019-04-044호
+  authority: 2
+  dates:
+    decided_on: '2019-02-25'
+  selection:
+    purpose: main
+    sha256: 804317f93a4e2df3be1dc574dce2a8b61a9ef4aa67470f145dad22c9394abbe3
+    complete: true
+    questions:
+      Q0: 3
+      Q2: 3
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-185
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '185'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 3. 11. 의결 제2019-02-013호 (도시공원 관리를 위한 인천광역시경제자유구역청 보유 영상정보 처리에 관한 건)
+  citation: 개인정보보호위원회 제2019-02-013호
+  authority: 2
+  dates:
+    decided_on: '2019-03-11'
+  selection:
+    purpose: main
+    sha256: 4f0ea787c5f58441744dc2d438ceba703a66b26eb93f9ac10b26ce8e2208ce1b
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 2
+      Q3: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-227
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '227'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 3. 25. 의결 제2019-06-070호 (동두천시의 영상정보처리기기 설치목적 추가를 위한 법령해석에 관한 건)
+  citation: 개인정보보호위원회 제2019-06-070호
+  authority: 2
+  dates:
+    decided_on: '2019-03-25'
+  selection:
+    purpose: main
+    sha256: 02beb5702c4050d30a695507f92b8ad113ee1871da59bc1d68b132e1497c0851
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+      Q3: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-215
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '215'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 4. 8. 의결 제2019-07-086호 (용인도시공사의 자체감사를 위한 CCTV 영상정보 이용에 관한 건)
+  citation: 개인정보보호위원회 제2019-07-086호
+  authority: 2
+  dates:
+    decided_on: '2019-04-08'
+  selection:
+    purpose: main
+    sha256: 4b820c771268ab26c48f31d330d83c6fc2b2f7336c3a624d7fe5f6540504504b
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q3: 3
+      Q6: 3
+      Q7: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-245
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '245'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 4. 8. 의결 제2019-07-087호 (전라남도의 자체감사를 위한 동부지역본부 보유 CCTV 영상정보 제공 요청에 관한 건)
+  citation: 개인정보보호위원회 제2019-07-087호
+  authority: 2
+  dates:
+    decided_on: '2019-04-08'
+  selection:
+    purpose: main
+    sha256: f94196a380e92ab05c980c55c06f363e5a15f8d2b32004db055d09876a5a6e09
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 1
+      Q3: 3
+      Q6: 3
+      Q7: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1443
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1443'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 5. 13. 의결 제2019-09-134호 (「개인정보 보호법」 일부개정안 (의안번호 19415) 의견 조회에 관한 건)
+  citation: 개인정보보호위원회 제2019-09-134호
+  authority: 2
+  dates:
+    decided_on: '2019-05-13'
+  selection:
+    purpose: main
+    sha256: b71bc12c9d8b29aff2a758755853eedd8b668413a14f383fd7333eaa45d73fd6
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-211
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '211'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 5. 13. 의결 제2019-09-129호 (CJ헬로 전북방송의 재난방송을 위한 임실군 보유 영상정보 제공에 관한 건)
+  citation: 개인정보보호위원회 제2019-09-129호
+  authority: 2
+  dates:
+    decided_on: '2019-05-13'
+  selection:
+    purpose: main
+    sha256: c7c719942437312de9a93f36e0c9211e61c72d9a17da4c8335fbf6314d778f18
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q2: 2
+      Q3: 3
+      Q6: 2
+      Q7: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-231
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '231'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 5. 13. 의결 제2019-09-131호 (국토교통부 보유 자동차속성정보 제공을 위한 법령 해석에 관한 건)
+  citation: 개인정보보호위원회 제2019-09-131호
+  authority: 2
+  dates:
+    decided_on: '2019-05-13'
+  selection:
+    purpose: main
+    sha256: e353a24ae3d4df7ddd833f036de8e52e4babdb355fa473e21ef6c8553878110d
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1361
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1361'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 5. 27. 의결 제2019-10-153호 (태아초음파 동영상 관련 ○○법원 사실조회에 관한 건)
+  citation: 개인정보보호위원회 제2019-10-153호
+  authority: 2
+  dates:
+    decided_on: '2019-05-27'
+  selection:
+    purpose: main
+    sha256: 98f6af754305536b4cc1c48ad046d9718260fca557383ff749d6277aa998e001
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1379
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1379'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 5. 27. 의결 제2019-10-156호 (경산시 선거관리위원회의 위탁선거 위반행위 조사를 위한 경산시 보유 영상정보 제공에 관한 건)
+  citation: 개인정보보호위원회 제2019-10-156호
+  authority: 2
+  dates:
+    decided_on: '2019-05-27'
+  selection:
+    purpose: main
+    sha256: 9d8365c79fbb89264843969c6f87165f0ee016e49313e104a9fbc0cde2886503
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 1
+      Q3: 3
+      Q6: 3
+      Q7: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1401
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1401'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 5. 27. 의결 제2019-10-155호 (성북구 보건소의 식품접객업소 불법행위 확인을 위한 영상정보 처리에 관한 건)
+  citation: 개인정보보호위원회 제2019-10-155호
+  authority: 2
+  dates:
+    decided_on: '2019-05-27'
+  selection:
+    purpose: main
+    sha256: 2eeb2a6f7e3a05e81c6ee28201dd3cffd2ba4db4c215e0968598640e7b5b103f
+    complete: true
+    questions:
+      Q0: 3
+      Q1: 2
+      Q2: 3
+      Q3: 3
+      Q4: 1
+      Q6: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1453
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1453'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 5. 27. 의결 제2019-10-157호 (「개인정보 보호법」 일부개정안 (의안번호 18103) 의견 조회에 관한 건)
+  citation: 개인정보보호위원회 제2019-10-157호
+  authority: 2
+  dates:
+    decided_on: '2019-05-27'
+  selection:
+    purpose: main
+    sha256: 7f310e2c6f22e93702d5cbbbbf24c37a07c1fb32ae93c38638191f165440169f
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+      Q4: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1375
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1375'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 6. 10. 의결 제2019-11-178호 (고양시의 관외택시 불법 영업행위 단속을 위한 영상정보 처리에 관한 건)
+  citation: 개인정보보호위원회 제2019-11-178호
+  authority: 2
+  dates:
+    decided_on: '2019-06-10'
+  selection:
+    purpose: main
+    sha256: f5c86ec3b480004658ae53df693b23915dc8e3f5b8b9a30c5cd2d6ca1f09cde9
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+      Q3: 3
+      Q4: 1
+      Q6: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1377
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1377'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 6. 10. 의결 제2019-11-179호 (한국도로공사 전북본부의 좌석안전띠 착용 검지 목적의 영상정보처리기기 설치에 대한 법령해석에 관한 건)
+  citation: 개인정보보호위원회 제2019-11-179호
+  authority: 2
+  dates:
+    decided_on: '2019-06-10'
+  selection:
+    purpose: main
+    sha256: ea30daf68b5dfb87e3956f013d715e66f687f33154af200d9344bb37060edf0a
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 1
+      Q2: 3
+      Q3: 1
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1391
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1391'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 6. 24. 의결 제2019-12-199호 (부산광역시의 영상정보처리기기 설치 목적 추가를 위한 법령해석에 관한 건)
+  citation: 개인정보보호위원회 제2019-12-199호
+  authority: 2
+  dates:
+    decided_on: '2019-06-24'
+  selection:
+    purpose: main
+    sha256: d727e68b4c7d1119c996816ca6bdc6e07b54cfbf0b346f0e9e34715ac87f9273
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+      Q3: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1389
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1389'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 7. 22. 의결 제2019-14-223호 (은평구의 개인영상정보 열람요구 거절 관련 법령해석에 관한 건)
+  citation: 개인정보보호위원회 제2019-14-223호
+  authority: 2
+  dates:
+    decided_on: '2019-07-22'
+  selection:
+    purpose: main
+    sha256: 98ae236deb8c8b5d4964a9e9ae35748848600dc42cbab0842cb4e84b2dbabcdd
+    complete: true
+    questions:
+      Q8: 3
+      Q7: 2
+      Q3: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1409
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1409'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 7. 22. 의결 제2019-14-222호 (지역책임부대의 통합방위사태 대응 등을 위한 지방자치단체 보유 통합관제센터 영상정보 제공 요청에 관한 건)
+  citation: 개인정보보호위원회 제2019-14-222호
+  authority: 2
+  dates:
+    decided_on: '2019-07-22'
+  selection:
+    purpose: main
+    sha256: 91f7c16e7a0acbf44271bb705c983022dd8a85d0d0aaaf2e9c11bc7fc0d5b6e2
+    complete: true
+    questions:
+      Q0: 2
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1457
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1457'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 8. 12. 의결 제2019-15-236호 (「개인정보 보호법」 일부개정안 (의안번호 20978) 의견 조회에 관한 건)
+  citation: 개인정보보호위원회 제2019-15-236호
+  authority: 2
+  dates:
+    decided_on: '2019-08-12'
+  selection:
+    purpose: main
+    sha256: 4620354664373d0e364a4ae8783514d8712750ab7dba7f02813097e8be914614
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+      Q4: 2
+      Q5: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1415
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1415'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 9. 23. 의결 제2019-16-260호 (자동차등록번호 제공 관련 법령해석에 관한 건)
+  citation: 개인정보보호위원회 제2019-16-260호
+  authority: 2
+  dates:
+    decided_on: '2019-09-23'
+  selection:
+    purpose: main
+    sha256: 42cf9e2283187307e072ffc31da01618123bc6b32cfc5051843952e3b983cf64
+    complete: true
+    questions:
+      Q1: 3
+      Q3: 3
+      Q4: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1425
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1425'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 10. 14. 의결 제2019-19-315호 (경상남도의 자동차 운행제한 단속시스템 구축을 위한 시ㆍ군 보유 CCTV 영상정보 처리에 관한 건)
+  citation: 개인정보보호위원회 제2019-19-315호
+  authority: 2
+  dates:
+    decided_on: '2019-10-14'
+  selection:
+    purpose: main
+    sha256: 86d70122bf0c74e21b219df167b3ba4c8f1275e3a52832851957d25dda93a7aa
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q2: 3
+      Q3: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1427
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1427'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 10. 14. 의결 제2019-19-314호 (○○○항공의 항공기 관리업무를 위한 인천국제공항공사 보유 CCTV 영상정보 제공 요청에 관한 건)
+  citation: 개인정보보호위원회 제2019-19-314호
+  authority: 2
+  dates:
+    decided_on: '2019-10-14'
+  selection:
+    purpose: main
+    sha256: bc904d18cd48dc533eec7b3faae40bd844141595457244b3a98d9528875c578b
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 1
+      Q3: 3
+      Q4: 2
+      Q5: 2
+      Q6: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1317
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1317'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 12. 9. 의결 제2019-24-385호 (한국도로공사의 터널 내 영상정보처리기기 설치ㆍ운영 관련 법령해석에 관한 건)
+  citation: 개인정보보호위원회 제2019-24-385호
+  authority: 2
+  dates:
+    decided_on: '2019-12-09'
+  selection:
+    purpose: main
+    sha256: bada1bc6f186bc4656fdfe2e1c54d2491ae46fe3589c8802611ac536d80e13db
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+      Q3: 1
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1323
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1323'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 12. 9. 의결 제2019-23-370호 (세종특별자치시의 자동차세 등 체납 징수업무를 위한 영상정보 처리에 관한 건)
+  citation: 개인정보보호위원회 제2019-23-370호
+  authority: 2
+  dates:
+    decided_on: '2019-12-09'
+  selection:
+    purpose: main
+    sha256: 76b9a6eb079a10eb6a195de1c258617fc8cc6e24607077e22404f2e1305e6f59
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q2: 3
+      Q3: 3
+      Q6: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1411
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1411'
+  kind: ppc
+  title: 개인정보보호위원회 2019. 12. 9. 의결 제2019-24-384호 (○○지방국세청의 국세징수업무를 위한 ○○시 보유 영상정보 제공에 관한 건)
+  citation: 개인정보보호위원회 제2019-24-384호
+  authority: 2
+  dates:
+    decided_on: '2019-12-09'
+  selection:
+    purpose: main
+    sha256: 10061da866eef75407202b779379ff8fb519aa7fc56888a42bf5c246f8be3127
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1309
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1309'
+  kind: ppc
+  title: 개인정보보호위원회 2020. 1. 13. 의결 제2020-01-004호 (시흥경찰서의 순찰업무를 위해 드론을 이용한 개인정보 수집에 관한 건)
+  citation: 개인정보보호위원회 제2020-01-004호
+  authority: 2
+  dates:
+    decided_on: '2020-01-13'
+  selection:
+    purpose: main
+    sha256: 11660b6a14e2032c96c79ffa0e24e6c45424749e0906d594ccc9bf17961659db
+    complete: true
+    questions:
+      Q0: 3
+      Q1: 1
+      Q2: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1329
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1329'
+  kind: ppc
+  title: 개인정보보호위원회 2020. 1. 13. 의결 제2020-01-002호 (광주시의 재난관리 업무를 위한 CCTV 영상정보 이용에 관한 건)
+  citation: 개인정보보호위원회 제2020-01-002호
+  authority: 2
+  dates:
+    decided_on: '2020-01-13'
+  selection:
+    purpose: main
+    sha256: 8911e31b919c7b2656c19c68d44cb393391efeb8d86ef25d9d2e70faa8d43c4a
+    complete: true
+    questions:
+      Q0: 2
+      Q3: 3
+      Q6: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1331
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1331'
+  kind: ppc
+  title: 개인정보보호위원회 2020. 2. 10. 의결 제2020-03-045호 (한국도로공사의 적재중량 초과 차량정보 처리 관련 법령해석에 관한 건)
+  citation: 개인정보보호위원회 제2020-03-045호
+  authority: 2
+  dates:
+    decided_on: '2020-02-10'
+  selection:
+    purpose: main
+    sha256: 29880ae03122b3b0965f671aaa218992308b4376e6cca1e5e2db2623bc4b0295
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q2: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1301
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1301'
+  kind: ppc
+  title: 개인정보보호위원회 2020. 4. 27. 의결 제2020-08-127호 (법무부의 전자장치 피부착자 위치추적 업무수행을 위한 울산광역시 구ㆍ군 CCTV 영상정보 제공에 관한 건)
+  citation: 개인정보보호위원회 제2020-08-127호
+  authority: 2
+  dates:
+    decided_on: '2020-04-27'
+  selection:
+    purpose: main
+    sha256: c4014f8f69b7c89f80a45228a3361d7fbc9033d26a0564f04d695552217f3817
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q2: 1
+      Q3: 3
+      Q4: 2
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1345
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1345'
+  kind: ppc
+  title: 개인정보보호위원회 2020. 5. 25. 의결 제2020-10-178호 (국토교통부의 운행정지명령 대상 자동차 단속 지원을 위한 지방자치단체 보유 운행정보 제공 요청에 관한 건)
+  citation: 개인정보보호위원회 제2020-10-178호
+  authority: 2
+  dates:
+    decided_on: '2020-05-25'
+  selection:
+    purpose: main
+    sha256: 5b99adc9753deb801f0a6bc1b8ed8bf770bae49965c6a794a3cad38b15160a57
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1357
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1357'
+  kind: ppc
+  title: 개인정보보호위원회 2020. 5. 25. 의결 제2020-10-177호 (학교폭력대책심의위원회의 영상정보 열람 관련 법령 해석에 관한 건)
+  citation: 개인정보보호위원회 제2020-10-177호
+  authority: 2
+  dates:
+    decided_on: '2020-05-25'
+  selection:
+    purpose: main
+    sha256: 638646b869c0c7dfec9d4834f90f3cafaf35882ca8b81ffa48ef4ab06eb38e71
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 1
+      Q3: 3
+      Q4: 2
+      Q5: 2
+      Q6: 3
+      Q7: 3
+      Q8: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1363
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1363'
+  kind: ppc
+  title: 개인정보보호위원회 2020. 5. 25. 의결 제2020-10-179호 (경찰청의 재난안전통신망 단말기를 이용한 개인정보 수집에 관한 건)
+  citation: 개인정보보호위원회 제2020-10-179호
+  authority: 2
+  dates:
+    decided_on: '2020-05-25'
+  selection:
+    purpose: main
+    sha256: 8fd60ca21557524acb4560364c2181870425c97d236603781f2a7c45224b98c5
+    complete: true
+    questions:
+      Q0: 3
+      Q2: 3
+      Q6: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1373
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1373'
+  kind: ppc
+  title: 개인정보보호위원회 2020. 5. 25. 의결 제2020-10-180호 (지역책임부대의 경계태세 발령이전 위기상황 대응을 위한 지방자치단체 보유 통합관제센터 영상정보 제공에 관한 건)
+  citation: 개인정보보호위원회 제2020-10-180호
+  authority: 2
+  dates:
+    decided_on: '2020-05-25'
+  selection:
+    purpose: main
+    sha256: 9d18c3f5d1c632cc8fe582549e21c04f43858f5da886f20983635fb1de734203
+    complete: true
+    questions:
+      Q0: 2
+      Q3: 3
+      Q6: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1247
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1247'
+  kind: ppc
+  title: 개인정보보호위원회 2020. 6. 8. 의결 제2020-11-197호 (광명시의 광명동굴 이용자 안전을 위한 광명도시공사 보유 CCTV 영상정보 이용에 관한 건)
+  citation: 개인정보보호위원회 제2020-11-197호
+  authority: 2
+  dates:
+    decided_on: '2020-06-08'
+  selection:
+    purpose: main
+    sha256: 25449bc39f1f38730571851566a60c5c4cb551920930c49b7c93da2a9962e6ac
+    complete: true
+    questions:
+      Q0: 3
+      Q2: 3
+      Q3: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1341
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1341'
+  kind: ppc
+  title: 개인정보보호위원회 2020. 6. 8. 의결 제2020-11-198호 (성동구의 개인영상정보 열람요구 관련 법령해석에 관한 건)
+  citation: 개인정보보호위원회 제2020-11-198호
+  authority: 2
+  dates:
+    decided_on: '2020-06-08'
+  selection:
+    purpose: main
+    sha256: 56f386411d7521eb191df56aede3023a6f46f26d855bfa1aadf4e8dab4ef1d55
+    complete: true
+    questions:
+      Q3: 3
+      Q8: 3
+      Q6: 2
+      Q2: 1
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1369
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1369'
+  kind: ppc
+  title: 개인정보보호위원회 2020. 6. 8. 의결 제2020-11-199호 (제주특별자치도 자치경찰단의 공공안전서비스 구축을 위한 블랙박스 영상정보 처리에 관한 건)
+  citation: 개인정보보호위원회 제2020-11-199호
+  authority: 2
+  dates:
+    decided_on: '2020-06-08'
+  selection:
+    purpose: main
+    sha256: d61fab96eca99dd11dd23c8b37e8df09ae8728e04c2d730d434303b82301bd83
+    complete: true
+    questions:
+      Q0: 3
+      Q1: 2
+      Q2: 3
+      Q3: 3
+      Q4: 2
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1359
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1359'
+  kind: ppc
+  title: 개인정보보호위원회 2020. 6. 22. 의결 제2020-12-221호 (강남구의 동물보호법 위반 과태료 부과를 위한 통합관제센터 영상정보 이용에 관한 건)
+  citation: 개인정보보호위원회 제2020-12-221호
+  authority: 2
+  dates:
+    decided_on: '2020-06-22'
+  selection:
+    purpose: main
+    sha256: f027606436e000aacf1e033e93c97afbd004cdf3899a607483d26bece162dc4f
+    complete: true
+    questions:
+      Q0: 2
+      Q3: 3
+      Q6: 3
+      Q2: 1
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-739
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '739'
+  kind: ppc
+  title: 개인정보보호위원회 2020. 8. 26. 의결 제2020-101-001호 (경찰 등 수사기관의 범죄사건 수사를 위한 블랙박스 영상정보 처리에 관한 건)
+  citation: 개인정보보호위원회 제2020-101-001호
+  authority: 2
+  dates:
+    decided_on: '2020-08-26'
+  selection:
+    purpose: main
+    sha256: e84fc1aff3972e7867b1054ee32dade57167b5a850d6f843b58258ec883796ac
+    complete: true
+    questions:
+      Q0: 3
+      Q1: 2
+      Q2: 3
+      Q3: 3
+      Q6: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1003
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1003'
+  kind: ppc
+  title: 개인정보보호위원회 2020. 10. 14. 의결 제2020-104-011호 (부산해양경찰서의 업무 수행을 위한 남항관리사업소 보유 CCTV 영상정보 제공 요청에 관한 건)
+  citation: 개인정보보호위원회 제2020-104-011호
+  authority: 2
+  dates:
+    decided_on: '2020-10-14'
+  selection:
+    purpose: main
+    sha256: 7d939be8d4010424fe94920e5e8a2fcd90b039098c451f8bf9429cf222f0aeb6
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 1
+      Q2: 1
+      Q3: 3
+      Q4: 1
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-843
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '843'
+  kind: ppc
+  title: 개인정보보호위원회 2021. 1. 27. 의결 제2021-102-004호 (평창군의 쓰레기 무단투기자 단속을 위한 영상정보 처리에 관한 건)
+  citation: 개인정보보호위원회 제2021-102-004호
+  authority: 2
+  dates:
+    decided_on: '2021-01-27'
+  selection:
+    purpose: main
+    sha256: a6c85038832a6746c6ded4f23ce40747bdd32c5ad146dae665874edf996e2529
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q2: 2
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-503
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '503'
+  kind: ppc
+  title: 개인정보보호위원회 2021. 2. 24. 의결 제2021-103-006호 (구리시의 방치차량 확인을 위한 주차단속 또는 방범 목적 CCTV 영상정보의 이용에 관한 건)
+  citation: 개인정보보호위원회 제2021-103-006호
+  authority: 2
+  dates:
+    decided_on: '2021-02-24'
+  selection:
+    purpose: main
+    sha256: b50b1f0d3597d4c406903243df20df15d93eda93688a385b6518a92e537d268a
+    complete: true
+    questions:
+      Q3: 3
+      Q2: 2
+      Q1: 1
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-521
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '521'
+  kind: ppc
+  title: 개인정보보호위원회 2021. 4. 14. 의결 제2021-106-011호 (시흥시의 자체감사를 위한 CCTV 영상정보의 이용에 관한 건)
+  citation: 개인정보보호위원회 제2021-106-011호
+  authority: 2
+  dates:
+    decided_on: '2021-04-14'
+  selection:
+    purpose: main
+    sha256: b2b17a0b4c33dfae7aa453f03f3f59004c494327fa28c48c8e64c499e2f5f3a1
+    complete: true
+    questions:
+      Q0: 3
+      Q1: 2
+      Q3: 3
+      Q6: 3
+      Q7: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-507
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '507'
+  kind: ppc
+  title: 개인정보보호위원회 2021. 4. 28. 의결 제2021-107-013호 (김포시 CCTV 연계 구축사업을 위한 김포도시관리공사 보유 영상정보 제공 요청에 관한 건)
+  citation: 개인정보보호위원회 제2021-107-013호
+  authority: 2
+  dates:
+    decided_on: '2021-04-28'
+  selection:
+    purpose: main
+    sha256: 8c665a644888019dc5977e93c17e96e1fc00bab7bd43782f456fd1a684f21a85
+    complete: true
+    questions:
+      Q0: 2
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-537
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '537'
+  kind: ppc
+  title: 개인정보보호위원회 2021. 5. 12. 의결 제2021-108-016호 (아이돌봄서비스 이용자의 가정 내 아이돌보미 활동확인용 CCTV 설치를 위한 법령 해석에 관한 건)
+  citation: 개인정보보호위원회 제2021-108-016호
+  authority: 2
+  dates:
+    decided_on: '2021-05-12'
+  selection:
+    purpose: main
+    sha256: 12eaf9ed03d295aa5dabe1c0b834257a69c98ec1607a35ddd91f554f284c084f
+    complete: true
+    questions:
+      Q0: 3
+      Q2: 3
+      Q5: 1
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+    unconfirmed:
+    - '근거 문장의 위치 미확인: Q0'
+- id: ppc-523
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '523'
+  kind: ppc
+  title: 개인정보보호위원회 2021. 5. 26. 의결 제2021-109-017호 (부산광역시경찰청의 이동형 IP카메라 사용을 위한 법령해석에 관한 건)
+  citation: 개인정보보호위원회 제2021-109-017호
+  authority: 2
+  dates:
+    decided_on: '2021-05-26'
+  selection:
+    purpose: main
+    sha256: 94a361492bee30773d1f6318d963fb5df34ab39510e2eab4935962f7a69b4c09
+    complete: true
+    questions:
+      Q0: 3
+      Q1: 2
+      Q2: 3
+      Q6: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-2223
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '2223'
+  kind: ppc
+  title: '개인정보보호위원회 2021. 8. 25. 의결 제2021-013-101호 (사건번호 : 2021조일033) (개인정보보호 법규 위반행위에 대한 시정조치 등에 관한 건)'
+  citation: '개인정보보호위원회 제2021-013-101호 (사건번호 : 2021조일033)'
+  authority: 2
+  dates:
+    decided_on: '2021-08-25'
+  selection:
+    purpose: main
+    sha256: 2091249721c860d1c83eb9dda30a289d48c0abf36b3d74b191fcc4b974f4670a
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 3
+      Q4: 3
+      Q2: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-565
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '565'
+  kind: ppc
+  title: 개인정보보호위원회 2021. 11. 10. 의결 제2021-121-042호 (구리시의 이동소음원 단속 및 과태료 부과를 위한 CCTV 통합관제센터의 영상정보 이용에 관한 건)
+  citation: 개인정보보호위원회 제2021-121-042호
+  authority: 2
+  dates:
+    decided_on: '2021-11-10'
+  selection:
+    purpose: main
+    sha256: b05b08bf722c7f220da0bb38189c9e8430b37054fc151b5778812ca40fba369f
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 2
+      Q3: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-687
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '687'
+  kind: ppc
+  title: 개인정보보호위원회 2022. 2. 23. 의결 제2022-104-008호 (연천군의 도로시설물 파손 원인자 비용부담을 위한 CCTV 통합관제센터 영상정보 이용에 관한 건)
+  citation: 개인정보보호위원회 제2022-104-008호
+  authority: 2
+  dates:
+    decided_on: '2022-02-23'
+  selection:
+    purpose: main
+    sha256: 9ad85b9956ab50afa63d1cdb3b4d2b9e58e222237b2d514697161213d78e3e0f
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 3
+      Q2: 2
+      Q3: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-685
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '685'
+  kind: ppc
+  title: 개인정보보호위원회 2022. 3. 23. 의결 제2022-105-010호 (서울본부세관의 마약 범죄 수사를 위한 IP카메라 설치ㆍ운영 관련 법령해석 건)
+  citation: 개인정보보호위원회 제2022-105-010호
+  authority: 2
+  dates:
+    decided_on: '2022-03-23'
+  selection:
+    purpose: main
+    sha256: ffe751fd5ceade0023960109fa4758f529b7a78b3f25198ac54c90c53b20237b
+    complete: true
+    questions:
+      Q0: 3
+      Q2: 3
+      Q3: 2
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-665
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '665'
+  kind: ppc
+  title: 개인정보보호위원회 2022. 4. 13. 의결 제2022-006-031호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2022-006-031호
+  authority: 2
+  dates:
+    decided_on: '2022-04-13'
+  selection:
+    purpose: main
+    sha256: b554e039e9bc42c4959e97e905bd90d1fbecf400b4ff9f27b1f171def6bcefee
+    complete: true
+    questions:
+      Q0: 1
+      Q8: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-669
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '669'
+  kind: ppc
+  title: 개인정보보호위원회 2022. 4. 13. 의결 제2022-006-034호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2022-006-034호
+  authority: 2
+  dates:
+    decided_on: '2022-04-13'
+  selection:
+    purpose: main
+    sha256: a07b2b9120a8671cd9b4b6e60ab5979c5e1733f48377ebea0181afdd2b91f9b4
+    complete: true
+    questions:
+      Q0: 3
+      Q1: 3
+      Q2: 3
+      Q4: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-677
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '677'
+  kind: ppc
+  title: 개인정보보호위원회 2022. 4. 13. 의결 제2022-006-030호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2022-006-030호
+  authority: 2
+  dates:
+    decided_on: '2022-04-13'
+  selection:
+    purpose: main
+    sha256: 97455d9c333a5a390c5449c33388dc8d0f9b9dbdfeeb40da5a57dd9e867112fb
+    complete: true
+    questions:
+      Q0: 2
+      Q8: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-681
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '681'
+  kind: ppc
+  title: 개인정보보호위원회 2022. 4. 13. 의결 제2022-006-033호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2022-006-033호
+  authority: 2
+  dates:
+    decided_on: '2022-04-13'
+  selection:
+    purpose: main
+    sha256: 0ab6e3c2bb93c83d44c64a2f7a591214fe22e4604df046963cc9d567d0557f62
+    complete: true
+    questions:
+      Q0: 3
+      Q1: 2
+      Q2: 3
+      Q4: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1461
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1461'
+  kind: ppc
+  title: 개인정보보호위원회 2022. 4. 27. 의결 제2022-007-046호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2022-007-046호
+  authority: 2
+  dates:
+    decided_on: '2022-04-27'
+  selection:
+    purpose: main
+    sha256: 7913e1638f1300b8ff9a943987ed765fa7dbf5973f340d7b4b3473beffdcfc20
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 3
+      Q2: 3
+      Q3: 3
+      Q4: 2
+      Q5: 3
+      Q6: 2
+      Q7: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1567
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1567'
+  kind: ppc
+  title: 개인정보보호위원회 2022. 6. 22. 의결 제2022-011-075호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2022-011-075호
+  authority: 2
+  dates:
+    decided_on: '2022-06-22'
+  selection:
+    purpose: main
+    sha256: 742c1db71df9f7488ad529a5531fac691ce392878e5246238a6de994a317b39c
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1569
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1569'
+  kind: ppc
+  title: 개인정보보호위원회 2022. 6. 22. 의결 제2022-011-074호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2022-011-074호
+  authority: 2
+  dates:
+    decided_on: '2022-06-22'
+  selection:
+    purpose: main
+    sha256: 22f7966530075f8e419fddb246deb09cc25764560faa94bb0a9b9a71946cfaa7
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1571
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1571'
+  kind: ppc
+  title: 개인정보보호위원회 2022. 6. 22. 의결 제2022-011-073호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2022-011-073호
+  authority: 2
+  dates:
+    decided_on: '2022-06-22'
+  selection:
+    purpose: main
+    sha256: 4e5600082187931837d18a5203d8c7f110cde4a885fb3eb6c82c70de553ed84d
+    complete: true
+    questions:
+      Q0: 1
+      Q2: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1573
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1573'
+  kind: ppc
+  title: 개인정보보호위원회 2022. 6. 22. 의결 제2022-011-072호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2022-011-072호
+  authority: 2
+  dates:
+    decided_on: '2022-06-22'
+  selection:
+    purpose: main
+    sha256: 88efbf92170644093bb9d370bc092d84665817a7e94e654e917f128c4fe430a3
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1575
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1575'
+  kind: ppc
+  title: 개인정보보호위원회 2022. 6. 22. 의결 제2022-011-071호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2022-011-071호
+  authority: 2
+  dates:
+    decided_on: '2022-06-22'
+  selection:
+    purpose: main
+    sha256: c39113f65205512c43908b5f456a60d46d13a31942a9840dbc09d75b7f29361b
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1577
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1577'
+  kind: ppc
+  title: 개인정보보호위원회 2022. 6. 22. 의결 제2022-011-070호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2022-011-070호
+  authority: 2
+  dates:
+    decided_on: '2022-06-22'
+  selection:
+    purpose: main
+    sha256: e0b14ed979e7c32a193b52b1ace0803490f5424a579cb0737b2d352e8fc12c81
+    complete: true
+    questions:
+      Q0: 3
+      Q2: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1579
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1579'
+  kind: ppc
+  title: 개인정보보호위원회 2022. 6. 22. 의결 제2022-011-069호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2022-011-069호
+  authority: 2
+  dates:
+    decided_on: '2022-06-22'
+  selection:
+    purpose: main
+    sha256: 7db776756f7f9b88a0e466b1659917ba7c697c5c651f02cba0abb5373de9f60a
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1583
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1583'
+  kind: ppc
+  title: 개인정보보호위원회 2022. 6. 22. 의결 제2022-011-067호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2022-011-067호
+  authority: 2
+  dates:
+    decided_on: '2022-06-22'
+  selection:
+    purpose: main
+    sha256: 5973e68aa04d240b1c3fe904a71f1191adcee7a98331f890e4f89e5dadaf6fc2
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+      Q4: 3
+      Q5: 2
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1867
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1867'
+  kind: ppc
+  title: 개인정보보호위원회 2022. 8. 10. 의결 제2022-013-099호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2022-013-099호
+  authority: 2
+  dates:
+    decided_on: '2022-08-10'
+  selection:
+    purpose: main
+    sha256: 5ae66a88f279f80eb36ce651f677acb84d1373d53c8d37b357a2ef827afc2037
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+      Q5: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1869
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1869'
+  kind: ppc
+  title: 개인정보보호위원회 2022. 8. 10. 의결 제2022-013-100호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2022-013-100호
+  authority: 2
+  dates:
+    decided_on: '2022-08-10'
+  selection:
+    purpose: main
+    sha256: ff5356b20e43504f1e9b9bb78e90e65bc49f09faaf9a377f112d44ba5757d200
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+      Q5: 3
+      Q4: 1
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1855
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1855'
+  kind: ppc
+  title: 개인정보보호위원회 2022. 9. 8. 의결 제2022-113-028호 (철도특별사법경찰대의 범죄수사를 위한대전광역시 보유 CCTV 영상정보 제공 요청에 관한 건)
+  citation: 개인정보보호위원회 제2022-113-028호
+  authority: 2
+  dates:
+    decided_on: '2022-09-08'
+  selection:
+    purpose: main
+    sha256: 4d4ae46a309adeab74caf5b1587068a633f7e35fbd30a9fe67d893b23b70b3e5
+    complete: true
+    questions:
+      Q0: 2
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1723
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1723'
+  kind: ppc
+  title: 개인정보보호위원회 2022. 9. 14. 의결 제2022-115-032호 (울산광역시의 승용차요일제 운휴일 준수여부 확인을 위한 울산시 구ㆍ군 보유 영상정보 제공 요청에 관한 건)
+  citation: 개인정보보호위원회 제2022-115-032호
+  authority: 2
+  dates:
+    decided_on: '2022-09-14'
+  selection:
+    purpose: main
+    sha256: b5e41d5f65820f5249f25ac28ac749666851011aea87d8fa5b26bfd4dd3ab9cd
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q3: 3
+      Q6: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1763
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1763'
+  kind: ppc
+  title: 개인정보보호위원회 2022. 9. 28. 의결 제2022-116-034호 (제주특별자치도선거관리위원회의 선거범죄 조사를 위한 제주특별자치도(서귀포시) 보유 영상정보 제공에 관한 건)
+  citation: 개인정보보호위원회 제2022-116-034호
+  authority: 2
+  dates:
+    decided_on: '2022-09-28'
+  selection:
+    purpose: main
+    sha256: 7ec64f74cceb6464ff14a86fb8b177047d392f5ab9034c8a41a45639a3f2334a
+    complete: true
+    questions:
+      Q0: 2
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+    unconfirmed:
+    - '근거 문장의 위치 미확인: Q3'
+- id: ppc-1853
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1853'
+  kind: ppc
+  title: 개인정보보호위원회 2022. 10. 19. 의결 제2022-117-039호 (국회사무처의 감사업무를 위한 개인정보 이용에 관한 건)
+  citation: 개인정보보호위원회 제2022-117-039호
+  authority: 2
+  dates:
+    decided_on: '2022-10-19'
+  selection:
+    purpose: main
+    sha256: 0330afc100a25a3af3c1cd36564e73e7ceff01d807a9378685ba3e446b7d3a0c
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 1
+      Q3: 3
+      Q6: 3
+      Q7: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1865
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1865'
+  kind: ppc
+  title: 개인정보보호위원회 2022. 11. 16. 의결 제2022-118-042호 (부산광역시 수영구의 해수 방류 차량 단속을 위한CCTV 설치 및 영상정보 제공에 관한 건)
+  citation: 개인정보보호위원회 제2022-118-042호
+  authority: 2
+  dates:
+    decided_on: '2022-11-16'
+  selection:
+    purpose: main
+    sha256: 698050248f137abc5bebd37935a02708acf8cebc5bccc76a8564e17f3e6a0f6c
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 1
+      Q2: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-1967
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '1967'
+  kind: ppc
+  title: 개인정보보호위원회 2022. 12. 19. 의결 제2022-120-046호 (경주시의 폐기물 투기차량 단속을 위한한국환경공단 보유 개인정보 제공 요청에 관한 건)
+  citation: 개인정보보호위원회 제2022-120-046호
+  authority: 2
+  dates:
+    decided_on: '2022-12-19'
+  selection:
+    purpose: main
+    sha256: 533204f0bad4ca056e03fbbcf749401b7601eee87f152b741fed7a7d5dc58bb2
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 3
+      Q2: 2
+      Q3: 3
+      Q6: 2
+      Q7: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-2431
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '2431'
+  kind: ppc
+  title: 개인정보보호위원회 2023. 3. 22. 의결 제2023-005-038호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2023-005-038호
+  authority: 2
+  dates:
+    decided_on: '2023-03-22'
+  selection:
+    purpose: main
+    sha256: 79449e9f8a7ed54eb78a6bd84c748f49086831ee61d2b3dcb7957fa70d0ff6a6
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+      Q5: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-2433
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '2433'
+  kind: ppc
+  title: 개인정보보호위원회 2023. 3. 22. 의결 제2023-005-039호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2023-005-039호
+  authority: 2
+  dates:
+    decided_on: '2023-03-22'
+  selection:
+    purpose: main
+    sha256: b845b12ce55a615f3546093e35119250036f9f2d4eb5e6e32b07bc52ecc16af7
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+      Q5: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-2435
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '2435'
+  kind: ppc
+  title: 개인정보보호위원회 2023. 3. 22. 의결 제2023-005-040호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2023-005-040호
+  authority: 2
+  dates:
+    decided_on: '2023-03-22'
+  selection:
+    purpose: main
+    sha256: 2c0c6d0781fc410f4ea62fc5e86eb7a2cebb02887892259fc845127fee7f12aa
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+      Q4: 3
+      Q5: 1
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-2437
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '2437'
+  kind: ppc
+  title: 개인정보보호위원회 2023. 3. 22. 의결 제2023-005-041호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2023-005-041호
+  authority: 2
+  dates:
+    decided_on: '2023-03-22'
+  selection:
+    purpose: main
+    sha256: 767a6d326bfc7d8a71d9114a41687c1e775a5f927a7043aae2f557188c742db2
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q3: 3
+      Q4: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-5509
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '5509'
+  kind: ppc
+  title: 개인정보보호위원회 2023. 4. 26. 의결 제2023-107-017호 (김포골드라인운영주식회사의 혼잡사고 방지를 위한 영상정보 제공에 관한 건)
+  citation: 개인정보보호위원회 제2023-107-017호
+  authority: 2
+  dates:
+    decided_on: '2023-04-26'
+  selection:
+    purpose: main
+    sha256: 214e817cad6c24845dc99d70dba53c1e4b37033c414e6963ada7a8b73646dc65
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 3
+      Q2: 2
+      Q3: 3
+      Q7: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-5729
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '5729'
+  kind: ppc
+  title: 개인정보보호위원회 2024. 1. 24. 의결 (null)
+  citation: 개인정보보호위원회 결정문 5729
+  authority: 2
+  dates:
+    decided_on: '2024-01-24'
+  selection:
+    purpose: main
+    sha256: 29ea1182c6ffc690302b1eb8157ee6b1d58c087ab922a200e08bf0eba5bbb00f
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q2: 2
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-5755
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '5755'
+  kind: ppc
+  title: 개인정보보호위원회 2024. 1. 24. 의결 제2024-002-010호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2024-002-010호
+  authority: 2
+  dates:
+    decided_on: '2024-01-24'
+  selection:
+    purpose: main
+    sha256: 6870ec9f2909db729e553ed9c4a250f51e4daa4cedc095a2bdff8dec690e1e66
+    complete: true
+    questions:
+      Q0: 3
+      Q2: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-5767
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '5767'
+  kind: ppc
+  title: 개인정보보호위원회 2024. 1. 24. 의결 제2024-002-012호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2024-002-012호
+  authority: 2
+  dates:
+    decided_on: '2024-01-24'
+  selection:
+    purpose: main
+    sha256: b897b55ca6b453912649baf8687a73f55b301ea76e8636dd67ecb2985f3ad1bb
+    complete: true
+    questions:
+      Q2: 3
+      Q0: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-5771
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '5771'
+  kind: ppc
+  title: 개인정보보호위원회 2024. 1. 24. 의결 제2024-002-011호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2024-002-011호
+  authority: 2
+  dates:
+    decided_on: '2024-01-24'
+  selection:
+    purpose: main
+    sha256: cafbf276cb2383aab10abdb43d2447c50ce6b8686f6c928c60d6b73f86041c5b
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-5927
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '5927'
+  kind: ppc
+  title: 개인정보보호위원회 2024. 3. 13. 의결 (null)
+  citation: 개인정보보호위원회 결정문 5927
+  authority: 2
+  dates:
+    decided_on: '2024-03-13'
+  selection:
+    purpose: main
+    sha256: f1e1615b2ec28c021223d7c2c0549605713a6231d6c61434ddf8a94208e4969b
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 3
+      Q3: 3
+      Q5: 2
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-5991
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '5991'
+  kind: ppc
+  title: 개인정보보호위원회 2024. 3. 13. 의결 (null)
+  citation: 개인정보보호위원회 결정문 5991
+  authority: 2
+  dates:
+    decided_on: '2024-03-13'
+  selection:
+    purpose: main
+    sha256: a95ce59e2451f8b880e9685a5920cfa20dd0f932bc569b99f86bc48343588e41
+    complete: true
+    questions:
+      Q0: 3
+      Q3: 3
+      Q6: 3
+      Q7: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-5993
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '5993'
+  kind: ppc
+  title: 개인정보보호위원회 2024. 3. 13. 의결 (null)
+  citation: 개인정보보호위원회 결정문 5993
+  authority: 2
+  dates:
+    decided_on: '2024-03-13'
+  selection:
+    purpose: main
+    sha256: 28462d23fd9b02795e4d0465d3df39c445f1714b5ae2670279f2cfcbb89444f2
+    complete: true
+    questions:
+      Q1: 2
+      Q2: 2
+      Q3: 3
+      Q6: 3
+      Q7: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-6091
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '6091'
+  kind: ppc
+  title: 개인정보보호위원회 2024. 4. 24. 의결 (null)
+  citation: 개인정보보호위원회 결정문 6091
+  authority: 2
+  dates:
+    decided_on: '2024-04-24'
+  selection:
+    purpose: main
+    sha256: 1633b9405c602f85d18d0b1a4f60e0a363c1230a4f44566c71909f43d220d968
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 1
+      Q2: 2
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-6683
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '6683'
+  kind: ppc
+  title: 개인정보보호위원회 2024. 5. 22. 의결 (null)
+  citation: 개인정보보호위원회 결정문 6683
+  authority: 2
+  dates:
+    decided_on: '2024-05-22'
+  selection:
+    purpose: main
+    sha256: a7b9cd7c3de92a6be15a2e0918be9a1802763c0e9d181f38875b3db555029d96
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-6907
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '6907'
+  kind: ppc
+  title: 개인정보보호위원회 2024. 6. 16. 의결 (null)
+  citation: 개인정보보호위원회 결정문 6907
+  authority: 2
+  dates:
+    decided_on: '2024-06-16'
+  selection:
+    purpose: main
+    sha256: e195e3c3c25950360cae16b5a84b5db14a0eb0f93b85732a326b6de7d4d5a372
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 1
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-7111
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '7111'
+  kind: ppc
+  title: 개인정보보호위원회 2024. 6. 26. 의결 (null)
+  citation: 개인정보보호위원회 결정문 7111
+  authority: 2
+  dates:
+    decided_on: '2024-06-26'
+  selection:
+    purpose: main
+    sha256: acc120b28273da94ea3d06e5a97f3ac7270567e3d40a6d710c5ee8221bff60ae
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q2: 3
+      Q3: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-6913
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '6913'
+  kind: ppc
+  title: 개인정보보호위원회 2024. 7. 10. 의결 제2024-214-498호 (공공기관의 개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2024-214-498호
+  authority: 2
+  dates:
+    decided_on: '2024-07-10'
+  selection:
+    purpose: main
+    sha256: 4df7e9f57e8caf3b111710cacea5be3f95ff10484ca8d5f86044136c544c779c
+    complete: true
+    questions:
+      Q0: 2
+      Q3: 3
+      Q4: 2
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-7113
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '7113'
+  kind: ppc
+  title: 개인정보보호위원회 2024. 7. 24. 의결 (null)
+  citation: 개인정보보호위원회 결정문 7113
+  authority: 2
+  dates:
+    decided_on: '2024-07-24'
+  selection:
+    purpose: main
+    sha256: f0225a14210659e8dd7936322800ee763c402dcd53890545585cbf8ad1d38e4d
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-7115
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '7115'
+  kind: ppc
+  title: 개인정보보호위원회 2024. 7. 24. 의결 (null)
+  citation: 개인정보보호위원회 결정문 7115
+  authority: 2
+  dates:
+    decided_on: '2024-07-24'
+  selection:
+    purpose: main
+    sha256: f850d5c24f36e84a24cf7aae485c4f8c62f715c153e65879b492d678ed81e698
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q2: 3
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-7109
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '7109'
+  kind: ppc
+  title: 개인정보보호위원회 2024. 8. 28. 의결 (null)
+  citation: 개인정보보호위원회 결정문 7109
+  authority: 2
+  dates:
+    decided_on: '2024-08-28'
+  selection:
+    purpose: main
+    sha256: 86f9f94523c7208de156da5016aa99156d96e535130d87258d4de94873787dc4
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 1
+      Q3: 3
+      Q6: 3
+      Q7: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-7161
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '7161'
+  kind: ppc
+  title: 개인정보보호위원회 2024. 8. 28. 의결 제2024-217-563호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2024-217-563호
+  authority: 2
+  dates:
+    decided_on: '2024-08-28'
+  selection:
+    purpose: main
+    sha256: cd3c3b8f31dd89203cd3ca221b78cae8a4930d937500d59fc116a28366fe158c
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+      Q8: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-7459
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '7459'
+  kind: ppc
+  title: 개인정보보호위원회 2024. 9. 25. 의결 제2024-016-234호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2024-016-234호
+  authority: 2
+  dates:
+    decided_on: '2024-09-25'
+  selection:
+    purpose: main
+    sha256: 1e4d04dfcc80d6c2b8cc534d65af128786e778fb23a18c7e0099c66d363e5c09
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 3
+      Q2: 2
+      Q4: 3
+      Q5: 3
+      Q7: 3
+      Q8: 1
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+    unconfirmed:
+    - '근거 문장의 위치 미확인: Q5'
+- id: ppc-7311
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '7311'
+  kind: ppc
+  title: 개인정보보호위원회 2024. 10. 23. 의결 (null)
+  citation: 개인정보보호위원회 결정문 7311
+  authority: 2
+  dates:
+    decided_on: '2024-10-23'
+  selection:
+    purpose: main
+    sha256: 0023d8ae43307480cb35fe67548f1cd4702e4a0bb31d01280ecbc879d44b05c4
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 1
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-9881
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '9881'
+  kind: ppc
+  title: 개인정보보호위원회 2024. 11. 4. 의결 제2024-221-665호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2024-221-665호
+  authority: 2
+  dates:
+    decided_on: '2024-11-04'
+  selection:
+    purpose: main
+    sha256: 5e022b7bda09fc1ab05f998f88a2357b7b1aa6e02e50d21a4ab3a7a2ef0de390
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q8: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-7471
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '7471'
+  kind: ppc
+  title: 개인정보보호위원회 2024. 11. 27. 의결 제2024-223-712호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2024-223-712호
+  authority: 2
+  dates:
+    decided_on: '2024-11-27'
+  selection:
+    purpose: main
+    sha256: 38f9df622243a15a1586057429b7b8b81c7193573c7c9b8611998c3f4689b30f
+    complete: true
+    questions:
+      Q8: 3
+      Q1: 1
+      Q5: 1
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-9667
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '9667'
+  kind: ppc
+  title: 개인정보보호위원회 2025. 2. 26. 의결 (null)
+  citation: 개인정보보호위원회 결정문 9667
+  authority: 2
+  dates:
+    decided_on: '2025-02-26'
+  selection:
+    purpose: main
+    sha256: 08f826ebca86d37ed99e460815532b96acbfaa68e991a85a7dfc1d36e3b71a09
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 1
+      Q2: 1
+      Q3: 3
+      Q6: 3
+      Q7: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-10827
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '10827'
+  kind: ppc
+  title: 개인정보보호위원회 2025. 5. 27. 의결 제2026-009-064호 (휴대전화 개통 시 안면인증 제도에 대한 개선권고에 관한 건)
+  citation: 개인정보보호위원회 제2026-009-064호
+  authority: 2
+  dates:
+    decided_on: '2025-05-27'
+  selection:
+    purpose: main
+    sha256: 6c0fd69ec5332b1b6e7d594db2b902592e73e6cc4782ea92a63e3e2d4313b6e1
+    complete: true
+    questions:
+      Q1: 3
+      Q5: 3
+      Q4: 3
+      Q2: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-10049
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '10049'
+  kind: ppc
+  title: 개인정보보호위원회 2025. 6. 11. 의결 제2025-211-251호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2025-211-251호
+  authority: 2
+  dates:
+    decided_on: '2025-06-11'
+  selection:
+    purpose: main
+    sha256: e221cecdf8c0bc1c135a1d1082b3f1cfafef0876531037836645365b6d38b7cd
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+      Q5: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+    unconfirmed:
+    - '근거 문장의 위치 미확인: Q5'
+- id: ppc-10053
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '10053'
+  kind: ppc
+  title: 개인정보보호위원회 2025. 6. 11. 의결 제2025-211-252호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2025-211-252호
+  authority: 2
+  dates:
+    decided_on: '2025-06-11'
+  selection:
+    purpose: main
+    sha256: 0df01d8bb75adbb077a9150f66edfff809881c71e11532a24489c404499517f4
+    complete: true
+    questions:
+      Q0: 2
+      Q8: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-9937
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '9937'
+  kind: ppc
+  title: 개인정보보호위원회 2025. 6. 11. 의결 (null)
+  citation: 개인정보보호위원회 결정문 9937
+  authority: 2
+  dates:
+    decided_on: '2025-06-11'
+  selection:
+    purpose: main
+    sha256: 06072b2948fc8657db5b7a1be4c430138fd9ee3176360c0a7204d1262ff3876c
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 3
+      Q2: 2
+      Q3: 3
+      Q4: 2
+      Q6: 2
+      Q7: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-10193
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '10193'
+  kind: ppc
+  title: 개인정보보호위원회 2025. 10. 22. 의결 (null)
+  citation: 개인정보보호위원회 결정문 10193
+  authority: 2
+  dates:
+    decided_on: '2025-10-22'
+  selection:
+    purpose: main
+    sha256: 7aa605adb11e330950000e1aef147a277b31b8e999d0965d8397be3bc68ac70c
+    complete: true
+    questions:
+      Q0: 2
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+    unconfirmed:
+    - '근거 문장의 위치 미확인: Q3'
+- id: ppc-10365
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '10365'
+  kind: ppc
+  title: 개인정보보호위원회 2026. 1. 28. 의결 (null)
+  citation: 개인정보보호위원회 결정문 10365
+  authority: 2
+  dates:
+    decided_on: '2026-01-28'
+  selection:
+    purpose: main
+    sha256: a89911e2a2f80f313c81f45a055d229c499d6c35909344972e1815e7ae8a556a
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q3: 3
+      Q6: 3
+      Q5: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-10405
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '10405'
+  kind: ppc
+  title: 개인정보보호위원회 2026. 3. 11. 의결 제2026-104-005호 (소방서의 소방시설관리업자에 대한 감독 업무를 위한 관계인 보유 영상정보 제공 요청에 관한 건)
+  citation: 개인정보보호위원회 제2026-104-005호
+  authority: 2
+  dates:
+    decided_on: '2026-03-11'
+  selection:
+    purpose: main
+    sha256: 49b61204e5da1a7a6fb0347118bc32f2b7f8f362720c184f16b24b390d81f089
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 1
+      Q2: 2
+      Q3: 3
+      Q6: 3
+      Q7: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-10457
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '10457'
+  kind: ppc
+  title: 개인정보보호위원회 2026. 4. 8. 의결 (null)
+  citation: 개인정보보호위원회 결정문 10457
+  authority: 2
+  dates:
+    decided_on: '2026-04-08'
+  selection:
+    purpose: main
+    sha256: a2e9a750b634f07de1216092bdba712d26fbd49978677df1e73c1aa59a17b611
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-10921
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '10921'
+  kind: ppc
+  title: 개인정보보호위원회 2026. 7. 15. 의결 (null)
+  citation: 개인정보보호위원회 결정문 10921
+  authority: 2
+  dates:
+    decided_on: '2026-07-15'
+  selection:
+    purpose: main
+    sha256: e9cca561b8b977cc9587701c91a0245ef087ef5c29025642e31557d1bb59f0b4
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q3: 3
+      Q6: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+    unconfirmed:
+    - '근거 문장의 위치 미확인: Q3'
+- id: ppc-10913
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '10913'
+  kind: ppc
+  title: 개인정보보호위원회 2026. 9. 4. 의결 제2026-118-024호 (관악구의 도로법 위반행위 단속을 위한 CCTV 영상정보 이용에 관한 건)
+  citation: 개인정보보호위원회 제2026-118-024호
+  authority: 2
+  dates:
+    decided_on: '2026-09-04'
+  selection:
+    purpose: main
+    sha256: 18b5416327ffeafd65be1d0c555715de68fde42c0404c3aaec975bec077e4743
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 2
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-10945
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '10945'
+  kind: ppc
+  title: 개인정보보호위원회 2026. 9. 17. 의결 제2026-120-027호 (법무부의 전자장치 부착 스토킹행위자의 의무위반 등 통지업무를 위한 지방자치단체 CCTV 영상정보 제공 요청에)
+  citation: 개인정보보호위원회 제2026-120-027호
+  authority: 2
+  dates:
+    decided_on: '2026-09-17'
+  selection:
+    purpose: main
+    sha256: 7a4a543e088b316147d3bbb3b680b803eaeb5f39f94918f9bf0c22ba07e2094a
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 1
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-11035
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '11035'
+  kind: ppc
+  title: 개인정보보호위원회 2026. 9. 18. 의결 제2026-218-421호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2026-218-421호
+  authority: 2
+  dates:
+    decided_on: '2026-09-18'
+  selection:
+    purpose: main
+    sha256: e3eda6b5a5e12e91b0b3bc323e4d45c14129c65b18c5a02579ceaa947b731c9b
+    complete: true
+    questions:
+      Q0: 2
+      Q8: 3
+      Q7: 2
+      Q3: 1
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-11037
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '11037'
+  kind: ppc
+  title: 개인정보보호위원회 2026. 9. 18. 의결 제2026-218-420호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2026-218-420호
+  authority: 2
+  dates:
+    decided_on: '2026-09-18'
+  selection:
+    purpose: main
+    sha256: 1ec690954fa7f8eea3e4cab06b614fe4e085615addb51a2addf563f730fe937d
+    complete: true
+    questions:
+      Q8: 3
+      Q0: 1
+      Q1: 1
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-11041
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '11041'
+  kind: ppc
+  title: 개인정보보호위원회 2026. 9. 18. 의결 제2026-218-418호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2026-218-418호
+  authority: 2
+  dates:
+    decided_on: '2026-09-18'
+  selection:
+    purpose: main
+    sha256: 2527d4ecac551b42f7e5a198b7afbc9d5e93d3c1a27cb3e86c8d129848764483
+    complete: true
+    questions:
+      Q0: 1
+      Q8: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-11043
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '11043'
+  kind: ppc
+  title: 개인정보보호위원회 2026. 9. 18. 의결 제2026-218-419호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2026-218-419호
+  authority: 2
+  dates:
+    decided_on: '2026-09-18'
+  selection:
+    purpose: main
+    sha256: 7fc9d761765612194a2d02722f117395e47d32efd1ec89368af15d7ed56da252
+    complete: true
+    questions:
+      Q0: 2
+      Q8: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-11045
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '11045'
+  kind: ppc
+  title: 개인정보보호위원회 2026. 9. 18. 의결 제2026-218-422호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2026-218-422호
+  authority: 2
+  dates:
+    decided_on: '2026-09-18'
+  selection:
+    purpose: main
+    sha256: 764ebd359ca27c7eb6ebae4442aac37e805ec93f9e1b4ba86d7e3024fff2bd60
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+      Q8: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-11051
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '11051'
+  kind: ppc
+  title: 개인정보보호위원회 2026. 9. 18. 의결 제2026-218-426호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2026-218-426호
+  authority: 2
+  dates:
+    decided_on: '2026-09-18'
+  selection:
+    purpose: main
+    sha256: 0840401f5485ed8a2a5dd61c2650b113ca13cf3be623058a96d381195098d5cd
+    complete: true
+    questions:
+      Q8: 3
+      Q1: 1
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-11053
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '11053'
+  kind: ppc
+  title: 개인정보보호위원회 2026. 9. 18. 의결 제2026-218-427호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2026-218-427호
+  authority: 2
+  dates:
+    decided_on: '2026-09-18'
+  selection:
+    purpose: main
+    sha256: 34052dd4003639cd3a77347981a7cb481bc71e82abadde660344df871d85e81a
+    complete: true
+    questions:
+      Q0: 1
+      Q1: 2
+      Q8: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-11055
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '11055'
+  kind: ppc
+  title: 개인정보보호위원회 2026. 9. 18. 의결 제2026-218-425호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2026-218-425호
+  authority: 2
+  dates:
+    decided_on: '2026-09-18'
+  selection:
+    purpose: main
+    sha256: 95e45269854f8f4f4c3f20972bd42b5f03c49233bc07a0643b2374b702879620
+    complete: true
+    questions:
+      Q0: 1
+      Q8: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-11057
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '11057'
+  kind: ppc
+  title: 개인정보보호위원회 2026. 9. 18. 의결 제2026-218-428호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2026-218-428호
+  authority: 2
+  dates:
+    decided_on: '2026-09-18'
+  selection:
+    purpose: main
+    sha256: e32bab10cf43f11933989e53d2c9242169edc6d11060d170afd6765b0f4c2106
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+      Q5: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-11059
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '11059'
+  kind: ppc
+  title: 개인정보보호위원회 2026. 9. 18. 의결 제2026-218-429호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2026-218-429호
+  authority: 2
+  dates:
+    decided_on: '2026-09-18'
+  selection:
+    purpose: main
+    sha256: bb41758457dd92d9d4801f908efca5cf61882c664d9f7b5b6f00b9be0c558338
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+      Q5: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: ppc-11061
+  source: lawgokr
+  target: ppc
+  params:
+    ID: '11061'
+  kind: ppc
+  title: 개인정보보호위원회 2026. 9. 18. 의결 제2026-218-430호 (개인정보보호 법규 위반행위에 대한 시정조치에 관한 건)
+  citation: 개인정보보호위원회 제2026-218-430호
+  authority: 2
+  dates:
+    decided_on: '2026-09-18'
+  selection:
+    purpose: main
+    sha256: 678e89ca2fc5e811ffc978bca161ae2f45339ba1cc3d0c5abb034b9e1f22bca6
+    complete: true
+    questions:
+      Q0: 2
+      Q2: 3
+      Q5: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    change: 검사 안 함
+- id: prec-223055
+  source: lawgokr
+  target: prec
+  params:
+    ID: '223055'
+  kind: prec
+  title: 서울지방법원 1995. 5. 19. 선고 93가합54908 판결
+  citation: 서울지방법원 93가합54908
+  authority: 2
+  dates:
+    decided_on: '1995-05-19'
+  selection:
+    purpose: trail
+    sha256: 16d62ec95b9e79af84d19f1c8f5391b09c150a0449d61ab6f56321629b886fed
+    complete: true
+- id: prec-223053
+  source: lawgokr
+  target: prec
+  params:
+    ID: '223053'
+  kind: prec
+  title: 서울지방법원 1995. 9. 29. 선고 91가합49346 판결
+  citation: 서울지방법원 91가합49346
+  authority: 2
+  dates:
+    decided_on: '1995-09-29'
+  selection:
+    purpose: trail
+    sha256: 195641030693dd559848223e9a0fbe29b63d152396edad159bfcc2a000cfaa2d
+    complete: true
+- id: prec-223009
+  source: lawgokr
+  target: prec
+  params:
+    ID: '223009'
+  kind: prec
+  title: 서울고등법원 1996. 2. 27. 선고 95나24946 판결
+  citation: 서울고등법원 95나24946
+  authority: 2
+  dates:
+    decided_on: '1996-02-27'
+  selection:
+    purpose: trail
+    sha256: 5806433bde5fde9345dbfbfdc6f8d0d3e7bbce21f001e2504b5e14b03503d853
+    complete: true
+- id: prec-222985
+  source: lawgokr
+  target: prec
+  params:
+    ID: '222985'
+  kind: prec
+  title: 서울고등법원 1996. 8. 20. 선고 95나44148 판결
+  citation: 서울고등법원 95나44148
+  authority: 2
+  dates:
+    decided_on: '1996-08-20'
+  selection:
+    purpose: trail
+    sha256: 0e068c73dc2eb16f3983d0ba4d0334193a6a852a9713669e8d7e882b6dc55614
+    complete: true
+- id: prec-115807
+  source: lawgokr
+  target: prec
+  params:
+    ID: '115807'
+  kind: prec
+  title: 대법원 1997. 9. 30. 선고 97도1230 판결
+  citation: 대법원 97도1230
+  authority: 2
+  dates:
+    decided_on: '1997-09-30'
+  selection:
+    purpose: main
+    sha256: ae67c31c83c5d128a9433e1761a00b1a48aac3492c3257d88cea426c12e77206
+    complete: true
+    questions:
+      Q2: 3
+      Q4: 3
+      Q5: 2
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 7
+    level: 대법원
+    change: 발견 못 함
+- id: prec-116873
+  source: lawgokr
+  target: prec
+  params:
+    ID: '116873'
+  kind: prec
+  title: 대법원 1998. 7. 14. 선고 96다17257 판결
+  citation: 대법원 96다17257
+  authority: 2
+  dates:
+    decided_on: '1998-07-14'
+  selection:
+    purpose: main
+    sha256: 1c3012ac521c7fd662778dabac16d9727ca612a8e096bdf64663cd88b485ae0d
+    complete: true
+    questions:
+      Q6: 3
+      Q7: 2
+      Q3: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    - ④
+    cited_by: 9
+    level: 대법원
+    change: 발견 못 함
+- id: prec-116906
+  source: lawgokr
+  target: prec
+  params:
+    ID: '116906'
+  kind: prec
+  title: 대법원 1998. 7. 24. 선고 96다42789 판결
+  citation: 대법원 96다42789
+  authority: 2
+  dates:
+    decided_on: '1998-07-24'
+  selection:
+    purpose: main
+    sha256: e37ab3d3c2957ad998936d21858f45a0a08c607c744553ccc3cac4e2c369eab9
+    complete: true
+    questions:
+      Q1: 2
+      Q2: 2
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    - ④
+    cited_by: 9
+    level: 대법원
+    change: 발견 못 함
+- id: prec-116979
+  source: lawgokr
+  target: prec
+  params:
+    ID: '116979'
+  kind: prec
+  title: 대법원 1998. 9. 4. 선고 96다11327 판결
+  citation: 대법원 96다11327
+  authority: 2
+  dates:
+    decided_on: '1998-09-04'
+  selection:
+    purpose: main
+    sha256: f1eb53a01a95506f19922a8b54d621275c56c56ec03c16f703df458de5cce5d5
+    complete: true
+    questions:
+      Q3: 3
+      Q4: 3
+      Q6: 3
+      Q7: 3
+      Q1: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    - ④
+    cited_by: 5
+    level: 대법원
+    change: 발견 못 함
+- id: prec-69543
+  source: lawgokr
+  target: prec
+  params:
+    ID: '69543'
+  kind: prec
+  title: 청주지방법원 2003. 8. 22. 선고 2001가합2034 판결
+  citation: 청주지방법원 2001가합2034
+  authority: 2
+  dates:
+    decided_on: '2003-08-22'
+  selection:
+    purpose: trail
+    sha256: 3fa17a780caefb345f0050a4db02ec87ea048c307b30905b76c4109ff0c7e19a
+    complete: true
+- id: prec-69682
+  source: lawgokr
+  target: prec
+  params:
+    ID: '69682'
+  kind: prec
+  title: 서울중앙지방법원 2004. 2. 6. 선고 2003나13979 판결
+  citation: 서울중앙지방법원 2003나13979
+  authority: 2
+  dates:
+    decided_on: '2004-02-06'
+  selection:
+    purpose: trail
+    sha256: 19e689ca1176df892c16b2a6ea64fbb30a7deb3558cf28250e0851f142a2c0ad
+    complete: true
+- id: prec-77574
+  source: lawgokr
+  target: prec
+  params:
+    ID: '77574'
+  kind: prec
+  title: 대전고등법원 2004. 6. 17. 선고 2003나7034 판결
+  citation: 대전고등법원 2003나7034
+  authority: 2
+  dates:
+    decided_on: '2004-06-17'
+  selection:
+    purpose: trail
+    sha256: f694fd54e6b36361a3ca41c784210117060362e63a141bbd2776eece50c53516
+    complete: true
+- id: prec-216091
+  source: lawgokr
+  target: prec
+  params:
+    ID: '216091'
+  kind: prec
+  title: 대법원 2006. 5. 12. 선고 2004다35199 판결
+  citation: 대법원 2004다35199
+  authority: 2
+  dates:
+    decided_on: '2006-05-12'
+  selection:
+    purpose: main
+    sha256: ad24278a0c94381f9a0eb2427e5ba2fc10a4c92ac6c8c7b905e7b2ed3b2c3c24
+    complete: true
+    questions:
+      Q1: 2
+      Q6: 2
+      Q7: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    - ④
+    cited_by: 17
+    level: 대법원
+    change: 발견 못 함
+- id: prec-215865
+  source: lawgokr
+  target: prec
+  params:
+    ID: '215865'
+  kind: prec
+  title: 대법원 2006. 10. 13. 선고 2004다16280 판결
+  citation: 대법원 2004다16280
+  authority: 2
+  dates:
+    decided_on: '2006-10-13'
+  selection:
+    purpose: main
+    sha256: fd7960935eba486325b8aa8638891381471c5ce74217caa0546983948005df50
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 3
+      Q2: 3
+      Q5: 2
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ①
+    - ③
+    - ④
+    cited_by: 18
+    level: 대법원
+    change: 발견 못 함
+- id: prec-140691
+  source: lawgokr
+  target: prec
+  params:
+    ID: '140691'
+  kind: prec
+  title: 광주고등법원 2006. 12. 7. 선고 2005나9561 판결
+  citation: 광주고등법원 2005나9561
+  authority: 2
+  dates:
+    decided_on: '2006-12-07'
+  selection:
+    purpose: trail
+    sha256: 87bc848e4db8f10ca72f8566c1e9464ba612c20f52a73527027a4b3cc648601f
+    complete: true
+- id: prec-78738
+  source: lawgokr
+  target: prec
+  params:
+    ID: '78738'
+  kind: prec
+  title: 서울고등법원 2007. 7. 25. 선고 2006나80294 판결
+  citation: 서울고등법원 2006나80294
+  authority: 2
+  dates:
+    decided_on: '2007-07-25'
+  selection:
+    purpose: trail
+    sha256: ed6e325cbce09d6056e741a61633d1dc613d6a76d3e0a263c232d05be3498db3
+    complete: true
+- id: prec-85493
+  source: lawgokr
+  target: prec
+  params:
+    ID: '85493'
+  kind: prec
+  title: 대법원 2008. 1. 17. 선고 2007다59912 판결
+  citation: 대법원 2007다59912
+  authority: 2
+  dates:
+    decided_on: '2008-01-17'
+  selection:
+    purpose: main
+    sha256: 260bc81d7e0f8477af86662d0180366afd55e2155fec1b9eb5da7827d428398d
+    complete: true
+    questions:
+      Q1: 2
+      Q2: 2
+      Q3: 3
+      Q4: 3
+      Q7: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    level: 대법원
+    change: 발견 못 함
+- id: prec-64524
+  source: lawgokr
+  target: prec
+  params:
+    ID: '64524'
+  kind: prec
+  title: 서울중앙지방법원 2008. 7. 23. 선고 2008노1386 판결
+  citation: 서울중앙지방법원 2008노1386
+  authority: 2
+  dates:
+    decided_on: '2008-07-23'
+  selection:
+    purpose: trail
+    sha256: 2bd66a792a67ac8f8e6e90605a474b08dc051a4799dcec89ca3a7e0619c7cea4
+    complete: true
+- id: prec-64697
+  source: lawgokr
+  target: prec
+  params:
+    ID: '64697'
+  kind: prec
+  title: 대법원 2008. 9. 25. 선고 2008도7007 판결
+  citation: 대법원 2008도7007
+  authority: 2
+  dates:
+    decided_on: '2008-09-25'
+  selection:
+    purpose: main
+    sha256: b43512ca2122f564aa318ee8edf61720c637a0a7112677912bcc5449bd234528
+    complete: true
+    questions:
+      Q2: 3
+      Q5: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ④
+    cited_by: 6
+    level: 대법원
+    change: 발견 못 함
+- id: prec-139169
+  source: lawgokr
+  target: prec
+  params:
+    ID: '139169'
+  kind: prec
+  title: 대법원 2009. 9. 10. 선고 2007다71 판결
+  citation: 대법원 2007다71
+  authority: 2
+  dates:
+    decided_on: '2009-09-10'
+  selection:
+    purpose: main
+    sha256: f64627a2e19f97bc0d496066aca0fa5042b05ed621cc38da17a224ed2807f305
+    complete: true
+    questions:
+      Q6: 3
+      Q4: 2
+      Q7: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    - ④
+    cited_by: 2
+    level: 대법원
+    change: 검사 못 함
+- id: prec-142801
+  source: lawgokr
+  target: prec
+  params:
+    ID: '142801'
+  kind: prec
+  title: 대법원 2009. 10. 29. 선고 2009다49766 판결
+  citation: 대법원 2009다49766
+  authority: 2
+  dates:
+    decided_on: '2009-10-29'
+  selection:
+    purpose: main
+    sha256: ca520dd00b8fe63bc6071c1fa71e38e69571eb5e644d0ff643cacf61545e4063
+    complete: true
+    questions:
+      Q1: 3
+      Q6: 2
+      Q7: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    - ④
+    cited_by: 1
+    level: 대법원
+    change: 발견 못 함
+- id: prec-186701
+  source: lawgokr
+  target: prec
+  params:
+    ID: '186701'
+  kind: prec
+  title: 서울중앙지방법원 2010. 7. 21. 선고 2008가합41593 판결
+  citation: 서울중앙지방법원 2008가합41593
+  authority: 2
+  dates:
+    decided_on: '2010-07-21'
+  selection:
+    purpose: trail
+    sha256: 5d05f396e7b2a6ad70b4d47f261cc69dd498252d493d3320c3c9a37784155da8
+    complete: true
+- id: prec-168985
+  source: lawgokr
+  target: prec
+  params:
+    ID: '168985'
+  kind: prec
+  title: 의정부지방법원 2010. 11. 11. 선고 2010나2696 판결
+  citation: 의정부지방법원 2010나2696
+  authority: 2
+  dates:
+    decided_on: '2010-11-11'
+  selection:
+    purpose: trail
+    sha256: b6e43edb389d157a3776fe4d09422fa4e8f5f894d226f4243b80e1ccac6502fb
+    complete: true
+- id: prec-186675
+  source: lawgokr
+  target: prec
+  params:
+    ID: '186675'
+  kind: prec
+  title: 서울고등법원 2011. 5. 19. 선고 2010나79031 판결
+  citation: 서울고등법원 2010나79031
+  authority: 2
+  dates:
+    decided_on: '2011-05-19'
+  selection:
+    purpose: trail
+    sha256: 38b1b501f71dd630c5aa297cb6f9200104d8faeaa7a5104e991d9e5a62e11cab
+    complete: true
+- id: prec-160434
+  source: lawgokr
+  target: prec
+  params:
+    ID: '160434'
+  kind: prec
+  title: 대법원 2011. 5. 24. 선고 2011마319 결정
+  citation: 대법원 2011마319
+  authority: 2
+  dates:
+    decided_on: '2011-05-24'
+  selection:
+    purpose: main
+    sha256: ca97d397fd49a41d142610009e4d695a2306d9e44374582b75e72375b7262059
+    complete: true
+    questions:
+      Q3: 2
+      Q5: 2
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ④
+    cited_by: 1
+    level: 대법원
+    change: 발견 못 함
+- id: prec-166324
+  source: lawgokr
+  target: prec
+  params:
+    ID: '166324'
+  kind: prec
+  title: 대법원 2011. 9. 2. 선고 2008다42430 전원합의체 판결
+  citation: 대법원 2008다42430
+  authority: 2
+  dates:
+    decided_on: '2011-09-02'
+  selection:
+    purpose: main
+    sha256: 8eda3ede955efc40d57ca23a45fdf4cebe2a06cd3dafcb7a4d0f623edb2bb64e
+    complete: true
+    questions:
+      Q1: 2
+      Q3: 2
+      Q4: 2
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ④
+    - 변경 확인
+    cited_by: 6
+    level: 전원합의체
+    change: 발견 못 함
+- id: prec-171705
+  source: lawgokr
+  target: prec
+  params:
+    ID: '171705'
+  kind: prec
+  title: 서울중앙지방법원 2012. 2. 23. 선고 2011고합1131 판결
+  citation: 서울중앙지방법원 2011고합1131
+  authority: 2
+  dates:
+    decided_on: '2012-02-23'
+  selection:
+    purpose: trail
+    sha256: 76294712e698d4d6b24e24f166de72afa6888d702cd25c5e2184a7469eeb0212
+    complete: false
+    unconfirmed:
+    - '원문 일부만 확보: 이유 없음'
+- id: prec-171113
+  source: lawgokr
+  target: prec
+  params:
+    ID: '171113'
+  kind: prec
+  title: 서울고등법원 2012. 3. 9. 선고 2011나89080 판결
+  citation: 서울고등법원 2011나89080
+  authority: 2
+  dates:
+    decided_on: '2012-03-09'
+  selection:
+    purpose: trail
+    sha256: 6a72474764eb4dcdd6cd088a765d73a64c5f62a9edab7653e9ca78e23b33bbd4
+    complete: true
+- id: prec-163564
+  source: lawgokr
+  target: prec
+  params:
+    ID: '163564'
+  kind: prec
+  title: 대법원 2012. 4. 26. 선고 2011다53164 판결
+  citation: 대법원 2011다53164
+  authority: 2
+  dates:
+    decided_on: '2012-04-26'
+  selection:
+    purpose: main
+    sha256: ea48db18e72d7b32555a941e6eaf101717c48d1ff67e513ec11de4d0393113c3
+    complete: true
+    questions:
+      Q3: 3
+      Q4: 2
+      Q5: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ④
+    cited_by: 1
+    level: 대법원
+    change: 발견 못 함
+- id: prec-171731
+  source: lawgokr
+  target: prec
+  params:
+    ID: '171731'
+  kind: prec
+  title: 서울고등법원 2013. 2. 8. 선고 2012노805 판결
+  citation: 서울고등법원 2012노805
+  authority: 2
+  dates:
+    decided_on: '2013-02-08'
+  selection:
+    purpose: trail
+    sha256: e404fc12c72f427ab151c4125521792d4fba600334466e0d10f8271f9d9225ad
+    complete: true
+- id: prec-167838
+  source: lawgokr
+  target: prec
+  params:
+    ID: '167838'
+  kind: prec
+  title: 대법원 2013. 2. 14. 선고 2010다103185 판결
+  citation: 대법원 2010다103185
+  authority: 2
+  dates:
+    decided_on: '2013-02-14'
+  selection:
+    purpose: main
+    sha256: 9d95302cb8daf75af82d59e2400079f2702b2ddf61ffcdc67e0c6b924c06e1b1
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 3
+      Q2: 3
+      Q3: 3
+      Q4: 3
+      Q5: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    - ④
+    cited_by: 2
+    level: 대법원
+    change: 발견 못 함
+- id: prec-170181
+  source: lawgokr
+  target: prec
+  params:
+    ID: '170181'
+  kind: prec
+  title: 대법원 2013. 6. 27. 선고 2012다31628 판결
+  citation: 대법원 2012다31628
+  authority: 2
+  dates:
+    decided_on: '2013-06-27'
+  selection:
+    purpose: main
+    sha256: 2e1a78f4711fb29fdabf1dd9571e165cdea51ab82acdc6c036aa6109402cc1ee
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 3
+      Q2: 3
+      Q3: 3
+      Q4: 2
+      Q5: 2
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    - ④
+    cited_by: 6
+    level: 대법원
+    change: 발견 못 함
+- id: prec-170900
+  source: lawgokr
+  target: prec
+  params:
+    ID: '170900'
+  kind: prec
+  title: 대법원 2013. 7. 26. 선고 2013도2511 판결
+  citation: 대법원 2013도2511
+  authority: 2
+  dates:
+    decided_on: '2013-07-26'
+  selection:
+    purpose: main
+    sha256: b171b31df687658705b7080d2270e7321b0c613dab58683e97989c5fa83de307
+    complete: true
+    questions:
+      Q2: 3
+      Q6: 3
+      Q1: 2
+      Q0: 1
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 5
+    level: 대법원
+    change: 발견 못 함
+- id: prec-177288
+  source: lawgokr
+  target: prec
+  params:
+    ID: '177288'
+  kind: prec
+  title: 대법원 2014. 2. 27. 선고 2013도8619 판결
+  citation: 대법원 2013도8619
+  authority: 2
+  dates:
+    decided_on: '2014-02-27'
+  selection:
+    purpose: main
+    sha256: db20e5ae3a31a745b2ddfee77827d47df50c9c19a2ae39b0191e2c579a8c548f
+    complete: true
+    questions:
+      Q0: 1
+      Q2: 3
+      Q5: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ④
+    cited_by: 0
+    level: 대법원
+    change: 발견 못 함
+- id: prec-175504
+  source: lawgokr
+  target: prec
+  params:
+    ID: '175504'
+  kind: prec
+  title: 대법원 2014. 7. 24. 선고 2014도6309 판결
+  citation: 대법원 2014도6309
+  authority: 2
+  dates:
+    decided_on: '2014-07-24'
+  selection:
+    purpose: main
+    sha256: d144e2f8894f8fb27b01b87eec4e7a0b78a9e3280a00f44bd643800294d4b5f3
+    complete: true
+    questions:
+      Q2: 3
+      Q5: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ④
+    cited_by: 1
+    level: 대법원
+    change: 발견 못 함
+- id: prec-176484
+  source: lawgokr
+  target: prec
+  params:
+    ID: '176484'
+  kind: prec
+  title: 서울중앙지방법원 2014. 11. 4. 선고 2013나49885 판결
+  citation: 서울중앙지방법원 2013나49885
+  authority: 2
+  dates:
+    decided_on: '2014-11-04'
+  selection:
+    purpose: trail
+    sha256: 376707237cc05f065a0041fca2c750d106d91d9403d55e89cdd83a806af44ff7
+    complete: true
+- id: prec-184061
+  source: lawgokr
+  target: prec
+  params:
+    ID: '184061'
+  kind: prec
+  title: 춘천지방법원원주지원 2014. 12. 10. 선고 2014고단930 판결
+  citation: 춘천지방법원원주지원 2014고단930
+  authority: 2
+  dates:
+    decided_on: '2014-12-10'
+  selection:
+    purpose: trail
+    sha256: 10aae519a1c810714972da719d95343e1e516acf1f01b605c9661885a117ea4f
+    complete: false
+    unconfirmed:
+    - '원문 일부만 확보: 이유 없음'
+- id: prec-182806
+  source: lawgokr
+  target: prec
+  params:
+    ID: '182806'
+  kind: prec
+  title: 서울북부지방법원 2015. 1. 13. 선고 2014고단2134 판결
+  citation: 서울북부지방법원 2014고단2134
+  authority: 2
+  dates:
+    decided_on: '2015-01-13'
+  selection:
+    purpose: trail
+    sha256: a13c9a2a5354dd849ab35eed2b0e88d2a016a85a0255a6475bfda4f8c527d1a6
+    complete: true
+- id: prec-209148
+  source: lawgokr
+  target: prec
+  params:
+    ID: '209148'
+  kind: prec
+  title: 대법원 2015. 2. 12. 선고 2014도11501 판결
+  citation: 대법원 2014도11501
+  authority: 2
+  dates:
+    decided_on: '2015-02-12'
+  selection:
+    purpose: main
+    sha256: f487c2bda8ffb2921d8a8b2b4b58fca7e652c8d1e910cb9046cacf7c0ce3db94
+    complete: true
+    questions:
+      Q2: 2
+      Q4: 2
+      Q5: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    - ④
+    cited_by: 5
+    level: 대법원
+    change: 발견 못 함
+- id: prec-209236
+  source: lawgokr
+  target: prec
+  params:
+    ID: '209236'
+  kind: prec
+  title: 대법원 2015. 3. 20. 선고 2014도17346 판결
+  citation: 대법원 2014도17346
+  authority: 2
+  dates:
+    decided_on: '2015-03-20'
+  selection:
+    purpose: main
+    sha256: 6134d0da990e993b1440ed4761b90fc498a00212a2fc0fef12e4ba8e581f1784
+    complete: true
+    questions:
+      Q2: 2
+      Q4: 3
+      Q5: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    - ④
+    cited_by: 0
+    level: 대법원
+    change: 발견 못 함
+- id: prec-182801
+  source: lawgokr
+  target: prec
+  params:
+    ID: '182801'
+  kind: prec
+  title: 서울북부지방법원 2015. 5. 21. 선고 2015노166 판결
+  citation: 서울북부지방법원 2015노166
+  authority: 2
+  dates:
+    decided_on: '2015-05-21'
+  selection:
+    purpose: trail
+    sha256: 444fe561f677e54b065a8070fc781df17d8bbcff325c370c8aaa855e7ccf4a0b
+    complete: true
+- id: prec-179838
+  source: lawgokr
+  target: prec
+  params:
+    ID: '179838'
+  kind: prec
+  title: 대법원 2015. 10. 15. 선고 2014다77970 판결
+  citation: 대법원 2014다77970
+  authority: 2
+  dates:
+    decided_on: '2015-10-15'
+  selection:
+    purpose: main
+    sha256: 00f13bd87168548da5ca9681cb9a4a28ca867815ea2119525073fcabf59bd7fc
+    complete: true
+    questions:
+      Q1: 3
+      Q3: 3
+      Q4: 2
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ④
+    cited_by: 0
+    level: 대법원
+    change: 발견 못 함
+- id: prec-182867
+  source: lawgokr
+  target: prec
+  params:
+    ID: '182867'
+  kind: prec
+  title: 대법원 2016. 3. 10. 선고 2015도8766 판결
+  citation: 대법원 2015도8766
+  authority: 2
+  dates:
+    decided_on: '2016-03-10'
+  selection:
+    purpose: main
+    sha256: 88fce4d523bce6825f1e53cdd3fcbf231e24ec21ce15ff9e43751c02e4ef9d5f
+    complete: true
+    questions:
+      Q0: 3
+      Q3: 2
+      Q1: 1
+    model: claude-sonnet-5-5-api
+    found:
+    - ②
+    - ④
+    cited_by: 7
+    level: 대법원
+    change: 발견 못 함
+- id: prec-184047
+  source: lawgokr
+  target: prec
+  params:
+    ID: '184047'
+  kind: prec
+  title: 춘천지방법원 2016. 4. 20. 선고 2015노24 판결
+  citation: 춘천지방법원 2015노24
+  authority: 2
+  dates:
+    decided_on: '2016-04-20'
+  selection:
+    purpose: trail
+    sha256: bb17c6a27b61074c8be71773e217545b7e5c275e73b89b2d4bb23fdcbe54fadc
+    complete: true
+- id: prec-183259
+  source: lawgokr
+  target: prec
+  params:
+    ID: '183259'
+  kind: prec
+  title: 대법원 2016. 8. 17. 선고 2014다235080 판결
+  citation: 대법원 2014다235080
+  authority: 2
+  dates:
+    decided_on: '2016-08-17'
+  selection:
+    purpose: main
+    sha256: 0a33990990b33722c0f920523782ece7099c96573db7de94f65101d31e166415
+    complete: true
+    questions:
+      Q1: 3
+      Q3: 3
+      Q4: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ②
+    - ④
+    cited_by: 6
+    level: 대법원
+    change: 발견 못 함
+- id: prec-188221
+  source: lawgokr
+  target: prec
+  params:
+    ID: '188221'
+  kind: prec
+  title: 광주지방법원 2016. 10. 5. 선고 2016노2044 판결
+  citation: 광주지방법원 2016노2044
+  authority: 2
+  dates:
+    decided_on: '2016-10-05'
+  selection:
+    purpose: trail
+    sha256: 6c5fdee8c731846ac00ed5b2c9b9c2706d370a16dc0b7af693b820cc198c99e4
+    complete: true
+- id: prec-183660
+  source: lawgokr
+  target: prec
+  params:
+    ID: '183660'
+  kind: prec
+  title: 대법원 2016. 10. 13. 선고 2016도6172 판결
+  citation: 대법원 2016도6172
+  authority: 2
+  dates:
+    decided_on: '2016-10-13'
+  selection:
+    purpose: main
+    sha256: 2f407b6da868a4d740b8b20766248b02979df2638c2ee2231a3c7cd1d58a6948
+    complete: true
+    questions:
+      Q3: 3
+      Q2: 2
+      Q5: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ④
+    cited_by: 1
+    level: 대법원
+    change: 발견 못 함
+- id: prec-183977
+  source: lawgokr
+  target: prec
+  params:
+    ID: '183977'
+  kind: prec
+  title: 대법원 2016. 12. 27. 선고 2016도16676 판결
+  citation: 대법원 2016도16676
+  authority: 2
+  dates:
+    decided_on: '2016-12-27'
+  selection:
+    purpose: main
+    sha256: bb6177923ee4cc978ffb5b2a09713a5c389285e8dc7e51b92644f9eb01bd743c
+    complete: true
+    questions:
+      Q3: 3
+      Q4: 3
+      Q5: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    - ④
+    cited_by: 2
+    level: 대법원
+    change: 발견 못 함
+- id: prec-204551
+  source: lawgokr
+  target: prec
+  params:
+    ID: '204551'
+  kind: prec
+  title: 대전지방법원 2018. 1. 10. 선고 2017노2202 판결
+  citation: 대전지방법원 2017노2202
+  authority: 2
+  dates:
+    decided_on: '2018-01-10'
+  selection:
+    purpose: trail
+    sha256: ad4d16d051a53f14abfc9af50b21eabb2df8cdc23f38b44f64b74b712ee847ee
+    complete: true
+- id: prec-205644
+  source: lawgokr
+  target: prec
+  params:
+    ID: '205644'
+  kind: prec
+  title: 제주지방법원 2018. 5. 3. 선고 2017노112 판결
+  citation: 제주지방법원 2017노112
+  authority: 2
+  dates:
+    decided_on: '2018-05-03'
+  selection:
+    purpose: trail
+    sha256: cd3db2e41216b096a0e453a7336b450396ade694a461a53dd6e127a8f91e9f01
+    complete: true
+- id: prec-201286
+  source: lawgokr
+  target: prec
+  params:
+    ID: '201286'
+  kind: prec
+  title: 대법원 2018. 8. 1. 선고 2018도1481 판결
+  citation: 대법원 2018도1481
+  authority: 2
+  dates:
+    decided_on: '2018-08-01'
+  selection:
+    purpose: main
+    sha256: c21dd7d32c16563367e25e59fb85af3354a0bdc8138abbb787b04c473891fb50
+    complete: true
+    questions:
+      Q3: 3
+      Q8: 2
+      Q2: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ④
+    cited_by: 0
+    level: 대법원
+    change: 발견 못 함
+- id: prec-216757
+  source: lawgokr
+  target: prec
+  params:
+    ID: '216757'
+  kind: prec
+  title: 전주지방법원 2020. 4. 22. 선고 2019나6372 판결
+  citation: 전주지방법원 2019나6372
+  authority: 2
+  dates:
+    decided_on: '2020-04-22'
+  selection:
+    purpose: trail
+    sha256: 8eed25b35c02ba1d60f718b13e472e775b447e8056366a01a59069d04db6cb53
+    complete: true
+- id: prec-241621
+  source: lawgokr
+  target: prec
+  params:
+    ID: '241621'
+  kind: prec
+  title: 춘천지방법원 2020. 12. 9. 선고 2019노869 판결
+  citation: 춘천지방법원 2019노869
+  authority: 2
+  dates:
+    decided_on: '2020-12-09'
+  selection:
+    purpose: trail
+    sha256: 96f8dac9f2148e7dfc5c3eae71ae38377630ec821c3f402595d88b7e4b29cda8
+    complete: true
+- id: prec-217565
+  source: lawgokr
+  target: prec
+  params:
+    ID: '217565'
+  kind: prec
+  title: 서울고등법원 2021. 2. 4. 선고 2020나2018284 판결
+  citation: 서울고등법원 2020나2018284
+  authority: 2
+  dates:
+    decided_on: '2021-02-04'
+  selection:
+    purpose: trail
+    sha256: d476dd664b7b77fece54a59b96f08e68f766b6e2317c958710369ce941efa210
+    complete: true
+- id: prec-216695
+  source: lawgokr
+  target: prec
+  params:
+    ID: '216695'
+  kind: prec
+  title: 대법원 2021. 4. 29. 선고 2020다227455 판결
+  citation: 대법원 2020다227455
+  authority: 2
+  dates:
+    decided_on: '2021-04-29'
+  selection:
+    purpose: main
+    sha256: 029f438bb1c47a9e137f7f53a3756587ce1e92990ccab39bfc48b13f88e1a151
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 3
+      Q2: 3
+      Q3: 3
+      Q4: 3
+      Q5: 1
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ①
+    - ③
+    - ④
+    cited_by: 2
+    level: 대법원
+    change: 발견 못 함
+    unconfirmed:
+    - '근거 문장의 위치 미확인: Q6'
+- id: prec-2021da219116
+  source: lawgokr
+  target: prec
+  params:
+    ID: '217373'
+  kind: prec
+  title: 대법원 2021. 7. 21. 선고 2021다219116 판결
+  citation: 대법원 2021다219116
+  authority: 2
+  dates:
+    decided_on: '2021-07-21'
+  selection:
+    purpose: main
+    sha256: 1aa656771dd34bb3e923ada66fecef304108cf2482f89fec2c7ca0fb47dcafdd
+    complete: true
+    questions:
+      Q1: 3
+      Q2: 3
+      Q3: 3
+      Q4: 3
+      Q6: 1
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    - ④
+    cited_by: 2
+    level: 대법원
+    change: 발견 못 함
+- id: prec-238603
+  source: lawgokr
+  target: prec
+  params:
+    ID: '238603'
+  kind: prec
+  title: 전주지방법원 2021. 7. 22. 선고 2021노340 판결
+  citation: 전주지방법원 2021노340
+  authority: 2
+  dates:
+    decided_on: '2021-07-22'
+  selection:
+    purpose: trail
+    sha256: 48fcaed34153f82056e4a6dbfc4d7b071731593dac1a3e2b5d9e38561babb295
+    complete: true
+- id: prec-230721
+  source: lawgokr
+  target: prec
+  params:
+    ID: '230721'
+  kind: prec
+  title: 대법원 2021. 12. 10. 선고 2021다265119 판결
+  citation: 대법원 2021다265119
+  authority: 2
+  dates:
+    decided_on: '2021-12-10'
+  selection:
+    purpose: main
+    sha256: cd402395c0a0028fc446151d2c88d18725dd47add0631b4901ba7da54a77d379
+    complete: true
+    questions:
+      Q1: 3
+      Q3: 3
+      Q4: 2
+      Q5: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    level: 대법원
+    change: 발견 못 함
+- id: prec-238481
+  source: lawgokr
+  target: prec
+  params:
+    ID: '238481'
+  kind: prec
+  title: 수원고등법원 2021. 12. 23. 선고 2020노70 판결
+  citation: 수원고등법원 2020노70
+  authority: 2
+  dates:
+    decided_on: '2021-12-23'
+  selection:
+    purpose: trail
+    sha256: 09af3a09d0be9539a4a0c44370ca61138ea5cdcba929d56524ff62e983fd04bd
+    complete: true
+- id: prec-232617
+  source: lawgokr
+  target: prec
+  params:
+    ID: '232617'
+  kind: prec
+  title: 대법원 2022. 4. 28. 선고 2021도9041 판결
+  citation: 대법원 2021도9041
+  authority: 2
+  dates:
+    decided_on: '2022-04-28'
+  selection:
+    purpose: main
+    sha256: eec53763a6a0c0fe71e87074761330073ac735047b293f6d7c57be949cc59ea5
+    complete: true
+    questions:
+      Q4: 3
+      Q2: 2
+      Q5: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 1
+    level: 대법원
+    change: 발견 못 함
+- id: prec-232031
+  source: lawgokr
+  target: prec
+  params:
+    ID: '232031'
+  kind: prec
+  title: 서울고등법원 2022. 7. 22. 선고 2021노2521 판결
+  citation: 서울고등법원 2021노2521
+  authority: 2
+  dates:
+    decided_on: '2022-07-22'
+  selection:
+    purpose: trail
+    sha256: 989ed51d6a9590d8731876416889dd7a99a54f315a78ded4d16f86f0702e8bbb
+    complete: true
+- id: prec-605215
+  source: lawgokr
+  target: prec
+  params:
+    ID: '605215'
+  kind: prec
+  title: 서울서부지방법원 2022. 9. 23. 선고 2022가단211204 판결
+  citation: 서울서부지방법원 2022가단211204
+  authority: 2
+  dates:
+    decided_on: '2022-09-23'
+  selection:
+    purpose: trail
+    sha256: ce00776456c40340311c485dff2c4b86f8a9dd3f1b2041b7d769c034898f83da
+    complete: true
+- id: prec-232085
+  source: lawgokr
+  target: prec
+  params:
+    ID: '232085'
+  kind: prec
+  title: 대법원 2022. 10. 27. 선고 2022도9510 판결
+  citation: 대법원 2022도9510
+  authority: 2
+  dates:
+    decided_on: '2022-10-27'
+  selection:
+    purpose: main
+    sha256: dafdb4af849b09569e88038f3e7a7bd2c9450f3760e4fba3185eb0e08563f9f9
+    complete: true
+    questions:
+      Q0: 2
+      Q3: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ②
+    - ④
+    cited_by: 1
+    level: 대법원
+    change: 발견 못 함
+- id: prec-235657
+  source: lawgokr
+  target: prec
+  params:
+    ID: '235657'
+  kind: prec
+  title: 서울남부지방법원 2022. 11. 8. 선고 2022노588 판결
+  citation: 서울남부지방법원 2022노588
+  authority: 2
+  dates:
+    decided_on: '2022-11-08'
+  selection:
+    purpose: trail
+    sha256: 85cb3a0446bd96f9d0c767477a6bd71061c931aaee7350c3d019b9c23c9ce64f
+    complete: true
+- id: prec-605217
+  source: lawgokr
+  target: prec
+  params:
+    ID: '605217'
+  kind: prec
+  title: 서울서부지방법원 2023. 4. 6. 선고 2022나48698 판결
+  citation: 서울서부지방법원 2022나48698
+  authority: 2
+  dates:
+    decided_on: '2023-04-06'
+  selection:
+    purpose: trail
+    sha256: b1e3c78015ca536731857df161f18ea8ac6c037701ad2846e8500a1eed5812ef
+    complete: true
+- id: prec-235585
+  source: lawgokr
+  target: prec
+  params:
+    ID: '235585'
+  kind: prec
+  title: 대법원 2023. 4. 13. 선고 2020다253423 판결
+  citation: 대법원 2020다253423
+  authority: 2
+  dates:
+    decided_on: '2023-04-13'
+  selection:
+    purpose: main
+    sha256: 754be3f938316070f7747b38aca112a9dd35ed126896012bde895ddbf2c19730
+    complete: true
+    questions:
+      Q1: 3
+      Q3: 3
+      Q6: 3
+      Q7: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    - ④
+    cited_by: 0
+    level: 대법원
+    change: 발견 못 함
+- id: prec-234715
+  source: lawgokr
+  target: prec
+  params:
+    ID: '234715'
+  kind: prec
+  title: 대법원 2023. 4. 27. 선고 2018도8161 판결
+  citation: 대법원 2018도8161
+  authority: 2
+  dates:
+    decided_on: '2023-04-27'
+  selection:
+    purpose: main
+    sha256: 1e8b0773ee58c1f363e3e4bb578298fda57a79adebfe3391348c55f6a43c8682
+    complete: true
+    questions:
+      Q2: 2
+      Q5: 2
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    - ④
+    cited_by: 2
+    level: 대법원
+    change: 발견 못 함
+- id: prec-235113
+  source: lawgokr
+  target: prec
+  params:
+    ID: '235113'
+  kind: prec
+  title: 대법원 2023. 6. 15. 선고 2022도15414 판결
+  citation: 대법원 2022도15414
+  authority: 2
+  dates:
+    decided_on: '2023-06-15'
+  selection:
+    purpose: main
+    sha256: ccf427ec8fdd4f48edd6592a48e44c28e595f63305069037d528a3f5784b8836
+    complete: true
+    questions:
+      Q3: 3
+      Q4: 3
+      Q5: 2
+      Q1: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 1
+    level: 대법원
+    change: 발견 못 함
+- id: prec-238999
+  source: lawgokr
+  target: prec
+  params:
+    ID: '238999'
+  kind: prec
+  title: 대법원 2023. 6. 29. 선고 2018도1917 판결
+  citation: 대법원 2018도1917
+  authority: 2
+  dates:
+    decided_on: '2023-06-29'
+  selection:
+    purpose: main
+    sha256: e0f53f65a1cc8824901a2d55fa17331fefab3df3bab9845f39b467d219ec5ebc
+    complete: true
+    questions:
+      Q0: 3
+      Q1: 3
+      Q2: 3
+      Q4: 3
+      Q5: 2
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ①
+    - ②
+    - ③
+    cited_by: 1
+    level: 대법원
+    change: 발견 못 함
+- id: prec-236935
+  source: lawgokr
+  target: prec
+  params:
+    ID: '236935'
+  kind: prec
+  title: 대법원 2023. 7. 13. 선고 2021도10763 판결
+  citation: 대법원 2021도10763
+  authority: 2
+  dates:
+    decided_on: '2023-07-13'
+  selection:
+    purpose: main
+    sha256: f862a2b84162b8c0c652e3665e32566b55ec3c797a1a894c31cd0014321a0ffe
+    complete: true
+    questions:
+      Q2: 3
+      Q5: 2
+      Q6: 3
+      Q1: 1
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    - ④
+    cited_by: 0
+    level: 대법원
+    change: 발견 못 함
+- id: prec-607541
+  source: lawgokr
+  target: prec
+  params:
+    ID: '607541'
+  kind: prec
+  title: 서울동부지방법원 2023. 11. 30. 선고 2023노612 판결
+  citation: 서울동부지방법원 2023노612
+  authority: 2
+  dates:
+    decided_on: '2023-11-30'
+  selection:
+    purpose: trail
+    sha256: a21610bb40e9cdd10e01877997dcf7149c7eb48a7f58122afad904049c62750c
+    complete: true
+- id: prec-239243
+  source: lawgokr
+  target: prec
+  params:
+    ID: '239243'
+  kind: prec
+  title: 대법원 2024. 1. 4. 선고 2022도699 판결
+  citation: 대법원 2022도699
+  authority: 2
+  dates:
+    decided_on: '2024-01-04'
+  selection:
+    purpose: main
+    sha256: ee2503f90b2447f835fceb5edd1caeccca42a881253e573a7091c44e51b995d8
+    complete: true
+    questions:
+      Q1: 3
+      Q3: 3
+      Q6: 3
+      Q7: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    level: 대법원
+    change: 발견 못 함
+- id: prec-615735
+  source: lawgokr
+  target: prec
+  params:
+    ID: '615735'
+  kind: prec
+  title: 인천지방법원 2024. 5. 8. 선고 2023노2796 판결
+  citation: 인천지방법원 2023노2796
+  authority: 2
+  dates:
+    decided_on: '2024-05-08'
+  selection:
+    purpose: trail
+    sha256: cb95b69f968eb757f996e8c7a1a2f2a03ca62c038b0d04086f35ab9dac32f90f
+    complete: true
+- id: prec-241495
+  source: lawgokr
+  target: prec
+  params:
+    ID: '241495'
+  kind: prec
+  title: 대법원 2024. 8. 23. 선고 2020도18397 판결
+  citation: 대법원 2020도18397
+  authority: 2
+  dates:
+    decided_on: '2024-08-23'
+  selection:
+    purpose: main
+    sha256: 74287822144db9dc41116e003a237af90b99f13695f0acf9d886b056a8c638b1
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 3
+      Q3: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ②
+    - ③
+    cited_by: 0
+    level: 대법원
+    change: 발견 못 함
+- id: prec-607545
+  source: lawgokr
+  target: prec
+  params:
+    ID: '607545'
+  kind: prec
+  title: 서울고등법원 2025. 2. 7. 선고 2024노2332 판결
+  citation: 서울고등법원 2024노2332
+  authority: 2
+  dates:
+    decided_on: '2025-02-07'
+  selection:
+    purpose: trail
+    sha256: 36e0139241a6aa22191f8908f727357c38bda647329236d9d7ad929509bda697
+    complete: true
+- id: prec-604291
+  source: lawgokr
+  target: prec
+  params:
+    ID: '604291'
+  kind: prec
+  title: 대법원 2025. 2. 27. 선고 2023다233895 판결
+  citation: 대법원 2023다233895
+  authority: 2
+  dates:
+    decided_on: '2025-02-27'
+  selection:
+    purpose: main
+    sha256: ccad505c1c3a967a900b22b458015012afa81e4f029c5c22fb7bc92ffa80a580
+    complete: true
+    questions:
+      Q1: 2
+      Q2: 3
+      Q3: 3
+      Q4: 2
+      Q5: 2
+      Q6: 3
+      Q7: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ③
+    cited_by: 0
+    level: 대법원
+    change: 발견 못 함
+- id: prec-606757
+  source: lawgokr
+  target: prec
+  params:
+    ID: '606757'
+  kind: prec
+  title: 대법원 2025. 3. 13. 선고 2025도266 판결
+  citation: 대법원 2025도266
+  authority: 2
+  dates:
+    decided_on: '2025-03-13'
+  selection:
+    purpose: main
+    sha256: 3ea48379ec8371b53fda969fcad0e7d11779f4250c2edbce3122c4b63c39b46c
+    complete: true
+    questions:
+      Q0: 3
+      Q3: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ②
+    cited_by: 0
+    level: 대법원
+    change: 발견 못 함
+- id: prec-607211
+  source: lawgokr
+  target: prec
+  params:
+    ID: '607211'
+  kind: prec
+  title: 대법원 2025. 6. 26. 선고 2023도18539 판결
+  citation: 대법원 2023도18539
+  authority: 2
+  dates:
+    decided_on: '2025-06-26'
+  selection:
+    purpose: main
+    sha256: 6d881c3b9de4101effac8c81f7a7b473ba9e8bf78e20f144b0804acc3bd7d82b
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 3
+      Q3: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ②
+    - ③
+    cited_by: 0
+    level: 대법원
+    change: 발견 못 함
+- id: prec-607191
+  source: lawgokr
+  target: prec
+  params:
+    ID: '607191'
+  kind: prec
+  title: 대법원 2025. 6. 26. 선고 2025도3153 판결
+  citation: 대법원 2025도3153
+  authority: 2
+  dates:
+    decided_on: '2025-06-26'
+  selection:
+    purpose: main
+    sha256: 9029254d05e0a84d4a45a25f68905049ddca4cbf69b1bd4838e4abe2f2e7d613
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 3
+      Q3: 3
+      Q6: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ②
+    - ③
+    cited_by: 1
+    level: 대법원
+    change: 발견 못 함
+- id: prec-612065
+  source: lawgokr
+  target: prec
+  params:
+    ID: '612065'
+  kind: prec
+  title: 대법원 2025. 7. 18. 선고 2023도17590 판결
+  citation: 대법원 2023도17590
+  authority: 2
+  dates:
+    decided_on: '2025-07-18'
+  selection:
+    purpose: main
+    sha256: b579192352bf79cfb331ab4d30f3564802b50a3f6d001b2faa9ab49c2717dfba
+    complete: true
+    questions:
+      Q0: 2
+      Q1: 1
+      Q3: 3
+      Q5: 2
+      Q6: 3
+      Q7: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ②
+    - ③
+    - ④
+    cited_by: 2
+    level: 대법원
+    change: 발견 못 함
+- id: prec-618495
+  source: lawgokr
+  target: prec
+  params:
+    ID: '618495'
+  kind: prec
+  title: 서울중앙지방법원 2025. 7. 24. 선고 2024노2575 판결
+  citation: 서울중앙지방법원 2024노2575
+  authority: 2
+  dates:
+    decided_on: '2025-07-24'
+  selection:
+    purpose: trail
+    sha256: 1ac75bc4985994ce2b4fcff1a712068a5c1b8eef661c48979399bc8dcc132828
+    complete: true
+- id: prec-615679
+  source: lawgokr
+  target: prec
+  params:
+    ID: '615679'
+  kind: prec
+  title: 대법원 2025. 9. 4. 선고 2025다209756 판결
+  citation: 대법원 2025다209756
+  authority: 2
+  dates:
+    decided_on: '2025-09-04'
+  selection:
+    purpose: main
+    sha256: 5e25d58a547a23b0072b094306043df4369849cc18e0c6af7603ec85c4e92463
+    complete: true
+    questions:
+      Q3: 3
+      Q6: 3
+    model: claude-sonnet-5-5-api
+    found:
+    - ②
+    - ③
+    cited_by: 0
+    level: 대법원
+    change: 발견 못 함
+- id: prec-614041
+  source: lawgokr
+  target: prec
+  params:
+    ID: '614041'
+  kind: prec
+  title: 대법원 2025. 12. 11. 선고 2024도8121 판결
+  citation: 대법원 2024도8121
+  authority: 2
+  dates:
+    decided_on: '2025-12-11'
+  selection:
+    purpose: main
+    sha256: 354dadba67a5abf4552465c83bac300738e170f0e62b70800ecc41b352ca30c8
+    complete: true
+    questions:
+      Q3: 3
+      Q8: 2
+      Q0: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ②
+    - ③
+    cited_by: 0
+    level: 대법원
+    change: 발견 못 함
+- id: prec-618177
+  source: lawgokr
+  target: prec
+  params:
+    ID: '618177'
+  kind: prec
+  title: 대법원 2026. 2. 26. 선고 2025도13141 판결
+  citation: 대법원 2025도13141
+  authority: 2
+  dates:
+    decided_on: '2026-02-26'
+  selection:
+    purpose: main
+    sha256: 399e17a4dee199955664afe7a5afa7185aa5946d2ca8ccc7b9362eebe5ec353d
+    complete: true
+    questions:
+      Q3: 3
+      Q6: 3
+      Q7: 2
+      Q5: 2
+      Q1: 1
+    model: claude-sonnet-5-5-api
+    found:
+    - ②
+    cited_by: 0
+    level: 대법원
+    change: 발견 못 함
+- id: prec-625211
+  source: lawgokr
+  target: prec
+  params:
+    ID: '625211'
+  kind: prec
+  title: 대법원 2026. 4. 30. 선고 2024도5938 판결
+  citation: 대법원 2024도5938
+  authority: 2
+  dates:
+    decided_on: '2026-04-30'
+  selection:
+    purpose: main
+    sha256: 9f1253fc3d4eaa4892f543c5a60b605631d411f3e294971a677195a8c39b950b
+    complete: true
+    questions:
+      Q0: 2
+      Q3: 3
+      Q5: 2
+      Q6: 3
+      Q7: 2
+    model: claude-sonnet-5-5-api
+    found:
+    - ②
+    - ③
+    - ④
+    cited_by: 0
+    level: 대법원
+    change: 발견 못 함
+missing:
+- id: guide-pseudonym
+  title: 가명정보 처리 가이드라인 (영상 · 이미지 가명처리 기준 포함)
+  why: '파일이 없음: data/corpus/inbox/가명정보_처리_가이드라인.pdf (자동으로 받을 수 없어 사람이 받아 두어야 한다)'
+  where: https://www.pipc.go.kr/np/cop/bbs/selectBoardList.do?bbsId=BS217&mCode=G010030000
+- id: guide-children
+  title: 아동·청소년 개인정보 보호 안내서
+  why: '파일이 없음: data/corpus/inbox/아동청소년_개인정보_보호_안내서.pdf (자동으로 받을 수 없어 사람이 받아 두어야 한다)'
+  where: https://www.pipc.go.kr/np/cop/bbs/selectBoardList.do?bbsId=BS217&mCode=G010030000
+- id: guide-biometric
+  title: 생체정보 보호 안내서
+  why: '파일이 없음: data/corpus/inbox/생체정보_보호_안내서.pdf (자동으로 받을 수 없어 사람이 받아 두어야 한다)'
+  where: https://www.pipc.go.kr/np/cop/bbs/selectBoardList.do?bbsId=BS217&mCode=G010030000
+- id: mediation-cases
+  title: 개인정보 분쟁조정 사례집 (최신 연도)
+  why: '파일이 없음: data/corpus/inbox/분쟁조정_사례집.pdf (자동으로 받을 수 없어 사람이 받아 두어야 한다)'
+  where: https://www.kopico.go.kr
+- id: pipc-precedents
+  title: 개인정보 보호 판례집 (개인정보위)
+  why: '파일이 없음: data/corpus/inbox/개인정보_보호_판례집.pdf (자동으로 받을 수 없어 사람이 받아 두어야 한다)'
+  where: https://www.pipc.go.kr/np/cop/bbs/selectBoardList.do?bbsId=BS217&mCode=G010030000
+- case: 부산지방법원 2023노2792
+  wanted_for:
+  - 대법원 2024도5938의 원심
+  why: 국가법령정보 API(prec)에서 사건번호 2023노2792을(를) 찾지 못함
+- case: 서울중앙지방법원 2023고정2052
+  wanted_for:
+  - 서울중앙지방법원 2024노2575의 앞 심급
+  why: 국가법령정보 API(prec)에서 사건번호 2023고정2052을(를) 찾지 못함
+- case: 인천지방법원 2021고정2470
+  wanted_for:
+  - 인천지방법원 2023노2796의 앞 심급
+  why: 국가법령정보 API(prec)에서 사건번호 2021고정2470을(를) 찾지 못함
+- case: 인천지방법원 2023나73048
+  wanted_for:
+  - 대법원 2025다209756의 원심
+  why: 국가법령정보 API(prec)에서 사건번호 2023나73048을(를) 찾지 못함
+- case: 서울중앙지방법원 2024고합161
+  wanted_for:
+  - 서울고등법원 2024노2332의 앞 심급
+  why: 국가법령정보 API(prec)에서 사건번호 2024고합161을(를) 찾지 못함
+- case: 서울동부지방법원 2022고정433
+  wanted_for:
+  - 서울동부지방법원 2023노612의 앞 심급
+  why: 국가법령정보 API(prec)에서 사건번호 2022고정433을(를) 찾지 못함
+- case: 대전지방법원 2023노2444
+  wanted_for:
+  - 대법원 2025도266의 원심
+  why: 국가법령정보 API(prec)에서 사건번호 2023노2444을(를) 찾지 못함
+- case: 춘천지방법원 2019고정89
+  wanted_for:
+  - 춘천지방법원 2019노869의 앞 심급
+  why: 국가법령정보 API(prec)에서 사건번호 2019고정89을(를) 찾지 못함
+- case: 전주지방법원 2017노881
+  wanted_for:
+  - 대법원 2018도1917의 원심
+  why: 국가법령정보 API(prec)에서 사건번호 2017노881을(를) 찾지 못함
+- case: 인천지방법원 2020고합639
+  wanted_for:
+  - 서울고등법원 2021노2521의 앞 심급
+  why: 국가법령정보 API(prec)에서 사건번호 2020고합639을(를) 찾지 못함
+- case: 서울중앙지방법원 2012가단133614
+  wanted_for:
+  - 서울중앙지방법원 2013나49885의 앞 심급
+  why: 국가법령정보 API(prec)에서 사건번호 2012가단133614을(를) 찾지 못함
+- case: 전주지방법원 2020고단1184
+  wanted_for:
+  - 전주지방법원 2021노340의 앞 심급
+  why: 국가법령정보 API(prec)에서 사건번호 2020고단1184을(를) 찾지 못함
+- case: 제주지방법원 2016고정819
+  wanted_for:
+  - 제주지방법원 2017노112의 앞 심급
+  why: 국가법령정보 API(prec)에서 사건번호 2016고정819을(를) 찾지 못함
+- case: 서울서부지방법원 2019나38288
+  wanted_for:
+  - 대법원 2020다253423의 원심
+  why: 국가법령정보 API(prec)에서 사건번호 2019나38288을(를) 찾지 못함
+- case: 서울고등법원 2020나2011542
+  wanted_for:
+  - 대법원 2021다265119의 원심
+  why: 국가법령정보 API(prec)에서 사건번호 2020나2011542을(를) 찾지 못함
+- case: 서울중앙지방법원 2018가합591790
+  wanted_for:
+  - 서울고등법원 2020나2018284의 앞 심급
+  why: 국가법령정보 API(prec)에서 사건번호 2018가합591790을(를) 찾지 못함
+- case: 전주지방법원 2018가소48440
+  wanted_for:
+  - 전주지방법원 2019나6372의 앞 심급
+  why: 국가법령정보 API(prec)에서 사건번호 2018가소48440을(를) 찾지 못함
+- case: 서울중앙지방법원 2011가합44370
+  wanted_for:
+  - 서울고등법원 2011나89080의 앞 심급
+  why: 국가법령정보 API(prec)에서 사건번호 2011가합44370을(를) 찾지 못함
+- case: 의정부지방법원 2009가단37299
+  wanted_for:
+  - 의정부지방법원 2010나2696의 앞 심급
+  why: 국가법령정보 API(prec)에서 사건번호 2009가단37299을(를) 찾지 못함
+- case: 서울고등법원 2008나80052
+  wanted_for:
+  - 대법원 2009다49766의 원심
+  why: 국가법령정보 API(prec)에서 사건번호 2008나80052을(를) 찾지 못함
+- case: 서울동부지방법원 2005가합14302
+  wanted_for:
+  - 서울고등법원 2006나80294의 앞 심급
+  why: 국가법령정보 API(prec)에서 사건번호 2005가합14302을(를) 찾지 못함
+- case: 서울지방법원 2002가단234723
+  wanted_for:
+  - 서울중앙지방법원 2003나13979의 앞 심급
+  why: 국가법령정보 API(prec)에서 사건번호 2002가단234723을(를) 찾지 못함
+- case: 서울지방법원 96노5541
+  wanted_for:
+  - 대법원 97도1230의 원심
+  why: 국가법령정보 API(prec)에서 사건번호 96노5541을(를) 찾지 못함
+- case: 대전고등법원 2014노64
+  wanted_for:
+  - 대법원 2014도11501의 원심
+  why: 국가법령정보 API(prec)에서 사건번호 2014노64을(를) 찾지 못함
+- case: 광주지방법원 2004가단45689
+  wanted_for:
+  - 광주고등법원 2005나9561의 앞 심급
+  why: 국가법령정보 API(prec)에서 사건번호 2004가단45689을(를) 찾지 못함
+- case: 서울고등법원 95나25819
+  wanted_for:
+  - 대법원 96다11327의 원심
+  why: 국가법령정보 API(prec)에서 사건번호 95나25819을(를) 찾지 못함
+- case: 서울남부지방법원 2021고단5505
+  wanted_for:
+  - 서울남부지방법원 2022노588의 앞 심급
+  why: 국가법령정보 API(prec)에서 사건번호 2021고단5505을(를) 찾지 못함
+- case: 광주고등법원 2016노104
+  wanted_for:
+  - 대법원 2021도9041의 원심
+  why: 국가법령정보 API(prec)에서 사건번호 2016노104을(를) 찾지 못함
+- case: 광주지방법원 2016고단1194
+  wanted_for:
+  - 광주지방법원 2016노2044의 앞 심급
+  why: 국가법령정보 API(prec)에서 사건번호 2016고단1194을(를) 찾지 못함
+- case: 서울고등법원 2014노160
+  wanted_for:
+  - 대법원 2014도17346의 원심
+  why: 국가법령정보 API(prec)에서 사건번호 2014노160을(를) 찾지 못함
+- case: 수원지방법원 2019고합425
+  wanted_for:
+  - 수원고등법원 2020노70의 앞 심급
+  why: 국가법령정보 API(prec)에서 사건번호 2019고합425을(를) 찾지 못함
+- case: 서울고등법원 2007나74937
+  wanted_for:
+  - 대법원 2008다42430의 원심
+  why: 국가법령정보 API(prec)에서 사건번호 2007나74937을(를) 찾지 못함
+- case: 대전지방법원 2016고단3094
+  wanted_for:
+  - 대전지방법원 2017노2202의 앞 심급
+  why: 국가법령정보 API(prec)에서 사건번호 2016고단3094을(를) 찾지 못함
+- case: 서울중앙지방법원 2008고단247
+  wanted_for:
+  - 서울중앙지방법원 2008노1386의 앞 심급
+  why: 국가법령정보 API(prec)에서 사건번호 2008고단247을(를) 찾지 못함
+- case: 서울고등법원 2013나64887
+  wanted_for:
+  - 대법원 2014다77970의 원심
+  why: 국가법령정보 API(prec)에서 사건번호 2013나64887을(를) 찾지 못함
+- case: 서울북부지방법원 2014노77
+  wanted_for:
+  - 대법원 2014도6309의 원심
+  why: 국가법령정보 API(prec)에서 사건번호 2014노77을(를) 찾지 못함
+- case: 광주지방법원 2013노373
+  wanted_for:
+  - 대법원 2013도8619의 원심
+  why: 국가법령정보 API(prec)에서 사건번호 2013노373을(를) 찾지 못함

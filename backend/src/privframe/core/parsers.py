@@ -67,7 +67,43 @@ def pdf(record: DocRecord, content: bytes) -> list[Unit]:
     """Any text PDF: one unit per page. Scanned PDFs have no text layer and need OCR, which is not done here."""
     units = units_from_pages(pdf_pages(content))
     if not units:
-        raise ParseError(f"{record.doc_id}: PDF에 추출할 글자가 없습니다(스캔본이면 OCR 필요)")
+        raise ParseError(f"{record.doc_id}: {NO_TEXT}(글자 층이 없는 PDF. pdf_ocr 파서가 읽는다)")
+    return units
+
+
+OCR_REF = "det=PP-OCRv6_det_small rec=korean_PP-OCRv5_rec_mobile"  # the catalog's rapidocr-small: pages are dense small print
+NO_TEXT = "PDF에 추출할 글자가 없습니다"
+
+
+def pdf_ocr(record: DocRecord, content: bytes) -> list[Unit]:
+    """A PDF with no text layer (scanned, or typeset with its letters turned into shapes): every page is
+    rendered and read by OCR. What comes out is a reading of the page, not the document's own text, and each
+    unit says so (`meta.ocr`). Lines are put together from the boxes the reader found, top to bottom."""
+    import numpy as np
+    import pdfplumber
+
+    from .perception.models import _rapidocr
+
+    reader = _rapidocr(OCR_REF)
+    units: list[Unit] = []
+    with pdfplumber.open(io.BytesIO(content)) as pdf:
+        for number, page in enumerate(pdf.pages, 1):
+            image = np.asarray(page.to_image(resolution=200).original.convert("RGB"))[:, :, ::-1]  # BGR, as the reader expects
+            found = reader.read(np.ascontiguousarray(image), upright=True)
+            readings = sorted((r for r in found if r[0][3] <= 1.5 * r[0][2]), key=lambda r: (r[0][1] + r[0][3] / 2, r[0][0]))  # without the chapter tabs printed sideways in the margin
+            lines: list[list[Any]] = []
+            for box, text_, score in readings:
+                middle = box[1] + box[3] / 2
+                if lines and abs(middle - lines[-1][0]) < 0.6 * box[3]:
+                    lines[-1][1].append((box[0], text_, score))
+                else:
+                    lines.append([middle, [(box[0], text_, score)]])
+            body = "\n".join(" ".join(part for _, part, _ in sorted(row)) for _, row in lines)
+            scores = [score for _, row in lines for _, _, score in row]
+            if body.strip():
+                units.append(Unit(unit_id=f"p{number}", label=f"{number}쪽", text=body, meta={"page": number, "ocr": OCR_REF, "cls": "off", "score": round(sum(scores) / len(scores), 3)}))
+    if not units:
+        raise ParseError(f"{record.doc_id}: OCR로도 글자를 읽지 못했습니다")
     return units
 
 
@@ -172,7 +208,7 @@ def text(record: DocRecord, content: bytes) -> list[Unit]:
     return [Unit(unit_id="text", label="본문", text=body)]
 
 
-PARSERS: dict[str, Parser] = {"law_html": law_html, "pdf": pdf, "lawgokr_json": lawgokr_json, "text": text}
+PARSERS: dict[str, Parser] = {"law_html": law_html, "pdf": pdf, "pdf_ocr": pdf_ocr, "lawgokr_json": lawgokr_json, "text": text}
 # default parser for a (source, format) pair; a list entry can override it with `parser`
 DEFAULTS = {("law_html", "html"): "law_html", ("lawgokr", "json"): "lawgokr_json"}
 BY_FORMAT = {"pdf": "pdf", "txt": "text", "json": "lawgokr_json", "html": "law_html"}

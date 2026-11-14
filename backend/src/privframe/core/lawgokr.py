@@ -2,7 +2,11 @@
 
 Calls need the registered OC value *and* a registered server IP/domain. An unregistered host still gets HTTP 200,
 with a '사용자 정보 검증에 실패' body, which this client raises as LawApiAuthError. The OC is a credential: it
-never goes into saved files — `public_url` gives the same request without it, for provenance.
+never goes into saved files — `public_url` gives the same request without it, for provenance, and no error this
+client raises quotes the address it called (an HTTP library's error message does, credential included).
+
+The whole site goes down for announced maintenance (every address answers 302 → /sorry/sorry.html, for up to a
+day). That is LawApiUnavailable: the API did not answer, which is not the same as an answer with no hits.
 """
 import re
 from typing import Any
@@ -20,6 +24,10 @@ class LawApiAuthError(LawApiError):
     pass
 
 
+class LawApiUnavailable(LawApiError):
+    """No answer to the request: no connection, an HTTP error, a redirect to the maintenance notice, a page that is not JSON."""
+
+
 def jo_code(article: str) -> str:
     """'제25조의2' → '002502' (JO = 4-digit article number + 2-digit branch number)."""
     match = re.fullmatch(r"\s*제?\s*(\d+)\s*조(?:\s*의\s*(\d+))?\s*", article)
@@ -34,18 +42,29 @@ class LawGoKr:
         self._client = client or httpx.Client(timeout=timeout, headers={"User-Agent": "PrivFrame capstone research"})
 
     def _call(self, endpoint: str, params: dict[str, Any]) -> dict[str, Any]:
-        response = self._client.get(f"{BASE}/{endpoint}", params={"OC": self._oc, "type": "JSON", **params})
-        response.raise_for_status()
+        asked = self.public_url(endpoint, {"type": "JSON", **params})
+        try:
+            response = self._client.get(f"{BASE}/{endpoint}", params={"OC": self._oc, "type": "JSON", **params})
+            response.raise_for_status()
+        except httpx.HTTPStatusError as error:  # `from None`: the original message quotes the address with the credential
+            moved = error.response.headers.get("location", "").split("?")[0]
+            notice = " (점검 안내로 보냄)" if "sorry" in moved else ""
+            raise LawApiUnavailable(f"HTTP {error.response.status_code}{f' → {moved}' if moved else ''}{notice} · {asked}") from None
+        except httpx.HTTPError as error:
+            raise LawApiUnavailable(f"{type(error).__name__}: {self._without_credential(str(error))} · {asked}") from None
         try:
             data = response.json()
         except ValueError as error:
-            raise LawApiError(f"JSON이 아닌 응답입니다 ({response.headers.get('content-type')}): {response.text[:200]}") from error
+            raise LawApiUnavailable(f"JSON이 아닌 응답입니다 ({response.headers.get('content-type')}): {self._without_credential(response.text[:200])} · {asked}") from error
         if isinstance(data, dict) and set(data) <= {"result", "msg"} and "result" in data:
             message = f"{data.get('result')} {data.get('msg', '')}".strip()
             if "검증" in str(data.get("result")):
                 raise LawApiAuthError(f"{message} — open.law.go.kr에서 OC와 이 컴퓨터의 공인 IP를 등록했는지 확인하세요.")
             raise LawApiError(message)
         return data
+
+    def _without_credential(self, text: str) -> str:
+        return text.replace(self._oc, "") if self._oc else text
 
     def search(self, target: str, query: str | None = None, **params: Any) -> dict[str, Any]:
         """lawSearch.do: target = law · prec · detc · expc · admrul · ppc …"""
