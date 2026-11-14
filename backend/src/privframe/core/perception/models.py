@@ -208,10 +208,11 @@ class TextReader:
         self._engine = engine
         self._lock = threading.Lock()
 
-    def read(self, image: np.ndarray) -> list[Reading]:
-        """Find and read every text of an image."""
+    def read(self, image: np.ndarray, *, upright: bool = False) -> list[Reading]:
+        """Find and read every text of an image. `upright`: the text is known not to be turned (a rendered page),
+        so no line is checked for being upside down — on dense print that check turns good lines over."""
         with self._lock:
-            result = self._engine(image, use_det=True, use_cls=True, use_rec=True)
+            result = self._engine(image, use_det=True, use_cls=not upright, use_rec=True)
         if result.boxes is None or result.txts is None:
             return []
         out: list[Reading] = []

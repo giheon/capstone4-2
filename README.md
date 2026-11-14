@@ -4,7 +4,7 @@
 
 - 지금 동작하는 범위와 측정 결과: [M4 구축 기록](docs/design/14-m4-build.md) · [M4 보완](docs/design/15-m4-improvements.md) · [실험실 보완](docs/design/16-lab-runs-and-experiment-sets.md)
 - 설계 전체와 변경 기록: [docs/design](docs/design/README.md) · 결정 기록 [docs/adr](docs/adr) · 용어 [GLOSSARY.md](GLOSSARY.md) · 기술 조사 [docs/research](docs/research/README.md)
-- 아직 정해지지 않은 것: 법률 코퍼스의 선정(M4-1). 지금은 소량 검증 목록(`configs/corpus/smoke.yaml`)으로 동작합니다.
+- 법률 코퍼스: 팀 기준으로 선정 · 수집한 목록 v1이 있습니다([수집 기록](docs/design/17-m4-1-corpus-collection.md)). 무엇을 색인할지는 아직 정하지 않아, 서비스는 소량 검증 목록(`configs/corpus/smoke.yaml`)의 색인으로 동작합니다.
 
 ## 실행
 
@@ -39,6 +39,7 @@ Anthropic API로 돌릴 때: `.env`에 `ANTHROPIC_API_KEY`를 넣고 `PRIVFRAME_
 uv run privframe-case run <영상> --memo "SNS에 올릴 카페 홍보 영상"   # 화면 없이 한 건 처리 (질문은 터미널에서 답함)
 uv run privframe-case run <영상> --profile claude-api --auto        # 질문에 보수적으로 자동 응답
 uv run privframe-corpus search "촬영 동의와 공표" -k 5              # 코퍼스 검색 (status · show · index도 있음)
+uv run privframe-corpus select configs/corpus/selection.yaml      # 법률 코퍼스 선정: 후보 탐색 → 원문 확보 → 채점 → 수집 목록 (모델 비용이 든다)
 uv run privframe-smoke                                            # 도구 연결 점검 (키가 없는 대상은 건너뜀)
 ```
 

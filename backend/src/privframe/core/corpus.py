@@ -108,7 +108,8 @@ class CorpusStore:
     # ---------- raw documents ----------
 
     def put_raw(self, *, doc_id: str, kind: str, title: str, source: str, format: str, content: bytes, **meta: Any) -> tuple[DocRecord, str]:
-        """Store source bytes. Returns the record and what happened: "new", "updated" or "unchanged"."""
+        """Store source bytes. Returns the record and what happened: "new", "updated" or "unchanged".
+        `index` left out (or None) keeps what the stored record says; a new document is indexed by default."""
         if not DOC_ID.match(doc_id):
             raise ValueError(f"문서 ID는 영문 소문자·숫자·'.'·'_'·'-'로 2~80자여야 합니다: {doc_id!r}")
         if not content:
@@ -116,6 +117,8 @@ class CorpusStore:
         digest = sha256_bytes(content)
         records = {r.doc_id: r for r in self.records()}
         previous = records.get(doc_id)
+        if meta.get("index") is None:
+            meta["index"] = previous.index if previous else True
         same_bytes = bool(previous and previous.sha256 == digest and (self.raw_dir / previous.raw_name).exists())
         record = DocRecord(
             doc_id=doc_id,
@@ -139,6 +142,17 @@ class CorpusStore:
         records[doc_id] = record
         self._write_registry(list(records.values()))
         return record, "updated" if previous else "new"
+
+    def remove(self, doc_id: str) -> bool:
+        """Take a document out of the store (raw file, normalized form, registry line). Returns whether it was there."""
+        records = {r.doc_id: r for r in self.records()}
+        record = records.pop(doc_id, None)
+        if record is None:
+            return False
+        (self.raw_dir / record.raw_name).unlink(missing_ok=True)
+        (self.docs_dir / f"{doc_id}.json").unlink(missing_ok=True)
+        self._write_registry(list(records.values()))
+        return True
 
     def raw_bytes(self, record: DocRecord) -> bytes:
         return (self.raw_dir / record.raw_name).read_bytes()

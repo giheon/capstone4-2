@@ -5,6 +5,7 @@ fetcher's input plus descriptive metadata (id, kind, title, citation, authority,
 Adding a source type = one function with the Fetcher signature and one FETCHERS entry.
 """
 import json
+import re
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -160,12 +161,24 @@ def lawgokr(entry: dict[str, Any], ctx: FetchContext) -> list[Fetched]:
             calls.append((doc_id, {"target": target, param: serial}, title))
     out = []
     for doc_id, params, title in calls:
-        data = ctx.law.service(**params)
+        data = scrub(ctx.law.service(**params))
         content = json.dumps(data, ensure_ascii=False, indent=1).encode("utf-8")
         meta = _meta(entry)
         meta["extra"] = {**meta.get("extra", {}), "api": _identifiers(data)}
         out.append(Fetched(doc_id, kind, title, "json", content, LawGoKr.public_url("lawService.do", {"type": "JSON", **params}), meta))
     return out
+
+
+def scrub(value: Any) -> Any:
+    """API data with the credential blanked: search hits link to themselves with the caller's OC in the address.
+    Nothing else is touched (an original is stored as it came)."""
+    if isinstance(value, dict):
+        return {k: scrub(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [scrub(v) for v in value]
+    if isinstance(value, str) and "OC=" in value:
+        return re.sub(r"OC=[^&\"'\s]*", "OC=", value)
+    return value
 
 
 def _identifiers(data: Any) -> dict[str, str]:
@@ -182,8 +195,10 @@ def _identifiers(data: Any) -> dict[str, str]:
 FETCHERS: dict[str, Fetcher] = {"http_file": http_file, "law_html": law_html, "local_file": local_file, "lawgokr": lawgokr}
 
 
-def fetch_all(entries: list[dict[str, Any]], store: CorpusStore, ctx: FetchContext) -> list[Outcome]:
-    """Fetch every entry and store what changed. One bad entry does not stop the rest."""
+def fetch_all(entries: list[dict[str, Any]], store: CorpusStore, ctx: FetchContext, default_index: bool | None = None) -> list[Outcome]:
+    """Fetch every entry and store what changed. One bad entry does not stop the rest.
+    `default_index` is what a list says about its new documents (`defaults.index`); an entry's own `index`
+    wins, and a document already stored keeps its setting."""
     outcomes = []
     for entry in entries:
         entry_id = str(entry.get("id") or entry.get("title") or "?")
@@ -201,6 +216,8 @@ def fetch_all(entries: list[dict[str, Any]], store: CorpusStore, ctx: FetchConte
             continue
         statuses, records = [], []
         for item in fetched:
+            if "index" not in item.meta and default_index is not None and store.get(item.doc_id) is None:
+                item.meta["index"] = default_index
             record, status = store.put_raw(doc_id=item.doc_id, kind=item.kind, title=item.title, source=str(entry["source"]), format=item.format, content=item.content, url=item.url, **item.meta)
             statuses.append(status)
             records.append(record)

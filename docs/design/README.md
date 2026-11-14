@@ -28,19 +28,21 @@
 | [09-prd.md](./09-prd.md) | PRD: 기능·비기능 요구사항, 화면, 마일스톤, 리스크 (§13) |
 | [10-ui.md](./10-ui.md) | 화면: 서비스와 실험실(멀티에이전트 토폴로지), 데이터 계약, 모의 백엔드, 검증 (M2, D10) |
 | [11-tool-setup.md](./11-tool-setup.md) | 툴 셋업과 연동: 의존성, core 연동 코드, 스모크 결과(U4 · U6 · U11), 법률 코퍼스 도구와 실제 자료 종단 확인 (M3) |
-| [12-corpus-plan-draft.md](./12-corpus-plan-draft.md) | 법률 코퍼스 수집 계획 초안 2: 범위, 선정, 색인, 오용 방지 (M4-1에서 확정, **미확정**) |
-| [13-corpus-selection-definitions.md](./13-corpus-selection-definitions.md) | 코퍼스 선정 기준 정의 D1~D14와 팀 결정 항목 (노션 의사결정 기록 원고, **검토 대기**) |
+| [12-corpus-plan-draft.md](./12-corpus-plan-draft.md) | 법률 코퍼스 수집 계획 초안 2. 선정 · 수집은 13으로 대체, 색인 · 오용 방지는 수집 뒤에 정할 초안 |
+| [13-corpus-selection-definitions.md](./13-corpus-selection-definitions.md) | 코퍼스 선정 기준 D1~D13(팀 노션 문서)과, 구현하면서 정한 것 · 문서와 다르게 한 것 |
 | [14-m4-build.md](./14-m4-build.md) | M4 구축 기록: 세로 슬라이스의 구조, 실행 방법, 측정으로 정한 값(U9 · U10 · 흐림 수준 · 비용), 실제 실행 결과, 한계 |
 | [15-m4-improvements.md](./15-m4-improvements.md) | M4 보완 기록: Claude API 경로와 비용 상한, 모자이크 · 유지만, 프레임 단위 가림과 전체 프레임 검증, 위치 메타데이터 판단, 토폴로지 기록, 구간 실험(체크포인트 분기 · 단계 결과 저장)과 실제 실험 결과 |
 | [16-lab-runs-and-experiment-sets.md](./16-lab-runs-and-experiment-sets.md) | 실험실 보완 기록: 실행 메뉴 통합, 실행이 쌓이는 구간 실험, 사용자에게 묻는 구간의 직접 응답, 평가의 최소 구조, API 계약, 검토 수정과 정리 |
+| [17-m4-1-corpus-collection.md](./17-m4-1-corpus-collection.md) | M4-1 법률 코퍼스 수집 기록: 접근, 사전 측정, 단계별 건수, 채점과 교차 확인, 같은 사건의 판결 찾기, 수집 목록 v1, 발견과 한계 |
 | [appendix.md](./appendix.md) | 부록 A–D: 채택 아이디어 반영, 코드 재사용 지도, 추가 스킬, Notion 페이지 ID |
 | [diagrams/](./diagrams/) | D1~D10 Mermaid 소스(.mmd)와 렌더 결과(.svg) |
 | [../research/](../research/README.md) | 리서치 보고서 원문 R1~R7 |
-| [../adr/](../adr/) | 아키텍처 결정 기록 ADR 0001~0014 |
+| [../adr/](../adr/) | 아키텍처 결정 기록 ADR 0001~0015 |
 | [../../GLOSSARY.md](../../GLOSSARY.md) | 용어집 |
 
 ## 변경 이력
 
+- **2026-11-13 (M4-1 법률 코퍼스 수집, 사용자 지시)**: 팀 노션의 선정 기준 D1~D13으로 실제 수집을 했다. ① 기준을 규칙 파일(`configs/corpus/selection.yaml`)과 선정 실행(`privframe-corpus select`)으로 옮겼다. 선정은 기록이 남는 실행이고 색인과 따로 둔다([ADR-0015](../adr/0015-corpus-selection-is-a-recorded-run-apart-from-indexing.md)). ② 후보 2,110건 → 원문 1,642건 → 채점 1,386건 → 주요 근거 232건(판례 47 · 헌재 19 · 해석례 3 · 결정문 163)과 경과 확인용 37건. 목록 `v1-20261113-dff1d3fa`. ③ 채택 판례 47건 가운데 22건이 파기환송 · 일부 파기인데 환송 후 판결은 한 건도 확보하지 못했다. ④ 문서에 없어 정한 것과 다르게 한 것은 [13 §9](./13-corpus-selection-definitions.md), 과정 · 실측 · 문제와 해결 · 한계는 [17](./17-m4-1-corpus-collection.md). 서비스의 색인은 바꾸지 않았다. ⑤ 같은 날 밤 개인정보위 문서 5종을 받아 두었다(판례집은 글자 층이 없어 OCR로 읽는다). 국가법령정보의 점검(11-13 21:00 ~ 11-14 21:00) 중에 돈 실행이 실패한 검색을 "0건"으로 넘겨 빈 목록을 만든 것을 발견해, API가 응답하지 않으면 실행이 멈추고 목록을 만들지 않게 고쳤다([17.17](./17-m4-1-corpus-collection.md)). 5종을 반영한 목록은 점검 뒤의 실행에서 나온다.
 - **2026-11-12 (푸시 전 검토 수정과 정리, 사용자 지시)**: ① 코드 검토에서 나온 10건을 고쳤다(재시작 뒤 계속, 감사에서 검토로 돌아가는 횟수, 잘린 이벤트 기록, 실험이 실행을 시작할 때의 잠금 등). ② 1.0 베이스라인(코드 · 테스트 · 스크립트 · 설정 · Docker · 문서)을 저장소에서 지웠다. 얼굴 검출 모델과 예시 영상의 초상은 처음 쓸 때 고정한 주소에서 받는다. ③ 중복 · 죽은 코드와 문서의 지난 내용을 정리했다. 목록과 검증은 [16 §16.10](./16-lab-runs-and-experiment-sets.md).
 - **2026-11-12 (실험실 보완, 사용자 지시)**: ① 구간 실험을 "한 번 돌리고 끝나는 표"에서 실행이 쌓이는 묶음으로 바꾸고, 사용자에게 묻는 구간은 자동 응답 없이 한 번에 1건씩 사람이 답한다. 범위 앞의 질문은 이미 답한 실행의 체크포인트에서 이어 간다([ADR-0014](../adr/0014-experiment-sets-accumulate-runs-and-never-answer-for-the-user.md)) ② 검토 · 감사를 구간으로 분리(구간 5개) ③ 실행 기록과 토폴로지를 메뉴 "실행" 하나로 합치고 체크포인트 분기 양식을 삭제 ④ 평가는 점수의 형식 · 저장 · 집계와 평가기 등록표만. 기록은 [16-lab-runs-and-experiment-sets.md](./16-lab-runs-and-experiment-sets.md).
 - **2026-11-11 (M4 검수 반영, 사용자 지시)**: ① Anthropic API 직접 경로와 `claude-api` 프로필, 비용 상한을 목표와 분리(기본 $1.00) ② 화면의 처리를 모자이크 하나로, 파일의 위치 메타데이터는 법적 판단에 따라 삭제([ADR-0011](../adr/0011-mosaic-only-and-metadata-removal.md)) ③ 가림 구간을 프레임에 맞춘 반열린 구간으로 바꾸고 한 곳에서 계산, 출력 검증이 모든 프레임을 보고 노출이 있으면 다시 렌더([ADR-0012](../adr/0012-frame-exact-ranges-and-full-frame-verification.md)) ④ 토폴로지 기록을 과거순으로, 노드를 고르면 그 기록으로 이동 ⑤ 구간 실험: 체크포인트 분기와 단계 결과 저장으로 앞 단계를 다시 돌리지 않고 부품 조합을 비교([ADR-0013](../adr/0013-section-experiments-by-checkpoint-fork-and-step-store.md)). 기록은 [15-m4-improvements.md](./15-m4-improvements.md).

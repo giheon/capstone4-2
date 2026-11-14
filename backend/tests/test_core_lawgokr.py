@@ -1,7 +1,7 @@
 import httpx
 import pytest
 
-from privframe.core.lawgokr import LawApiAuthError, LawGoKr, jo_code
+from privframe.core.lawgokr import LawApiAuthError, LawApiUnavailable, LawGoKr, jo_code
 
 
 @pytest.mark.parametrize(("article", "code"), [("제2조", "000200"), ("제25조의2", "002502"), ("58조의2", "005802"), ("제 10 조 의 3", "001003")])
@@ -27,3 +27,26 @@ def test_search_hits_and_count_whatever_the_wrapper_key():
 def test_public_url_never_contains_the_credential():
     url = LawGoKr.public_url("lawService.do", {"OC": "secret-oc", "target": "prec", "ID": "1"})
     assert "secret-oc" not in url and "target=prec" in url
+
+
+def refused(request: httpx.Request) -> httpx.Response:
+    raise httpx.ConnectError(f"cannot reach {request.url}", request=request)
+
+
+@pytest.mark.parametrize(
+    ("answer", "says"),
+    [
+        (lambda request: httpx.Response(302, headers={"location": f"https://www.law.go.kr/sorry/sorry.html?{request.url.query.decode()}"}), "점검"),  # announced maintenance: every address is sent to the notice
+        (lambda request: httpx.Response(503), "503"),
+        (lambda request: httpx.Response(200, text=f"<html>busy {request.url}</html>"), "JSON"),
+        (refused, "ConnectError"),
+    ],
+)
+def test_no_answer_is_its_own_error_and_never_quotes_the_credential(answer, says):
+    client = httpx.Client(transport=httpx.MockTransport(answer))
+    with pytest.raises(LawApiUnavailable, match=says) as caught:
+        LawGoKr("secret-oc", client=client).search("prec", "초상권")
+    error = caught.value
+    told = [str(error), repr(error), str(error.__cause__), str(error.__context__ if not error.__suppress_context__ else "")]
+    assert not any("secret-oc" in text for text in told)
+    assert "target=prec" in str(error)  # what was asked is still said, without the credential
